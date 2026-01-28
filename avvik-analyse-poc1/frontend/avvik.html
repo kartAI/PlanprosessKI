@@ -3,259 +3,22 @@
 <head>
     <title>Avviker</title>
     <link rel="stylesheet" href="css/styles.css">
-    <style>
-        body {
-            background: linear-gradient(135deg, #034E31 0%, #24BD76 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 20px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-        }
-
-        .main-container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            width: 100%;
-            max-width: 1400px;
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            grid-template-rows: auto 1fr;
-            gap: 0;
-            overflow: hidden;
-            min-height: 600px;
-        }
-
-        .header {
-            grid-column: 1 / -1;
-            padding: 30px 40px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-
-        .header h1 {
-            color: #034E31;
-            font-size: 2rem;
-            margin: 0 0 10px 0;
-            font-weight: 700;
-        }
-
-        .header p {
-            color: #666;
-            margin: 0;
-            font-size: 1rem;
-        }
-
-        .sidebar {
-            background: #f8f9fa;
-            border-right: 1px solid #e0e0e0;
-            overflow-y: auto;
-            padding: 20px 0;
-            max-height: calc(100vh - 200px);
-        }
-
-        .avvik-list-item {
-            padding: 12px 15px;
-            margin: 5px 10px;
-            background: white;
-            border-left: 4px solid transparent;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 0.9rem;
-            border: 1px solid transparent;
-        }
-
-        .avvik-list-item:hover {
-            background: #fff5f5;
-            border-color: #e0e0e0;
-        }
-
-        .avvik-list-item.active {
-            background: #667eea;
-            color: white;
-            border-left-color: #667eea;
-        }
-
-        .avvik-list-item.high {
-            border-left-color: #d32f2f;
-        }
-
-        .avvik-list-item.medium {
-            border-left-color: #ff9800;
-        }
-
-        .avvik-list-item.low {
-            border-left-color: #388e3c;
-        }
-
-        .avvik-list-item.active.high {
-            border-left-color: white;
-        }
-
-        .avvik-list-item.active.medium {
-            border-left-color: white;
-        }
-
-        .avvik-list-item.active.low {
-            border-left-color: white;
-        }
-
-        .avvik-title-small {
-            font-weight: 600;
-            margin-bottom: 3px;
-        }
-
-        .avvik-severity-small {
-            font-size: 0.75rem;
-            opacity: 0.8;
-        }
-
-        .content-area {
-            padding: 30px;
-            overflow-y: auto;
-            max-height: calc(100vh - 200px);
-        }
-
-        .containers-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-
-        .document-container {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 20px;
-            border: 2px solid #e0e0e0;
-        }
-
-        .document-container h3 {
-            color: #667eea;
-            font-size: 1.1rem;
-            margin: 0 0 15px 0;
-            font-weight: 600;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #667eea;
-        }
-
-        .document-content {
-            font-size: 0.9rem;
-            color: #333;
-            line-height: 1.6;
-        }
-
-        .content-item {
-            margin-bottom: 15px;
-            padding: 10px;
-            background: white;
-            border-radius: 6px;
-            border-left: 3px solid #667eea;
-        }
-
-        .content-label {
-            font-size: 0.8rem;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 3px;
-        }
-
-        .content-value {
-            font-weight: 500;
-            color: #333;
-        }
-
-        .no-selection {
-            text-align: center;
-            color: #999;
-            padding: 40px 20px;
-        }
-
-        .no-selection p {
-            margin: 0;
-            font-size: 1rem;
-        }
-
-        @media (max-width: 1024px) {
-            .main-container {
-                grid-template-columns: 250px 1fr;
-            }
-
-            .containers-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .main-container {
-                grid-template-columns: 1fr;
-            }
-
-            .sidebar {
-                display: none;
-            }
-
-            .header {
-                padding: 20px;
-            }
-
-            .header h1 {
-                font-size: 1.5rem;
-            }
-
-            .content-area {
-                padding: 20px;
-            }
-        }
-    </style>
 </head>
 
 <body>
     <div class="main-container">
         <div class="header">
+            <a href="index.html" class="analyse-btn">tilbake</a>
             <h1>Avviker</h1>
             <p>Identifiserte avvik mellom planmaterialer</p>
         </div>
 
         <div class="sidebar">
-            <div class="avvik-list-item high" onclick="selectAvvik(1)">
-                <div class="avvik-title-small">Grensemarkering område A</div>
-                <div class="avvik-severity-small">HØYT</div>
-            </div>
-            <div class="avvik-list-item high" onclick="selectAvvik(2)">
-                <div class="avvik-title-small">Høydebegrensning</div>
-                <div class="avvik-severity-small">HØYT</div>
-            </div>
-            <div class="avvik-list-item high" onclick="selectAvvik(3)">
-                <div class="avvik-title-small">Trafikk og parkering</div>
-                <div class="avvik-severity-small">HØYT</div>
-            </div>
-            <div class="avvik-list-item medium" onclick="selectAvvik(4)">
-                <div class="avvik-title-small">Grøntarealer</div>
-                <div class="avvik-severity-small">MEDIUM</div>
-            </div>
-            <div class="avvik-list-item medium" onclick="selectAvvik(5)">
-                <div class="avvik-title-small">Driftsvei bredde</div>
-                <div class="avvik-severity-small">MEDIUM</div>
-            </div>
-            <div class="avvik-list-item medium" onclick="selectAvvik(6)">
-                <div class="avvik-title-small">Støygrenser</div>
-                <div class="avvik-severity-small">MEDIUM</div>
-            </div>
-            <div class="avvik-list-item medium" onclick="selectAvvik(7)">
-                <div class="avvik-title-small">Arealbruk</div>
-                <div class="avvik-severity-small">MEDIUM</div>
-            </div>
-            <div class="avvik-list-item low" onclick="selectAvvik(8)">
-                <div class="avvik-title-small">Kulturminner</div>
-                <div class="avvik-severity-small">LAV</div>
-            </div>
+            
         </div>
 
         <div class="content-area">
-            <div id="content" style="display: none;">
+            <div id="content">
                 <div class="containers-grid">
                     <div class="document-container">
                         <h3>📍 Plankart</h3>
@@ -272,83 +35,11 @@
                 </div>
             </div>
             <div id="no-selection" class="no-selection">
-                <p>👈 Velg et avvik fra listen for å se detaljer</p>
             </div>
         </div>
     </div>
+    <script src="js/avvik.js"></script>
 
-    <script>
-        const avvikData = {
-            1: {
-                title: 'Grensemarkering område A',
-                plankart: '<div class="content-item"><div class="content-label">Område A klassifisering</div><div class="content-value">Boligfelt</div></div>',
-                bestemmelse: '<div class="content-item"><div class="content-label">Område A klassifisering</div><div class="content-value">Næringsområde</div></div>',
-                beskrivelse: ''
-            },
-            2: {
-                title: 'Høydebegrensning',
-                plankart: '<div class="content-item"><div class="content-label">Maksimum høyde</div><div class="content-value">15 meter</div></div>',
-                bestemmelse: '<div class="content-item"><div class="content-label">Maksimum høyde</div><div class="content-value">20 meter</div></div>',
-                beskrivelse: ''
-            },
-            3: {
-                title: 'Trafikk og parkering',
-                plankart: '',
-                bestemmelse: '<div class="content-item"><div class="content-label">Parkeringskrav</div><div class="content-value">1 plass per 50 m²</div></div>',
-                beskrivelse: '<div class="content-item"><div class="content-label">Parkeringskrav</div><div class="content-value">1 plass per 40 m²</div></div>'
-            },
-            4: {
-                title: 'Grøntarealer',
-                plankart: '<div class="content-item"><div class="content-label">Grøntandel</div><div class="content-value">25%</div></div>',
-                bestemmelse: '<div class="content-item"><div class="content-label">Grøntandel</div><div class="content-value">30%</div></div>',
-                beskrivelse: ''
-            },
-            5: {
-                title: 'Driftsvei bredde',
-                plankart: '',
-                bestemmelse: '<div class="content-item"><div class="content-label">Minimumsbredde</div><div class="content-value">6 meter</div></div>',
-                beskrivelse: '<div class="content-item"><div class="content-label">Minimumsbredde</div><div class="content-value">7 meter</div></div>'
-            },
-            6: {
-                title: 'Støygrenser',
-                plankart: '',
-                bestemmelse: '<div class="content-item"><div class="content-label">Maksimal støy</div><div class="content-value">55 dB(A)</div></div>',
-                beskrivelse: '<div class="content-item"><div class="content-label">Maksimal støy</div><div class="content-value">60 dB(A)</div></div>'
-            },
-            7: {
-                title: 'Arealbruk',
-                plankart: '<div class="content-item"><div class="content-label">Arealbruk</div><div class="content-value">Ikke angitt</div></div>',
-                bestemmelse: '',
-                beskrivelse: '<div class="content-item"><div class="content-label">Arealbruk</div><div class="content-value">Blandet bolig og næring</div></div>'
-            },
-            8: {
-                title: 'Kulturminner',
-                plankart: '<div class="content-item"><div class="content-label">Status</div><div class="content-value">Kulturdenkmal markert</div></div>',
-                bestemmelse: '',
-                beskrivelse: '<div class="content-item"><div class="content-label">Status</div><div class="content-value">Ikke nevnt i beskrivelse</div></div>'
-            }
-        };
-
-        function selectAvvik(id) {
-            // Deaktiver alle
-            document.querySelectorAll('.avvik-list-item').forEach(item => {
-                item.classList.remove('active');
-            });
-
-            // Aktiver valgt
-            event.target.closest('.avvik-list-item').classList.add('active');
-
-            // Oppdater innhold
-            const data = avvikData[id];
-            document.getElementById('plankart-content').innerHTML = data.plankart || '<p style="color: #999;">Ingen informasjon</p>';
-            document.getElementById('bestemmelse-content').innerHTML = data.bestemmelse || '<p style="color: #999;">Ingen informasjon</p>';
-            document.getElementById('beskrivelse-content').innerHTML = data.beskrivelse || '<p style="color: #999;">Ingen informasjon</p>';
-
-            // Vis innhold
-            document.getElementById('content').style.display = 'block';
-            document.getElementById('no-selection').style.display = 'none';
-        }
-    </script>
 </body>
 
 </html>

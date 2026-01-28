@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
 
@@ -22,12 +22,32 @@ def upload_file():
         
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
         
-        # Check if file already exists
+        #sjekker om filen allerede eksisterer
         if not os.path.exists(file_path):
-            #lagrer filen i upload-mappen
+            #lagrer filen i upload
             file.save(file_path)
     
     return 'Files uploaded successfully', 200
+
+@app.route('/files', methods=['GET'])
+def get_files():
+    files = os.listdir(app.config['UPLOAD_FOLDER'])
+    return jsonify(files)
+
+@app.route('/file-content', methods=['GET'])
+def get_file_content():
+    files_list = os.listdir(app.config['UPLOAD_FOLDER'])
+    file_contents = {}
+    
+    for filename in files_list:
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                file_contents[filename] = f.read()
+        except:
+            file_contents[filename] = f'[Kunne ikke lese fil: {filename}]'
+    
+    return jsonify(file_contents)
 
 # Kjør appen
 if __name__ == '__main__':

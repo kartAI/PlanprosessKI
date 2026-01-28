@@ -7,10 +7,7 @@ fileInputs.forEach(input => {
         nameElement.style.color = e.target.files[0] ? '#667eea' : '#999';
     });
 });
-if (response.ok) {
-    alert('Filene ble lastet opp!');
-    window.location.href = 'avvik.html';
-}
+
 
 // Håndter skjema-innsending
 const uploadForm = document.getElementById('uploadForm');
@@ -41,6 +38,7 @@ uploadForm.addEventListener('submit', async function(e) {
         
         if (response.ok) {
             alert('Filene ble lastet opp!');
+            window.location.href = 'http://127.0.0.1:5500/avvik-analyse-poc1/frontend/avvik.html';
         } else {
             const error = await response.text();
             alert('Feil ved opplasting: ' + error);
@@ -50,3 +48,5 @@ uploadForm.addEventListener('submit', async function(e) {
         console.error('Error:', error);
     }
 });
+
+
