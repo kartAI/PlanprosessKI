@@ -9,7 +9,7 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     line-height: 1.6;
     color: #333;
-    background: linear-gradient(135deg, #034E31 0%, #24BD76 100%);
+    background: #2E2D30;
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -19,7 +19,7 @@ body {
 
 /* Hoved container */
 .container {
-    background: white;
+    background: #F5F5F5;
     border-radius: 20px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     padding: 40px;
@@ -65,18 +65,17 @@ p {
 
 /* Upload bokser */
 .upload-box {
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background-color:  #F2F2F2;
     border-radius: 15px;
     padding: 30px 20px;
     text-align: center;
     transition: all 0.3s ease;
-    border: 2px dashed transparent;
+    border: 3px solid #24BD76;
 }
 
 .upload-box:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(36, 189, 118, 0.2);
-    border-color: #034E31;
+    border: 3px solid #034E31;
 }
 
 .upload-icon {
@@ -114,8 +113,8 @@ p {
 }
 
 .file-name {
-    font-size: 0.9rem;
-    color: #999;
+    font-size: 1rem;
+    color: #2E2D30;
     margin-top: 10px;
     min-height: 20px;
     word-break: break-word;
@@ -124,7 +123,7 @@ p {
 /* Analyse knapp */
 .analyse-btn {
     width: 100%;
-    background: linear-gradient(135deg, #24BD76 0%, #034E31 100%);
+    background-color: #034E31;
     color: white;
     border: none;
     padding: 18px 40px;
@@ -133,12 +132,12 @@ p {
     border-radius: 30px;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    
 }
 
 .analyse-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+    transform: scale(1.05);
+
 }
 
 .analyse-btn:active {
@@ -207,63 +206,14 @@ p {
 }
 
 .sidebar {
-    background: #f8f9fa;
+    background: #C8EBDC;
     border-right: 1px solid #e0e0e0;
     overflow-y: auto;
     padding: 20px 0;
     max-height: calc(100vh - 200px);
 }
 
-.avvik-list-item {
-    padding: 12px 15px;
-    margin: 5px 10px;
-    background: white;
-    border-left: 4px solid transparent;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 0.9rem;
-    border: 1px solid transparent;
-}
 
-.avvik-list-item:hover {
-    background: #fff5f5;
-    border-color: #e0e0e0;
-}
-
-.avvik-list-item.active {
-    background: #667eea;
-    color: white;
-    border-left-color: #667eea;
-}
-
-.avvik-list-item.high {
-    border-left-color: #d32f2f;
-}
-
-.avvik-list-item.medium {
-    border-left-color: #ff9800;
-}
-
-.avvik-list-item.low {
-    border-left-color: #388e3c;
-}
-
-.avvik-list-item.active.high,
-.avvik-list-item.active.medium,
-.avvik-list-item.active.low {
-    border-left-color: white;
-}
-
-.avvik-title-small {
-    font-weight: 600;
-    margin-bottom: 3px;
-}
-
-.avvik-severity-small {
-    font-size: 0.75rem;
-    opacity: 0.8;
-}
 
 .content-area {
     padding: 30px;
@@ -285,12 +235,12 @@ p {
 }
 
 .document-container h3 {
-    color: #667eea;
+    color: #2E2D30;
     font-size: 1.1rem;
     margin: 0 0 15px 0;
     font-weight: 600;
     padding-bottom: 10px;
-    border-bottom: 2px solid #667eea;
+    border-bottom: 2px solid #2E2D30;
 }
 
 .document-content {
