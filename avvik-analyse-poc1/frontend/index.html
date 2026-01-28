@@ -9,36 +9,40 @@
 
 <body>
 <div class="container">
-<h1>Avvik analyse</h1>
+<h1>Last opp dokumenter</h1>
 <p>Sjekk avvik mellom plankart, planbestemmelse og planbeskrivelse</p>
 
 <div class="upload-grid">
 <div class="upload-box">
-<div class="upload-icon">📄</div>
-<h3>Planprosess</h3>
-<input type="file" id="planprosess" accept=".pdf,.doc,.docx">
-<label for="planprosess" class="upload-label">Velg fil</label>
-<p class="file-name" id="planprosess-name">Ingen fil valgt</p>
+<div class="upload-icon"></div>
+<h3>Planbestemmelse</h3>
+<input type="file" id="planbestemmelse" accept=".pdf">
+<label for="planbestemmelse" class="upload-label">Velg fil</label>
+<p class="file-name" id="planbestemmelse-name">Ingen fil valgt</p>
 </div>
 
 <div class="upload-box">
-<div class="upload-icon">📋</div>
+<div class="upload-icon"></div>
 <h3>Planbeskrivelse</h3>
-<input type="file" id="planbeskrivelse" accept=".pdf,.doc,.docx">
+<input type="file" id="planbeskrivelse" accept=".pdf">
 <label for="planbeskrivelse" class="upload-label">Velg fil</label>
 <p class="file-name" id="planbeskrivelse-name">Ingen fil valgt</p>
 </div>
 
 <div class="upload-box">
-<div class="upload-icon">🗺️</div>
+<div class="upload-icon"></div>
 <h3>Plankart</h3>
-<input type="file" id="plankart" accept=".pdf,.png,.jpg,.jpeg">
+<input type="file" id="plankart" accept=".pdf">
 <label for="plankart" class="upload-label">Velg fil</label>
 <p class="file-name" id="plankart-name">Ingen fil valgt</p>
 </div>
 </div>
 
-<button class="analyse-btn">Analyser dokumenter</button>
+
+
+
+
+<button class="analyse-btn">Sjekk avvik</button>
 </div>
 
 <script>
