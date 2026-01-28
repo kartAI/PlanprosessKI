@@ -38,7 +38,7 @@ uploadForm.addEventListener('submit', async function(e) {
         
         if (response.ok) {
             alert('Filene ble lastet opp!');
-            window.location.href = 'http://127.0.0.1:5500/avvik-analyse-poc1/frontend/avvik.html';
+            window.location.href = 'avvik.html';
         } else {
             const error = await response.text();
             alert('Feil ved opplasting: ' + error);
