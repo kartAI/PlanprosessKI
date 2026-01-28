@@ -12,50 +12,36 @@
 <h1>Last opp dokumenter</h1>
 <p>Sjekk avvik mellom plankart, planbestemmelse og planbeskrivelse</p>
 
-<div class="upload-grid">
-<div class="upload-box">
-<div class="upload-icon"></div>
-<h3>Planbestemmelse</h3>
-<input type="file" id="planbestemmelse" accept=".pdf">
-<label for="planbestemmelse" class="upload-label">Velg fil</label>
-<p class="file-name" id="planbestemmelse-name">Ingen fil valgt</p>
+<form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+    <div class="upload-grid">
+
+        <div class="upload-box">
+            <h3>Planbestemmelse</h3>
+            <input type="file" name="planbestemmelse" id="planbestemmelse" accept=".pdf">
+            <label for="planbestemmelse" class="upload-label">Velg fil</label>
+            <p class="file-name" id="planbestemmelse-name">Ingen fil valgt</p>
+        </div>
+
+        <div class="upload-box">
+            <h3>Planbeskrivelse</h3>
+            <input type="file" name="planbeskrivelse" id="planbeskrivelse" accept=".pdf">
+            <label for="planbeskrivelse" class="upload-label">Velg fil</label>
+            <p class="file-name" id="planbeskrivelse-name">Ingen fil valgt</p>
+        </div>
+
+        <div class="upload-box">
+            <h3>Plankart</h3>
+            <input type="file" name="plankart" id="plankart" accept=".pdf">
+            <label for="plankart" class="upload-label">Velg fil</label>
+            <p class="file-name" id="plankart-name">Ingen fil valgt</p>
+        </div>
+
+    </div>
+
+    <a href="avvik.html" class="analyse-btn">Sjekk avvik</a>
+</form>
 </div>
-
-<div class="upload-box">
-<div class="upload-icon"></div>
-<h3>Planbeskrivelse</h3>
-<input type="file" id="planbeskrivelse" accept=".pdf">
-<label for="planbeskrivelse" class="upload-label">Velg fil</label>
-<p class="file-name" id="planbeskrivelse-name">Ingen fil valgt</p>
-</div>
-
-<div class="upload-box">
-<div class="upload-icon"></div>
-<h3>Plankart</h3>
-<input type="file" id="plankart" accept=".pdf">
-<label for="plankart" class="upload-label">Velg fil</label>
-<p class="file-name" id="plankart-name">Ingen fil valgt</p>
-</div>
-</div>
-
-
-
-
-
-<button class="analyse-btn">Sjekk avvik</button>
-</div>
-
-<script>
-const fileInputs = document.querySelectorAll('input[type="file"]');
-fileInputs.forEach(input => {
-input.addEventListener('change', function(e) {
-const fileName = e.target.files[0]?.name || 'Ingen fil valgt';
-const nameElement = document.getElementById(e.target.id + '-name');
-nameElement.textContent = fileName;
-nameElement.style.color = e.target.files[0] ? '#667eea' : '#999';
-});
-});
-</script>
+<script src="js/script.js"></script>
 </body>
 
 </html>
