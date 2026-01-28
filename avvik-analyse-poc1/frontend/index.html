@@ -1,12 +1,57 @@
 <!DOCTYPE html>
-<html>
+<html lang="no">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Avvik analyse</title>
+<link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
+<div class="container">
 <h1>Avvik analyse</h1>
 <p>Sjekk avvik mellom plankart, planbestemmelse og planbeskrivelse</p>
+
+<div class="upload-grid">
+<div class="upload-box">
+<div class="upload-icon">📄</div>
+<h3>Planprosess</h3>
+<input type="file" id="planprosess" accept=".pdf,.doc,.docx">
+<label for="planprosess" class="upload-label">Velg fil</label>
+<p class="file-name" id="planprosess-name">Ingen fil valgt</p>
+</div>
+
+<div class="upload-box">
+<div class="upload-icon">📋</div>
+<h3>Planbeskrivelse</h3>
+<input type="file" id="planbeskrivelse" accept=".pdf,.doc,.docx">
+<label for="planbeskrivelse" class="upload-label">Velg fil</label>
+<p class="file-name" id="planbeskrivelse-name">Ingen fil valgt</p>
+</div>
+
+<div class="upload-box">
+<div class="upload-icon">🗺️</div>
+<h3>Plankart</h3>
+<input type="file" id="plankart" accept=".pdf,.png,.jpg,.jpeg">
+<label for="plankart" class="upload-label">Velg fil</label>
+<p class="file-name" id="plankart-name">Ingen fil valgt</p>
+</div>
+</div>
+
+<button class="analyse-btn">Analyser dokumenter</button>
+</div>
+
+<script>
+const fileInputs = document.querySelectorAll('input[type="file"]');
+fileInputs.forEach(input => {
+input.addEventListener('change', function(e) {
+const fileName = e.target.files[0]?.name || 'Ingen fil valgt';
+const nameElement = document.getElementById(e.target.id + '-name');
+nameElement.textContent = fileName;
+nameElement.style.color = e.target.files[0] ? '#667eea' : '#999';
+});
+});
+</script>
 </body>
 
 </html>
