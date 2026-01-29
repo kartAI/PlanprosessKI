@@ -55,9 +55,9 @@ result = compare_documents(
     plan_text_1,
     plan_text_2,
     plan_text_3,
-    doc1_name="Planbeskrivelse3-Flere-avvik-med-bestemmelse",
-    doc2_name="Reguleringsbestemmelser",
-    doc3_name="Plankart (JSON)"
+    doc1_name="Planbeskrivelse",
+    doc2_name="Planbestemmelser",
+    doc3_name="Plankart"
 )
 
 print("\n=== SAMMENLIGNINGSRESULTAT ===")
