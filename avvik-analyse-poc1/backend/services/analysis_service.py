@@ -19,16 +19,22 @@ Oppgave:
 Trekk ut følgende informasjon hvis den finnes i teksten:
 - energiforbruk
 - arealbruk
-
+- maks_høyde_kote
+- sykkelparkeringsplasser
 Regler:
 - Hvis noe ikke finnes i teksten, sett verdien til null.
 - Returner svaret KUN som gyldig JSON.
 
 Format:
-{{
-  "energiforbruk": "...",
-  "arealbruk": "..."
-}}
+{
+    {
+    "energiforbruk": "...",
+    "arealbruk": "...",
+    "maks_høyde_kote": "...",
+    "sykkelparkeringsplasser": "...",
+    "hensynssone": "..."
+    }
+}
 
 Her er teksten:
 {plan_text}
