@@ -1,6 +1,17 @@
-from openai import OpenAI
+import os
+import json
+from dotenv import load_dotenv
+from openai import AzureOpenAI
 
-client = OpenAI()
+load_dotenv()
+
+deployment = "gpt-4.1"
+
+client = AzureOpenAI(
+    api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
+    api_version=os.getenv("AZURE_OPENAI_API_VERSION")
+)
 
 def compare_documents(doc1_text, doc2_text, doc3_text, doc1_name="Dokument 1", doc2_name="Dokument 2", doc3_name="Dokument 3"):
     """
@@ -27,9 +38,9 @@ Gi en strukturert analyse med konkrete eksempler fra dokumentene.
 """
     
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model=deployment,
         messages=[
-            {"role": "system", "content": "Du er en juridisk/teknisk dokumentanalytiker som spesialiserer seg på å identifisere inkonsistenser."},
+            {"role": "system", "content": "Du er en juridisk/teknisk dokumentanalytiker som spesialiserer seg på å identifisere avvik."},
             {"role": "user", "content": prompt}
         ],
         temperature=0.3
