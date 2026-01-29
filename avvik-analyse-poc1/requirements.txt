@@ -1,4 +1,7 @@
 flask==3.1.2
+flask-cors==3.0.10
 pypdf>=3.0.0
 openai
 dotenv
+
+

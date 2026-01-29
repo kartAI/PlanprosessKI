@@ -22,9 +22,9 @@ def upload_file():
         
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
         
-        # Check if file already exists
+        #sjekker om filen allerede eksisterer
         if not os.path.exists(file_path):
-            #lagrer filen i upload-mappen
+            #lagrer filen i upload
             file.save(file_path)
     
     return 'Files uploaded successfully', 200
