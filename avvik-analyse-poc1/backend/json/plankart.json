@@ -1,0 +1,44 @@
+{
+    "plan": {
+    "navn": "Detaljregulering for Gyldenløves gate 70",
+    "kommune": "Kristiansand",
+    "arealplan_id": "1626"
+    },
+    "plankart": {
+        "felt": [
+            {
+            "id": "T",
+            "formål": "Bebyggelse og anlegg",
+            "lovhjemmel": "PBL2008 §12-5 nr.1",
+            "underformål": "Tjenesteyting",
+            "maks_høyde_kote": "k+12.7",
+            "hensynssone": "H570"
+            }
+        ],
+
+"eiendommer": [
+        "150/422"
+],
+    "symboler": {
+        "linjer": [
+            "Planens begrensning",
+            "Formålsgrense",
+            "Bygg/kulturminner som skal bevares",
+            "Angitt hensynsgrense",
+            "Byggegrense"
+        ]
+    }
+
+    },
+    "hensynssoner": [
+    {
+        "kode": "H570",
+        "type": "Bevaring kulturmiljø",
+        "beskrivelse": "Sikre bevaring og utbedring av verneverdig bebyggelse og god tilpasning av nye tiltak"
+    }
+    ],
+    "metadata": {
+        "utarbeidet_av": "Plan og bygg, Kristiansand kommune",
+        "dato_utarbeidet": "08.05.2025"
+    }
+}
