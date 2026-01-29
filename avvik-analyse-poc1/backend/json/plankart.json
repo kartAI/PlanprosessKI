@@ -16,26 +16,26 @@
             }
         ],
 
-"eiendommer": [
-        "150/422"
-],
-    "symboler": {
-        "linjer": [
-            "Planens begrensning",
-            "Formålsgrense",
-            "Bygg/kulturminner som skal bevares",
-            "Angitt hensynsgrense",
-            "Byggegrense"
-        ]
-    }
-
+        "eiendommer": [
+            "150/422"
+        ],
+        "symboler": {
+            "linjer": [
+                "Planens begrensning",
+                "Formålsgrense",
+                "Bygg/kulturminner som skal bevares",
+                "Angitt hensynsgrense",
+                "Byggegrense"
+            ]
+        }
     },
     "hensynssoner": [
-    {
-        "kode": "H570",
-        "type": "Bevaring kulturmiljø",
-        "beskrivelse": "Sikre bevaring og utbedring av verneverdig bebyggelse og god tilpasning av nye tiltak"
-    }
+        {
+            "kode": "H570",
+            "type": "Bevaring kulturmiljø",
+            "beskrivelse": "Sikre bevaring og utbedring av verneverdig bebyggelse og god tilpasning av nye tiltak"
+        }
+
     ],
     "metadata": {
         "utarbeidet_av": "Plan og bygg, Kristiansand kommune",
