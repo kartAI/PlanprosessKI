@@ -18,19 +18,28 @@ def compare_documents(doc1_text, doc2_text, doc3_text, doc1_name="Planbestemmels
     Sammenligner tre dokumenter og returnerer avvik og manglende informasjon.
     """
     
-    prompt = f"""Du er en ekspert på dokumentsammenlikning. Sammenlign følgende tre dokumenter og lag TO tabeller.
+    prompt = f"""Du er en ekspert på dokumentsammenlikning. Sammenlign følgende tre dokumenter.
+
+DOKUMENTNAVN:
+- planbestemmelse = {doc1_name}
+- planbeskrivelse = {doc2_name}
+- plankart = {doc3_name}
 
 KRAV TIL SVAR:
 
-
 TABELL - MANGLER OG AVVIK:
 Kolonner: Element | Mangler i | Avvik | Notat
-- Mangler i: Hvilke dokumenter mangler informasjonen?
-- Avvik: Hva er de faktiske ulikhetene/motstridelsene?
-- Notat: Konsekvens eller merknad (kort)
+- Element: Hvilke punkter gjelder det?
+- Mangler i: Hvilke dokumenter som mangler disse elementene?
+- Avvik: Konkrete avvik mellom dokumentene?
+- Notat: Kort konsekvens eller merknad
+
+REGLER:
 - Bruk bare Markdown-tabellformat
-- Hold svar kort og presis
-- Avslutt med én setning oppsummering etter tabellene
+- Hold svar kort og presist
+- Ta kun med elementer der det faktisk finnes avvik eller mangler
+- Ikke ta med elementer som er like i alle dokumenter
+- Avslutt med en kort oppsummering etter tabellen
 
 DOKUMENT 1 ({doc1_name}):
 {doc1_text[:3000]}
@@ -45,7 +54,7 @@ DOKUMENT 3 ({doc3_name}):
     response = client.chat.completions.create(
         model=deployment,
         messages=[
-            {"role": "system", "content": "Du er en juridisk/teknisk dokumentanalytiker som spesialiserer seg på å identifisere avvik. Returner alltid to Markdown-tabeller som spesifisert."},
+            {"role": "system", "content": "Du er en juridisk/teknisk dokumentanalytiker som spesialiserer seg på å identifisere avvik. Returner alltid en Markdown-tabell som spesifisert."},
             {"role": "user", "content": prompt}
         ],
         temperature=0.3,

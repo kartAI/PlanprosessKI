@@ -21,6 +21,7 @@ Trekk ut følgende informasjon hvis den finnes i teksten:
 - arealbruk
 - maks_høyde_kote
 - sykkelparkeringsplasser
+- henssynssone
 
 Regler:
 - Hvis noe ikke finnes i teksten, sett verdien til null.
