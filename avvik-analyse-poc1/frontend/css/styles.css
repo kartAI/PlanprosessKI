@@ -249,6 +249,101 @@ p {
     line-height: 1.6;
 }
 
+.analysis-container {
+    margin-top: 30px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+    border: 2px solid #e0e0e0;
+}
+
+.analysis-container h2 {
+    color: #2E2D30;
+    font-size: 1.2rem;
+    margin: 0 0 15px 0;
+    font-weight: 600;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #2E2D30;
+}
+
+.analysis-output pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.analysis-output .section-title {
+    color: #034E31;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.analysis-output p {
+    font-size: 0.95rem;
+    color: #333;
+    line-height: 1.6;
+    margin: 8px 0;
+}
+
+.analysis-output p.error {
+    color: #d32f2f;
+    font-weight: 500;
+}
+
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    margin: 15px 0;
+    background: white;
+}
+
+.comparison-table th {
+    background: #034E31;
+    color: white;
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    border: 1px solid #2E2D30;
+}
+
+.comparison-table td {
+    border: 1px solid #ddd;
+    padding: 10px 12px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.comparison-table tbody tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
+.comparison-table tbody tr:hover {
+    background: #e8f5e9;
+}
+
+.analysis-output table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.analysis-output th,
+.analysis-output td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.analysis-output th {
+    background: #e9ecef;
+    font-weight: 600;
+}
+
 .content-item {
     margin-bottom: 15px;
     padding: 10px;
