@@ -1,13 +1,20 @@
-const fileInputs = document.querySelectorAll('input[type="file"]');
+ const fileInputs = document.querySelectorAll('input[type="file"]');
 fileInputs.forEach(input => {
     input.addEventListener('change', function(e) {
-        const fileName = e.target.files[0]?.name || 'Ingen fil valgt';
+        const files = e.target.files;
         const nameElement = document.getElementById(e.target.id + '-name');
-        nameElement.textContent = fileName;
-        nameElement.style.color = e.target.files[0] ? '#667eea' : '#999';
+        if (!files || files.length === 0) {
+            nameElement.textContent = 'Ingen fil valgt';
+            nameElement.style.color = '#999';
+        } else if (files.length === 1) {
+            nameElement.textContent = files[0].name;
+            nameElement.style.color = '#667eea';
+        } else {
+            nameElement.textContent = files.length + ' filer valgt';
+            nameElement.style.color = '#667eea';
+        }
     });
 });
-
 
 // Håndter skjema-innsending
 const uploadForm = document.getElementById('uploadForm');
@@ -15,17 +22,17 @@ uploadForm.addEventListener('submit', async function(e) {
     e.preventDefault();
     
     const formData = new FormData();
-    const innspill = document.getElementById('innspill').files;
-    
-    // Sjekk at alle filer er valgt
-    if (!innspill) {
-        alert('Vennligst velg en fil');
+    const files = document.getElementById('innspill').files;
+
+    // Sjekk at minst én fil er valgt
+    if (!files || files.length === 0) {
+        alert('Vennligst velg minst én fil');
         return;
     }
-    
-    // Legg alle filer i FormData med navn som matcher backend
+
+    // Legg alle filer i FormData med navn 'files' slik backend forventer
     for (let i = 0; i < files.length; i++) {
-        formData.append('files', files[i]); 
+        formData.append('files', files[i]);
     }
 
     try {
@@ -46,5 +53,3 @@ uploadForm.addEventListener('submit', async function(e) {
         console.error('Error:', error);
     }
 });
-
-
