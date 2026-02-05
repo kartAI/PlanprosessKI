@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
 
@@ -12,9 +12,8 @@ def upload():
     files = request.files.getlist("files")
     
     for file in files:
-    path = os.path.join(app.config["UPLOAD_FOLDER"], file.filename)
-    file.save(path)
-
+        path = os.path.join(app.config["UPLOAD_FOLDER"], file.filename)
+        file.save(path)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
