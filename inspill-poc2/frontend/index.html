@@ -1,11 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="no">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Avvik analyse</title>
+<link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
-    
+<div class="container">
+<h1>Last opp innspill</h1>
+
+<form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+    <div class="upload-grid">
+        <div class="upload-box">
+            <h3>Innspill</h3>
+            <input type="file" name="innspill" id="innspill" accept=".pdf" multiple>
+            <label for="inspill" class="upload-label">Velg fil</label>
+            <p class="file-name" id="innspill-name">Ingen fil valgt</p>
+        </div>
+
+    </div>
+
+    <button type="submit" class="analyse-btn">Oppsummer innspill</button>
+</form>
+</div>
+<script src="js/script.js"></script>
 </body>
+
 </html>
