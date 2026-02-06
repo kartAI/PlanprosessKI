@@ -33,7 +33,8 @@ if (uploadForm) {
         const files = document.getElementById('innspill').files;
 
         if (!files || files.length === 0) {
-            alert('Vennligst velg minst én fil');
+            // Ikke-blokkerende tilbakemelding
+            showBanner('Vennligst velg minst én fil', 'error');
             return;
         }
 
@@ -48,14 +49,16 @@ if (uploadForm) {
             });
             
             if (response.ok) {
-                alert('Filene ble lastet opp!');
-                window.location.href = 'oppsummering.html';
+                // Ikke-blokkerende melding; redirect umiddelbart
+                showBanner('Opplasting fullført — sender til oppsummering...', 'success');
+                window.location.href = 'oppsummering.html?t=' + Date.now();
             } else {
                 const error = await response.text();
-                alert('Feil ved opplasting: ' + error);
+                showBanner('Feil ved opplasting: ' + error, 'error');
+                console.error('Upload error:', error);
             }
         } catch (error) {
-            alert('Kunne ikke koble til serveren. Er Flask-serveren kjørende?');
+            showBanner('Kunne ikke koble til serveren. Er Flask-serveren kjørende?', 'error');
             console.error('Error:', error);
         }
     });
@@ -64,8 +67,15 @@ if (uploadForm) {
 // Hent dokumenter fra backend - kun på oppsummering.html
 async function loadDocuments() {
     try {
+
+        // Bruk no-store for å sikre at vi ikke får cached resultat
+        const response = await fetch('http://localhost:5000/documents?t=' + Date.now(), {
+            method: 'GET',
+            cache: 'no-store'
+
         const response = await fetch(`${API_BASE}/documents`, {
             method: 'GET'
+
         });
         const documents = await response.json();
         
@@ -82,6 +92,26 @@ async function loadDocuments() {
 
 // Kall funksjonen når siden lastes
 document.addEventListener('DOMContentLoaded', loadDocuments);
+
+
+// Enkel ikke-blokkerende bannermelding
+function showBanner(message, type = 'info') {
+    const existing = document.getElementById('upload-banner');
+    if (existing) existing.remove();
+
+    const banner = document.createElement('div');
+    banner.id = 'upload-banner';
+    banner.className = 'upload-banner upload-banner--' + (type || 'info');
+    banner.textContent = message;
+
+    document.body.appendChild(banner);
+    setTimeout(() => {
+        // fade out then remove for a smooth UX
+        banner.style.opacity = '0';
+        banner.style.transform = 'translateX(-50%) translateY(-6px)';
+        setTimeout(() => banner.remove(), 250);
+    }, 3000);
+}
 
 //hent analyse
 window.onload = async function () {
