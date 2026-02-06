@@ -88,25 +88,14 @@ function showBanner(message, type = 'info') {
 
     const banner = document.createElement('div');
     banner.id = 'upload-banner';
+    banner.className = 'upload-banner upload-banner--' + (type || 'info');
     banner.textContent = message;
-    banner.style.position = 'fixed';
-    banner.style.top = '20px';
-    banner.style.left = '50%';
-    banner.style.transform = 'translateX(-50%)';
-    banner.style.padding = '10px 18px';
-    banner.style.borderRadius = '6px';
-    banner.style.zIndex = 10000;
-    banner.style.color = '#fff';
-    banner.style.fontWeight = '600';
-    banner.style.boxShadow = '0 4px 12px rgba(0,0,0,0.12)';
-    banner.style.opacity = '0.95';
-
-    if (type === 'error') banner.style.background = '#d32f2f';
-    else if (type === 'success') banner.style.background = '#034E31';
-    else banner.style.background = '#333';
 
     document.body.appendChild(banner);
     setTimeout(() => {
-        banner.remove();
+        // fade out then remove for a smooth UX
+        banner.style.opacity = '0';
+        banner.style.transform = 'translateX(-50%) translateY(-6px)';
+        setTimeout(() => banner.remove(), 250);
     }, 3000);
 }
