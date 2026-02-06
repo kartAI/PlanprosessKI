@@ -26,7 +26,8 @@ if (uploadForm) {
         const files = document.getElementById('innspill').files;
 
         if (!files || files.length === 0) {
-            alert('Vennligst velg minst én fil');
+            // Ikke-blokkerende tilbakemelding
+            showBanner('Vennligst velg minst én fil', 'error');
             return;
         }
 
@@ -41,14 +42,16 @@ if (uploadForm) {
             });
             
             if (response.ok) {
-                alert('Filene ble lastet opp!');
-                window.location.href = 'oppsummering.html';
+                // Ikke-blokkerende melding; redirect umiddelbart
+                showBanner('Opplasting fullført — sender til oppsummering...', 'success');
+                window.location.href = 'oppsummering.html?t=' + Date.now();
             } else {
                 const error = await response.text();
-                alert('Feil ved opplasting: ' + error);
+                showBanner('Feil ved opplasting: ' + error, 'error');
+                console.error('Upload error:', error);
             }
         } catch (error) {
-            alert('Kunne ikke koble til serveren. Er Flask-serveren kjørende?');
+            showBanner('Kunne ikke koble til serveren. Er Flask-serveren kjørende?', 'error');
             console.error('Error:', error);
         }
     });
@@ -57,8 +60,10 @@ if (uploadForm) {
 // Hent dokumenter fra backend - kun på oppsummering.html
 async function loadDocuments() {
     try {
-        const response = await fetch('http://localhost:5000/documents', {
-            method: 'GET'
+        // Bruk no-store for å sikre at vi ikke får cached resultat
+        const response = await fetch('http://localhost:5000/documents?t=' + Date.now(), {
+            method: 'GET',
+            cache: 'no-store'
         });
         const documents = await response.json();
         
@@ -75,3 +80,33 @@ async function loadDocuments() {
 
 // Kall funksjonen når siden lastes
 document.addEventListener('DOMContentLoaded', loadDocuments);
+
+// Enkel ikke-blokkerende bannermelding
+function showBanner(message, type = 'info') {
+    const existing = document.getElementById('upload-banner');
+    if (existing) existing.remove();
+
+    const banner = document.createElement('div');
+    banner.id = 'upload-banner';
+    banner.textContent = message;
+    banner.style.position = 'fixed';
+    banner.style.top = '20px';
+    banner.style.left = '50%';
+    banner.style.transform = 'translateX(-50%)';
+    banner.style.padding = '10px 18px';
+    banner.style.borderRadius = '6px';
+    banner.style.zIndex = 10000;
+    banner.style.color = '#fff';
+    banner.style.fontWeight = '600';
+    banner.style.boxShadow = '0 4px 12px rgba(0,0,0,0.12)';
+    banner.style.opacity = '0.95';
+
+    if (type === 'error') banner.style.background = '#d32f2f';
+    else if (type === 'success') banner.style.background = '#034E31';
+    else banner.style.background = '#333';
+
+    document.body.appendChild(banner);
+    setTimeout(() => {
+        banner.remove();
+    }, 3000);
+}
