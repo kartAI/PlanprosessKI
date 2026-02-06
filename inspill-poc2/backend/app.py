@@ -107,7 +107,7 @@ def analysis():
         all_texts.append(text)
 
 
-     # 2. Automatisk kategorisering
+    # 2. Automatisk kategorisering
     auto = generate_categories(all_texts)
 
     # 3. Lag kategori → dokumentliste (tekst + filnavn)
