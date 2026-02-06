@@ -32,7 +32,7 @@ Oppsummer følgende høringsinnspill kort, presist og nøytralt:
 
 
 # ---------------------------------------------------------
-# 1. Automatisk kategorisering
+# 2. Automatisk kategorisering
 # ---------------------------------------------------------
 def generate_categories(all_texts: list[str]):
     joined = "\n\n---\n\n".join(all_texts)
@@ -47,7 +47,6 @@ Returner KUN gyldig JSON i dette formatet:
     {{
       "navn": "...",
       "beskrivelse": "...",
-      "filnavn": "..."
     }}
   ]
 }}
@@ -65,13 +64,19 @@ Her er innspillene:
     raw = response.choices[0].message.content
 
     try:
-        return json.loads(raw)
-    except:
-        return {"error": "Ugyldig JSON", "raw": raw}
-
+        data = json.loads(raw)
+        if "kategorier" not in data:
+            raise ValueError("KI returnerte ikke 'kategorier'")
+        return data
+    except Exception as e:
+        return {
+            "error": "Ugyldig JSON fra KI",
+            "exception": str(e),
+            "raw": raw
+        }
 
 # ---------------------------------------------------------
-# 2. Felles oppsummering av ALLE dokumenter
+# 3. Felles oppsummering av ALLE dokumenter
 # ---------------------------------------------------------
 def summarize_all_documents(summaries: list[str]) -> str:
     joined = "\n\n---\n\n".join(summaries)
@@ -98,7 +103,7 @@ Her er oppsummeringene:
 
 
 # ---------------------------------------------------------
-# 3. Oppsummering per kategori
+# 4. Oppsummering per kategori
 # ---------------------------------------------------------
 def summarize_category(name: str, texts: list[str]) -> str:
     if not texts:
