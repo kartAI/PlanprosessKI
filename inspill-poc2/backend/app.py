@@ -97,13 +97,15 @@ def analysis():
      # 2. Automatisk kategorisering
     auto = generate_categories(all_texts)
 
-    # 3. Lag kategori → dokumentliste
-    category_map = {cat["navn"]: [] for cat in auto["kategorier"]}
+    # 3. Lag kategori → dokumentliste (tekst + filnavn)
+    category_texts = {cat["navn"]: [] for cat in auto["kategorier"]}
+    category_documents = {cat["navn"]: [] for cat in auto["kategorier"]}
 
     for doc in documents:
         for cat in auto["kategorier"]:
             if any(word.lower() in doc["text"].lower() for word in cat["navn"].split()):
-                category_map[cat["navn"]].append(doc["text"])
+                category_texts[cat["navn"]].append(doc["text"])
+                category_documents[cat["navn"]].append(doc["filename"])
 
     # 4. Felles oppsummering
     combined_summary = summarize_all_documents([d["summary"] for d in documents])
@@ -111,13 +113,14 @@ def analysis():
     # 5. Oppsummering per kategori
     category_summaries = {
         name: summarize_category(name, texts)
-        for name, texts in category_map.items()
+        for name, texts in category_texts.items()
     }
     # 6. Returner alt til frontend
     return jsonify({
         "documents": documents,
         "auto_categories": auto,
-        "category_distribution": category_map,
+        "category_distribution": category_texts,
+        "category_documents": category_documents,
         "combined_summary": combined_summary,
         "category_summaries": category_summaries
     }), 200
