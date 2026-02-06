@@ -13,6 +13,24 @@ client = AzureOpenAI(
 
 deployment = "gpt-4.1"
 
+# 1. Oppsummer ett dokument
+# ---------------------------------------------------------
+def summarize_single_document(text: str) -> str:
+    prompt = f"""
+Oppsummer følgende høringsinnspill kort, presist og nøytralt:
+
+{text}
+"""
+
+    response = client.chat.completions.create(
+        model=deployment,
+        messages=[{"role": "user", "content": prompt}],
+        max_completion_tokens=300
+    )
+
+    return response.choices[0].message.content.strip()
+
+
 # ---------------------------------------------------------
 # 1. Automatisk kategorisering
 # ---------------------------------------------------------
@@ -27,7 +45,7 @@ Returner KUN gyldig JSON i dette formatet:
 {{
   "kategorier": [
     {{
-      "kategori": "...",
+      "navn": "...",
       "beskrivelse": "...",
       "filnavn": "..."
     }}
@@ -53,7 +71,7 @@ Her er innspillene:
 
 
 # ---------------------------------------------------------
-# 2. Felles oppsummering av alle dokumenter
+# 2. Felles oppsummering av ALLE dokumenter
 # ---------------------------------------------------------
 def summarize_all_documents(summaries: list[str]) -> str:
     joined = "\n\n---\n\n".join(summaries)
