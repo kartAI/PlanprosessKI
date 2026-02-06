@@ -1,3 +1,10 @@
+// Velger riktig backend-base URL for alle maskiner
+const API_BASE =
+  window.location.hostname === "127.0.0.1"
+    ? "http://127.0.0.1:5000"
+    : "http://localhost:5000";
+
+
 const fileInputs = document.querySelectorAll('input[type="file"]');
 fileInputs.forEach(input => {
     input.addEventListener('change', function(e) {
@@ -35,7 +42,7 @@ if (uploadForm) {
         }
 
         try {
-            const response = await fetch('http://localhost:5000/upload', {
+            const response = await fetch(`${API_BASE}/upload`, {
                 method: 'POST',
                 body: formData
             });
@@ -57,7 +64,7 @@ if (uploadForm) {
 // Hent dokumenter fra backend - kun på oppsummering.html
 async function loadDocuments() {
     try {
-        const response = await fetch('http://localhost:5000/documents', {
+        const response = await fetch(`${API_BASE}/documents`, {
             method: 'GET'
         });
         const documents = await response.json();
@@ -65,7 +72,7 @@ async function loadDocuments() {
         const documentsList = document.getElementById('documents-list');
         if (documentsList) {
             documentsList.innerHTML = documents.map(doc => 
-                `<a href="http://localhost:5000/uploads/${doc}" target="_blank" class="document-link">${doc}</a>`
+                `<a href="${API_BASE}/uploads/${doc}" target="_blank" class="document-link">${doc}</a>`
             ).join('<br>');
         }
     } catch (error) {
@@ -79,7 +86,7 @@ document.addEventListener('DOMContentLoaded', loadDocuments);
 //hent analyse
 window.onload = async function () {
     try {
-        const response = await fetch('http://localhost:5000/analysis');
+        const response = await fetch(`${API_BASE}/analysis`);
         const data = await response.json();
 
         const summaryOutput = document.getElementById('summary-output');
