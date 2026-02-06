@@ -400,6 +400,31 @@ p {
     background-color: #034E31;
 }
 
+/* Kategori-knapper */
+.category-item {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    margin: 0.3rem 0.3rem 0.3rem 0;
+    background-color: #24BD76;
+    color: white;
+    text-decoration: none;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.category-item:hover {
+    background-color: #034E31;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.category-item:active {
+    transform: translateY(0);
+}
+
 /* Banner used for non-blocking upload messages */
 #upload-banner,
 .upload-banner {

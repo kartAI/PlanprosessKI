@@ -145,12 +145,12 @@ window.onload = async function () {
         showSummary('Alle');
 
         // Kategorier (klikkbare)
-        let html = `<h3>Kategorier</h3><ul>`;
-        html += `<li><button type="button" class="category-item" data-category="Alle">Alle</button></li>`;
+        let html = `<h3>Kategorier</h3><div class="category-buttons">`;
+        html += `<button type="button" class="category-item" data-category="Alle">Alle</button>`;
         for (const cat of data.auto_categories.kategorier) {
-            html += `<li><button type="button" class="category-item" data-category="${cat.navn}">${cat.navn}</button></li>`;
+            html += `<button type="button" class="category-item" data-category="${cat.navn}">${cat.navn}</button>`;
         }
-        html += `</ul>`;
+        html += `</div>`;
 
         categoryOutput.innerHTML = html;
 
