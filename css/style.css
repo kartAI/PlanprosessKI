@@ -78,11 +78,6 @@ p {
     border: 3px solid #034E31;
 }
 
-.upload-icon {
-    font-size: 3rem;
-    margin-bottom: 15px;
-}
-
 .upload-box h3 {
     color: #333;
     font-size: 1.3rem;
@@ -132,16 +127,10 @@ p {
     border-radius: 30px;
     cursor: pointer;
     transition: all 0.3s ease;
-    
 }
 
 .analyse-btn:hover {
     transform: scale(1.05);
-
-}
-
-.analyse-btn:active {
-    transform: translateY(0);
 }
 
 /* Responsiv design */
@@ -205,13 +194,6 @@ p {
     font-size: 1rem;
 }
 
-.sidebar {
-    background: #C8EBDC;
-    border-right: 1px solid #e0e0e0;
-    overflow-y: auto;
-    padding: 20px 0;
-    max-height: calc(100vh - 200px);
-}
 
 .content-wrapper {
     display: flex;
@@ -241,26 +223,20 @@ p {
     gap: 20px;
 }
 
-.document-container {
+.documents-container {
     background: #f8f9fa;
     border-radius: 12px;
     padding: 20px;
     border: 2px solid #e0e0e0;
 }
 
-.document-container h3 {
+.documents-container h2 {
     color: #2E2D30;
     font-size: 1.1rem;
     margin: 0 0 15px 0;
     font-weight: 600;
     padding-bottom: 10px;
     border-bottom: 2px solid #2E2D30;
-}
-
-.document-content {
-    font-size: 0.9rem;
-    color: #333;
-    line-height: 1.6;
 }
 
 .analysis-container {
@@ -364,28 +340,7 @@ p {
     background: white;
     border-radius: 6px;
     border-left: 3px solid #667eea;
-}
-
-.content-label {
-    font-size: 0.8rem;
-    color: #666;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 3px;
-}
-
-.content-value {
-    font-weight: 500;
-    color: #333;
-}
-
-.no-selection {
-    text-align: center;
-    color: #999;
-    padding: 40px 20px;
-}
-
-.no-selection p {
+}no-selection p {
     margin: 0;
     font-size: 1rem;
 }
@@ -403,10 +358,6 @@ p {
 @media (max-width: 768px) {
     .main-container {
         grid-template-columns: 1fr;
-    }
-
-    .sidebar {
-        display: none;
     }
 
     .header {
@@ -437,5 +388,6 @@ p {
 }
 
 .document-link:hover {
-    background-color: #0056b3;
+    transition: all 0.3s ease;
+    background-color: #034E31
 }
