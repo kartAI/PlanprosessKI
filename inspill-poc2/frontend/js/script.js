@@ -121,30 +121,49 @@ window.onload = async function () {
 
         const summaryOutput = document.getElementById('summary-output');
         const categoryOutput = document.getElementById('category-output');
+        const currentCategory = document.getElementById('current-category');
 
         if (!response.ok) {
             summaryOutput.innerHTML = `<p class="error">${data.error}</p>`;
             return;
         }
 
+        const combinedSummary = data.combined_summary;
+        const categorySummaries = data.category_summaries || {};
+
+        function showSummary(categoryName) {
+            const isAll = categoryName === 'Alle';
+            if (currentCategory) {
+                currentCategory.textContent = categoryName;
+            }
+            const title = isAll ? 'Felles oppsummering' : `Oppsummering - ${categoryName}`;
+            const summaryText = isAll ? combinedSummary : (categorySummaries[categoryName] || 'Ingen oppsummering for denne kategorien.');
+            summaryOutput.innerHTML = `
+                <h3>${title}</h3>
+                <p>${summaryText}</p>
+            `;
+        }
+
         // Felles oppsummering
-        summaryOutput.innerHTML = `
-            <h3>Felles oppsummering</h3>
-            <p>${data.combined_summary}</p>
-        `;
+        showSummary('Alle');
 
-        // Kategorier + oppsummering per kategori
+        // Kategorier (klikkbare)
         let html = `<h3>Kategorier</h3><ul>`;
+        html += `<li><button type="button" class="category-item" data-category="Alle">Alle</button></li>`;
         for (const cat of data.auto_categories.kategorier) {
-            html += `<li><strong>${cat.navn}</strong>: ${cat.beskrivelse}</li>`;
+            html += `<li><button type="button" class="category-item" data-category="${cat.navn}">${cat.navn}</button></li>`;
         }
-        html += `</ul><h3>Oppsummering per kategori</h3>`;
-
-        for (const [name, summary] of Object.entries(data.category_summaries)) {
-            html += `<h4>${name}</h4><p>${summary}</p>`;
-        }
+        html += `</ul>`;
 
         categoryOutput.innerHTML = html;
+
+        const categoryButtons = categoryOutput.querySelectorAll('.category-item');
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const name = button.getAttribute('data-category');
+                showSummary(name);
+            });
+        });
 
     } catch (error) {
         console.error("Backend feil:", error);
