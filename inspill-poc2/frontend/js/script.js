@@ -164,11 +164,12 @@ window.onload = async function () {
         showSummary('Alle');
 
         // Kategorier (klikkbare)
-            // Kategorier (klikkbare) - behold semantisk liste, men uten punkttegn
+            // Kategorier (klikkbare)
             let html = `<h3>Kategorier</h3><ul class="category-buttons">`;
-            html += `<li><button type="button" class="category-item" data-category="Alle">Alle</button></li>`;
+            html += `<li><button type="button" class="category-item" data-category="Alle">Alle (${allDocuments.length})</button></li>`;
             for (const cat of data.auto_categories.kategorier) {
-                html += `<li><button type="button" class="category-item" data-category="${cat.navn}">${cat.navn}</button></li>`;
+                const count = (categoryDocuments[cat.navn] || []).length;
+                html += `<li><button type="button" class="category-item" data-category="${cat.navn}">${cat.navn} (${count})</button></li>`;
             }
             html += `</ul>`;
 
