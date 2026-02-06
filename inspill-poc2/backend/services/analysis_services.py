@@ -38,7 +38,7 @@ def generate_categories(all_texts: list[str]):
     joined = "\n\n---\n\n".join(all_texts)
 
     prompt = f"""
-Kategoriser hvert høringsinnspill til hvilke team som bør håndtere innholdet. Et dokument kan tilhøre flere team. Lag ikke nye team eller lange beskrivelser.
+Kategoriser hvert høringsinnspill til hvilke team som bør håndtere innholdet. Lag ikke nye team eller lange beskrivelser.
 Bruk KUN disse teamene:
 
 [
