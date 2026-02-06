@@ -75,3 +75,43 @@ async function loadDocuments() {
 
 // Kall funksjonen når siden lastes
 document.addEventListener('DOMContentLoaded', loadDocuments);
+
+//hent analyse
+window.onload = async function () {
+    try {
+        const response = await fetch('http://localhost:5000/analysis');
+        const data = await response.json();
+
+        const summaryOutput = document.getElementById('summary-output');
+        const categoryOutput = document.getElementById('category-output');
+
+        if (!response.ok) {
+            summaryOutput.innerHTML = `<p class="error">${data.error}</p>`;
+            return;
+        }
+
+        // Felles oppsummering
+        summaryOutput.innerHTML = `
+            <h3>Felles oppsummering</h3>
+            <p>${data.combined_summary}</p>
+        `;
+
+        // Kategorier + oppsummering per kategori
+        let html = `<h3>Kategorier</h3><ul>`;
+        for (const cat of data.auto_categories.kategorier) {
+            html += `<li><strong>${cat.navn}</strong>: ${cat.beskrivelse}</li>`;
+        }
+        html += `</ul><h3>Oppsummering per kategori</h3>`;
+
+        for (const [name, summary] of Object.entries(data.category_summaries)) {
+            html += `<h4>${name}</h4><p>${summary}</p>`;
+        }
+
+        categoryOutput.innerHTML = html;
+
+    } catch (error) {
+        console.error("Backend feil:", error);
+        document.getElementById('summary-output').innerHTML =
+            `<p class="error">Kunne ikke hente analyse. Sjekk at backend kjører.</p>`;
+    }
+};
