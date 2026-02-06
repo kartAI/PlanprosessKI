@@ -1,6 +1,6 @@
 // Velger riktig backend-base URL for alle maskiner
 const API_BASE =
-  window.location.hostname === "127.0.0.1"
+window.location.hostname === "127.0.0.1"
     ? "http://127.0.0.1:5000"
     : "http://localhost:5000";
 
@@ -67,15 +67,10 @@ if (uploadForm) {
 // Hent dokumenter fra backend - kun på oppsummering.html
 async function loadDocuments() {
     try {
-
-        // Bruk no-store for å sikre at vi ikke får cached resultat
-        const response = await fetch('http://localhost:5000/documents?t=' + Date.now(), {
+        // Bruk no-store + cache busting for å unnga gammel liste
+        const response = await fetch(`${API_BASE}/documents?t=${Date.now()}`, {
             method: 'GET',
             cache: 'no-store'
-
-        const response = await fetch(`${API_BASE}/documents`, {
-            method: 'GET'
-
         });
         const documents = await response.json();
         
@@ -88,7 +83,9 @@ async function loadDocuments() {
     } catch (error) {
         console.error('Feil ved henting av dokumenter:', error);
     }
+
 }
+
 
 // Kall funksjonen når siden lastes
 document.addEventListener('DOMContentLoaded', loadDocuments);
@@ -170,4 +167,4 @@ window.onload = async function () {
         document.getElementById('summary-output').innerHTML =
             `<p class="error">Kunne ikke hente analyse. Sjekk at backend kjører.</p>`;
     }
-};
+}
