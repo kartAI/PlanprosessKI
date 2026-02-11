@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from openai import AzureOpenAI
 import re
 from pathlib import Path
-from ..read_pdf import read_pdf
+from read_pdf import read_pdf
 
 load_dotenv()
 
