@@ -119,6 +119,7 @@ window.onload = async function () {
         const summaryOutput = document.getElementById('summary-output');
         const categoryOutput = document.getElementById('category-output');
         const currentCategory = document.getElementById('current-category');
+        const documentsList = document.getElementById('documents-list');
 
         if (!response.ok) {
             summaryOutput.innerHTML = `<p class="error">${data.error}</p>`;
@@ -127,6 +128,21 @@ window.onload = async function () {
 
         const combinedSummary = data.combined_summary;
         const categorySummaries = data.category_summaries || {};
+        const categoryDocuments = data.category_documents || {};
+        const allDocuments = (data.documents || []).map(doc => doc.filename);
+
+        function renderDocuments(files) {
+            if (!documentsList) {
+                return;
+            }
+            if (!files || files.length === 0) {
+                documentsList.innerHTML = '<p>Ingen dokumenter funnet for denne kategorien.</p>';
+                return;
+            }
+            documentsList.innerHTML = files.map(doc =>
+                `<a href="${API_BASE}/uploads/${doc}" target="_blank" class="document-link">${doc}</a>`
+            ).join('<br>');
+        }
 
         function showSummary(categoryName) {
             const isAll = categoryName === 'Alle';
@@ -139,18 +155,23 @@ window.onload = async function () {
                 <h3>${title}</h3>
                 <p>${summaryText}</p>
             `;
+
+            const files = isAll ? allDocuments : (categoryDocuments[categoryName] || []);
+            renderDocuments(files);
         }
 
         // Felles oppsummering
         showSummary('Alle');
 
         // Kategorier (klikkbare)
-        let html = `<h3>Kategorier</h3><ul>`;
-        html += `<li><button type="button" class="category-item" data-category="Alle">Alle</button></li>`;
-        for (const cat of data.auto_categories.kategorier) {
-            html += `<li><button type="button" class="category-item" data-category="${cat.navn}">${cat.navn}</button></li>`;
-        }
-        html += `</ul>`;
+            // Kategorier (klikkbare)
+            let html = `<h3>Kategorier</h3><ul class="category-buttons">`;
+            html += `<li><button type="button" class="category-item" data-category="Alle">Alle (${allDocuments.length})</button></li>`;
+            for (const cat of data.auto_categories.kategorier) {
+                const count = (categoryDocuments[cat.navn] || []).length;
+                html += `<li><button type="button" class="category-item" data-category="${cat.navn}">${cat.navn} (${count})</button></li>`;
+            }
+            html += `</ul>`;
 
         categoryOutput.innerHTML = html;
 

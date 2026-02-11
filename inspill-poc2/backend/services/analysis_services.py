@@ -38,7 +38,19 @@ def generate_categories(all_texts: list[str]):
     joined = "\n\n---\n\n".join(all_texts)
 
     prompt = f"""
-Analyser alle høringsinnspillene og identifiser 3–7 hovedtemaer som går igjen.
+Kategoriser hvert høringsinnspill til hvilke team som bør håndtere innholdet. Lag ikke nye team eller lange beskrivelser.
+Bruk KUN disse teamene:
+
+[
+"Miljø / Klima",
+"Samferdsel / Infrastruktur",
+"Trafikk / Parkering",
+"Bygg/plan / Arkitektur",
+"Sosiale forhold / Nabolag",
+"Barn / Unge",
+"Universell utforming / Tilgjengelighet",
+"Kultur / Historie"
+]
 
 Returner KUN gyldig JSON i dette formatet:
 
