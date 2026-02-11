@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from pathlib import Path
+from services.analysis_service import extract_checklist_points, checklist_text
 
 app = Flask(__name__)
 CORS(app)
@@ -53,6 +54,11 @@ def serve_file(filename):
     except Exception:
         return jsonify({"error": "Filen finnes ikke"}), 404
 
+# Returner sjekklisten
+@app.route("/checklist", methods=["GET"])
+def get_checklist():
+    points = extract_checklist_points(checklist_text)  
+    return jsonify({"checklist": points}), 200
 
 if __name__ == "__main__":
     app.run(debug=True)

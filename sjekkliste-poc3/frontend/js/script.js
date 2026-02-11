@@ -8,7 +8,7 @@ window.location.hostname === "127.0.0.1"
 const fileInputs = document.querySelectorAll('input[type="file"]');
 fileInputs.forEach(input => {
     input.addEventListener('change', function(e) {
-        const files = e.target.files;
+        const files = e.target.files;  // ← Endre fra .file til .files
         const nameElement = document.getElementById(e.target.id + '-name');
         if (!files || files.length === 0) {
             nameElement.textContent = 'Ingen fil valgt';
@@ -32,10 +32,9 @@ if (uploadForm) {
         e.preventDefault();
         
         const formData = new FormData();
-        const files = document.getElementById('planbeskrivelse').files;
+        const files = document.getElementById('planbeskrivelse').files;  
 
         if (!files || files.length === 0) {
-            // Ikke-blokkerende tilbakemelding
             showBanner('Vennligst velg én fil', 'error');
             return;
         }
@@ -46,6 +45,9 @@ if (uploadForm) {
             return;
         }
 
+        // Legg til den en fil
+        formData.append('file', files[0]);  
+
         try {
             const response = await fetch(`${API_BASE}/upload`, {
                 method: 'POST',
@@ -53,7 +55,6 @@ if (uploadForm) {
             });
             
             if (response.ok) {
-                // Ikke-blokkerende melding; redirect umiddelbart
                 showBanner('Opplasting fullført — sender til oppsummering...', 'success');
                 window.location.href = 'sjekkliste.html?t=' + Date.now();
             } else {
@@ -90,9 +91,25 @@ async function loadDocuments() {
 
 }
 
-// Kall funksjonen når siden lastes
-document.addEventListener('DOMContentLoaded', loadDocuments);
+// Hent og vis sjekklisten
+async function loadChecklist() {
+    try {
+        const response = await fetch(`${API_BASE}/checklist`);
+        const data = await response.json();
+        
+        const checklistElement = document.getElementById('checklist-list');
+        if (checklistElement && data.checklist) {
+            checklistElement.innerHTML = data.checklist.map(point => 
+                `<li>${point}</li>`
+            ).join('');
+        }
+    } catch (error) {
+        console.error('Feil ved henting av sjekkliste:', error);
+    }
+}
 
+// Kall funksjonen når siden lastes
+document.addEventListener('DOMContentLoaded', loadChecklist);
 
 // Enkel ikke-blokkerende bannermelding
 function showBanner(message, type = 'info') {
