@@ -17,8 +17,10 @@ fileInputs.forEach(input => {
             nameElement.textContent = files[0].name;
             nameElement.style.color = '#667eea';
         } else {
-            nameElement.textContent = files.length + ' filer valgt';
-            nameElement.style.color = '#667eea';
+            // Avvis flere filer
+            nameElement.textContent = 'Kun ett dokument er tillatt';
+            nameElement.style.color = '#e74c3c';
+            e.target.value = ''; // Tøm inputen
         }
     });
 });
@@ -34,12 +36,14 @@ if (uploadForm) {
 
         if (!files || files.length === 0) {
             // Ikke-blokkerende tilbakemelding
-            showBanner('Vennligst velg minst én fil', 'error');
+            showBanner('Vennligst velg én fil', 'error');
             return;
         }
 
-        for (let i = 0; i < files.length; i++) {
-            formData.append('files', files[i]);
+        // Valider at kun ett dokument er valgt
+        if (files.length > 1) {
+            showBanner('Kun ett dokument er tillatt', 'error');
+            return;
         }
 
         try {
