@@ -50,11 +50,21 @@ def check_document_against_checklist(document_text: str, checklist: list[str]):
 Du skal evaluere et dokument opp mot en sjekkliste.
 
 VIKTIG:
-- Bruk hvert sjekkpunkt ORDRETT slik det står i listen.
-- Ikke slå sammen punkter.
-- Ikke legg til nye punkter.
-- For hvert punkt skal du si om det er OPPFYLT eller IKKE OPPFYLT.
-- Returner KUN gyldig JSON i dette formatet:
+- Du SKAL sjekke ALLE punktene i sjekklisten, fra første til siste, uten å hoppe over noen.
+- Du skal bruke hvert sjekkpunkt ORDRETT slik det står i listen.
+- Du skal ikke slå sammen punkter.
+- Ikke svar på spørsmål i sjekklisten, eller vurder om de er dekket på en god måte. Du skal KUN vurdere om hvert punkt er OPPFYLT eller IKKE OPPFYLT.
+- Du skal ikke legge til nye punkter.
+- Du skal KUN svare på om dokumentet omtaler dette punktet som et eget tema.
+- Du skal IKKE vurdere om innholdet er godt nok, riktig, tilstrekkelig eller logisk.
+- Et punkt er OPPFYLT hvis dokumentet har tekst som tydelig handler om dette punktet/temaet.
+- Et punkt er IKKE OPPFYLT hvis dokumentet ikke har tekst som tydelig handler om dette punktet/temaet.
+- Du skal ikke bruke annen informasjon i dokumentet til å gjette at punktet er dekket indirekte.
+- Du skal ikke anta at et punkt er dekket bare fordi noe lignende er omtalt et annet sted.
+- Du skal gå i kronologisk rekkefølge gjennom sjekklisten, og vurdere hvert punkt for seg.
+- Du skal returnere KUN gyldig JSON med "punkt" og "status".
+- Du skal returnere KUN gyldig JSON i dette formatet:
+
 
 {{
     "resultat": [
@@ -75,7 +85,7 @@ DOKUMENT:
     response = client.chat.completions.create(
         model=deployment,
         messages=[{"role": "user", "content": prompt}],
-        max_completion_tokens=800
+        max_completion_tokens=1000
     )
 
     raw = response.choices[0].message.content
