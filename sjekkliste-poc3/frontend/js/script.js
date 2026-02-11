@@ -108,6 +108,22 @@ async function loadChecklist() {
     }
 }
 
+const filnavn = "planbeskrivelse_m.pdf";
+fetch(`${API_BASE}/uploads/${filnavn}`)
+    .then(response => {
+        if (!response.ok) throw new Error("Filen finnes ikke");
+        return response.blob();
+    })
+    .then(blob => {
+        // Vis filen, f.eks. som PDF i <iframe> eller last ned
+        const url = URL.createObjectURL(blob);
+        document.getElementById("pdfViewer").src = url;
+    })
+    .catch(error => {
+        // Håndter feil
+    alert(error.message);
+    });
+
 // Kall funksjonen når siden lastes
 document.addEventListener('DOMContentLoaded', loadChecklist);
 
