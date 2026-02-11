@@ -55,12 +55,12 @@ Bruk KUN disse teamene:
 Returner KUN gyldig JSON i dette formatet:
 
 {{
-  "kategorier": [
+"kategorier": [
     {{
-      "navn": "...",
-      "beskrivelse": "...",
+    "navn": "...",
+    "beskrivelse": "...",
     }}
-  ]
+]
 }}
 
 Her er innspillene:
