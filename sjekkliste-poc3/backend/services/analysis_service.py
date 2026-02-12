@@ -18,18 +18,25 @@ deployment = "gpt-4.1"
 
 # ekstraherer numererte punkter og underpunkter fra et dokument
 def extract_checklist_points(text: str) -> list[str]:
-
-    # Kombiner i rekkefølge slik de står i dokumentet
-    # (regex alene bevarer ikke rekkefølgen)
     combined = []
     for line in text.splitlines():
         line = line.strip()
-        if re.match(r"\d+\.\d+\s+", line):
+
+        # Hovedpunkter: 2 Bakgrunn, 3 Planprosessen, 4 Planstatus ...
+        if re.match(r"^\d+\s+[^\n]+", line):
             combined.append(line)
+
+        # Underpunkter: 2.1 Hensikten med planen, 4.1 Overordnede planer
+        elif re.match(r"^\d+\.\d+\s+[^\n]+", line):
+            combined.append(line)
+
+        # Bulletpunkter: • Fylkeskommunale planer
         elif line.startswith("•"):
-            combined.append(line[1:].strip())  # fjern •
+            combined.append(line.lstrip("•").strip())
 
     return combined
+
+
 
 def load_checklist_from_sjekklister(filename: str) -> str:
     sjekklister = Path(__file__).parent.parent / "sjekklister"
@@ -49,29 +56,39 @@ def check_document_against_checklist(document_text: str, checklist: list[str]):
     prompt = f"""
 Du skal evaluere et dokument opp mot en sjekkliste.
 
-VIKTIG:
-- Du SKAL sjekke ALLE punktene i sjekklisten, fra første til siste, uten å hoppe over noen.
-- Du skal bruke hvert sjekkpunkt ORDRETT slik det står i listen.
-- Du skal ikke slå sammen punkter.
-- Ikke svar på spørsmål i sjekklisten, eller vurder om de er dekket på en god måte. Du skal KUN vurdere om hvert punkt er OPPFYLT eller IKKE OPPFYLT.
-- Du skal ikke legge til nye punkter.
-- Du skal KUN svare på om dokumentet omtaler dette punktet som et eget tema.
-- Du skal IKKE vurdere om innholdet er godt nok, riktig, tilstrekkelig eller logisk.
-- Et punkt er OPPFYLT hvis dokumentet har tekst som tydelig handler om dette punktet/temaet.
-- Et punkt er IKKE OPPFYLT hvis dokumentet ikke har tekst som tydelig handler om dette punktet/temaet.
-- Du skal ikke bruke annen informasjon i dokumentet til å gjette at punktet er dekket indirekte.
-- Du skal ikke anta at et punkt er dekket bare fordi noe lignende er omtalt et annet sted.
-- Du skal gå i kronologisk rekkefølge gjennom sjekklisten, og vurdere hvert punkt for seg.
-- Du skal returnere KUN gyldig JSON med "punkt" og "status".
-- Du skal returnere KUN gyldig JSON i dette formatet:
+Obligatoriske regler (du skal følge alle nøyaktig):
 
+KRAV FOR AT ET PUNKT ER OPPFYLT:
+- Punktet er KUN "oppfylt" hvis dokumentet inneholder en EGEN OVERSKRIFT eller seksjon som eksplisitt matcher punktet ordrett (eller nesten ordrett), OG denne overskriften har tilhørende tekst under seg.
+- Det er IKKE nok at temaet nevnes i forbifarten under et annet punkt.
+- Det er IKKE nok at dokumentet omtaler noe som ligner.
+- Det er IKKE nok at dokumentet omtaler temaet i en annen sammenheng.
+- Hvis overskriften ikke finnes, eller ikke har tekst under seg, skal punktet være "ikke oppfylt".
+
+GENERELLE REGLER:
+- Du SKAL returnere alle punktene i sjekklisten, i samme rekkefølge.
+- Du SKAL bruke hvert punkt ordrett, uten endringer, uten sammenslåing, uten utelatelser.
+- Du skal KUN bruke tekst som står i DOKUMENT-seksjonen nedenfor.
+- Du skal IKKE tolke, IKKE anta, IKKE vurdere kvalitet, IKKE bruke indirekte eller relatert informasjon.
+- Du skal IKKE bruke semantisk likhet.
+- Du skal IKKE bruke tekst som bare ligner.
+- Du skal IKKE bruke tekst fra andre punkter som “bevis”.
+- Du skal IKKE gjette.
+- Hvis du er usikker, skal du svare "ikke oppfylt".
+
+For hvert punkt i sjekklisten skal du:
+- Sette "status" til "oppfylt" eller "ikke oppfylt".
+- Du skal gi en kort forklaring på hvorfor status er satt.
+
+Du SKAL returnere KUN gyldig JSON i dette formatet:
 
 {{
     "resultat": [
-    {{
+        {{
         "punkt": "...",
-        "status": "oppfylt" eller "ikke oppfylt"
-    }}
+        "status": "oppfylt" eller "ikke oppfylt",
+        "forklaring": "kort forklaring på hvorfor status er satt"
+        }}
     ]
 }}
 
@@ -82,11 +99,16 @@ DOKUMENT:
 {document_text}
 """
 
+
+
+
     response = client.chat.completions.create(
-        model=deployment,
-        messages=[{"role": "user", "content": prompt}],
-        max_completion_tokens=1000
-    )
+    model=deployment,
+    messages=[{"role": "user", "content": prompt}],
+    max_completion_tokens=2000,
+    temperature=0.1
+)
+
 
     raw = response.choices[0].message.content
 
