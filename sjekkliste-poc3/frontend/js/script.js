@@ -4,6 +4,16 @@ window.location.hostname === "127.0.0.1"
     ? "http://127.0.0.1:5000"
     : "http://localhost:5000";
 
+function getSelectedChecklist() {
+    const params = new URLSearchParams(window.location.search);
+    const fromQuery = params.get("sjekkliste");
+    if (fromQuery) {
+        localStorage.setItem("selectedChecklist", fromQuery);
+        return fromQuery;
+    }
+    return localStorage.getItem("selectedChecklist") || "";
+}
+
 
 const fileInputs = document.querySelectorAll('input[type="file"]');
 fileInputs.forEach(input => {
@@ -48,6 +58,13 @@ if (uploadForm) {
         // Legg til den en fil
         formData.append('file', files[0]);  
 
+        const checklistSelect = document.querySelector('select[name="sjekkliste"]');
+        const selectedChecklist = checklistSelect ? checklistSelect.value : "";
+        if (selectedChecklist) {
+            localStorage.setItem("selectedChecklist", selectedChecklist);
+            formData.append('sjekkliste', selectedChecklist);
+        }
+
         try {
             const response = await fetch(`${API_BASE}/upload`, {
                 method: 'POST',
@@ -56,7 +73,10 @@ if (uploadForm) {
             
             if (response.ok) {
                 showBanner('Opplasting fullført — sender til oppsummering...', 'success');
-                window.location.href = 'sjekkliste.html?t=' + Date.now();
+                const nextUrl = selectedChecklist
+                    ? `sjekkliste.html?t=${Date.now()}&sjekkliste=${encodeURIComponent(selectedChecklist)}`
+                    : `sjekkliste.html?t=${Date.now()}`;
+                window.location.href = nextUrl;
             } else {
                 const error = await response.text();
                 showBanner('Feil ved opplasting: ' + error, 'error');
@@ -94,7 +114,11 @@ async function loadDocuments() {
 // Hent og vis sjekklisten
 async function loadChecklist() {
     try {
-        const response = await fetch(`${API_BASE}/checklist`);
+        const selectedChecklist = getSelectedChecklist();
+        const checklistParam = selectedChecklist
+            ? `?name=${encodeURIComponent(selectedChecklist)}`
+            : "";
+        const response = await fetch(`${API_BASE}/checklist${checklistParam}`);
         const data = await response.json();
         
         const checklistElement = document.getElementById('checklist-list');
@@ -135,7 +159,11 @@ if (pdfViewer) {
 
 async function loadAnalysis() {
     try {
-        const response = await fetch(`${API_BASE}/analysis`);
+        const selectedChecklist = getSelectedChecklist();
+        const analysisParam = selectedChecklist
+            ? `?name=${encodeURIComponent(selectedChecklist)}`
+            : "";
+        const response = await fetch(`${API_BASE}/analysis${analysisParam}`);
         const data = await response.json();
         
         const analysisList = document.getElementById('analysis-list');
