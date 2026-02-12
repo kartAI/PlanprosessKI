@@ -21,6 +21,29 @@ def extract_checklist_points(text: str) -> list[str]:
     combined = []
     for line in text.splitlines():
         line = line.strip()
+        if not line:
+            continue
+
+        if "•" in line:
+            parts = [p.strip() for p in line.split("•") if p.strip()]
+            if parts:
+                head = parts[0]
+                if re.match(r"^\d+(?:\.\d+)?\s+", head):
+                    combined.append(head)
+                    bullet_parts = parts[1:]
+                else:
+                    bullet_parts = parts
+                for bullet in bullet_parts:
+                    combined.append(bullet)
+            continue
+
+        numbered_matches = re.findall(
+            r"\b\d+(?:\.\d+)?\s+[^\d]+?(?=\s+\d+(?:\.\d+)?\s+|$)",
+            line
+        )
+        if numbered_matches:
+            combined.extend([m.strip() for m in numbered_matches])
+            continue
 
         # Hovedpunkter: 2 Bakgrunn, 3 Planprosessen, 4 Planstatus ...
         if re.match(r"^\d+\s+[^\n]+", line):
@@ -75,6 +98,7 @@ GENERELLE REGLER:
 - Du skal IKKE bruke tekst fra andre punkter som “bevis”.
 - Du skal IKKE gjette.
 - Hvis du er usikker, skal du svare "ikke oppfylt".
+- Alle punktene og under punktene skal stå hver for seg, og vurderes hver for seg.
 
 For hvert punkt i sjekklisten skal du:
 - Sette "status" til "oppfylt" eller "ikke oppfylt".
