@@ -2,7 +2,8 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from pathlib import Path
-from services.analysis_service import extract_checklist_points, checklist_text
+from services.analysis_service import extract_checklist_points, checklist_text, check_document_against_checklist
+from read_pdf import read_pdf
 
 app = Flask(__name__)
 CORS(app)
@@ -54,11 +55,34 @@ def serve_file(filename):
     except Exception:
         return jsonify({"error": "Filen finnes ikke"}), 404
 
-# Returner sjekklisten
-@app.route("/checklist", methods=["GET"])
-def get_checklist():
-    points = extract_checklist_points(checklist_text)  
-    return jsonify({"checklist": points}), 200
+#returner KI analyse
+@app.route("/analysis", methods=["GET"])
+def get_analysis():
+    filename = request.args.get("filename")
+    
+    if not filename:
+        return jsonify({"error": "Filename parameter mangler"}), 400
+    
+    # Validér filnavnet
+    filename = secure_filename(filename)
+    path = UPLOAD_FOLDER / filename
+    
+    if not path.exists():
+        return jsonify({"error": "Filen finnes ikke"}), 404
+    
+    try:
+        # Les dokumentet
+        document_text = read_pdf(str(path))
+        
+        # Hent sjekkliste
+        checklist_points = extract_checklist_points(checklist_text)
+    
+        # Kjør analysen
+        resultat = check_document_against_checklist(document_text, checklist_points)
+        
+        return jsonify(resultat), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)

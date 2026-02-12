@@ -108,6 +108,7 @@ async function loadChecklist() {
     }
 }
 
+//vis planbeskrivelsen
 const filnavn = "planbeskrivelse_m.pdf";
 fetch(`${API_BASE}/uploads/${filnavn}`)
     .then(response => {
@@ -115,7 +116,7 @@ fetch(`${API_BASE}/uploads/${filnavn}`)
         return response.blob();
     })
     .then(blob => {
-        // Vis filen, f.eks. som PDF i <iframe> eller last ned
+        // Vis filen
         const url = URL.createObjectURL(blob);
         document.getElementById("pdfViewer").src = url;
     })
@@ -124,8 +125,32 @@ fetch(`${API_BASE}/uploads/${filnavn}`)
     alert(error.message);
     });
 
+async function loadAnalysis() {
+    try {
+        const response = await fetch(`${API_BASE}/analysis?filename=planbeskrivelse_m.pdf`);
+        const data = await response.json();
+        
+        const analysisList = document.getElementById('analysis-list');
+        if (analysisList && data.resultat) {
+            analysisList.innerHTML = data.resultat.map(item => {
+                const statusClass = item.status === 'oppfylt' ? 'oppfylt' : 'ikke-oppfylt';
+                const statusIcon = item.status === 'oppfylt' ? '✓' : '✗';
+                return `<li class="analysis-item ${statusClass}">
+                    <span class="status-icon">${statusIcon}</span>
+                    <span class="punkt">${item.punkt}</span>
+                </li>`;
+            }).join('');
+        }
+    } catch (error) {
+        console.error('Feil ved henting av analyse:', error);
+    }
+}
+
 // Kall funksjonen når siden lastes
-document.addEventListener('DOMContentLoaded', loadChecklist);
+document.addEventListener('DOMContentLoaded', () => {
+    loadChecklist();
+    loadAnalysis();
+});
 
 // Enkel ikke-blokkerende bannermelding
 function showBanner(message, type = 'info') {

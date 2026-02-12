@@ -496,3 +496,25 @@ p {
 .upload-banner--info {
     background: #333;
 }
+
+/*Style for poc3*/
+.analysis-item.oppfylt {
+    background-color: #24BD76; 
+}
+
+.analysis-item.ikke-oppfylt {
+    background-color: #ee554a; 
+}
+
+.analysis-item {
+    padding: 8px;
+    margin-bottom: 6px;
+    border-radius: 4px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.checklist-point {
+    color: black;
+}
