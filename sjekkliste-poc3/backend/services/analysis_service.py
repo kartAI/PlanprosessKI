@@ -100,14 +100,22 @@ DOKUMENT:
 
 # Les dokumentet som skal sjekkes
 uploads = Path(__file__).parent.parent / "uploads"
-path = uploads / "planbeskrivelse_m.pdf"
 
-document_text = read_pdf(str(path))
+if __name__ == "__main__":
+    # Finn første (og eneste) opplastede fil
+    uploaded_files = list(uploads.glob("*.pdf"))
 
-# Kjør sjekk
-resultat = check_document_against_checklist(document_text, checklist_points)
+    if not uploaded_files:
+        raise FileNotFoundError("Ingen PDF funnet i uploads-mappen")
 
-print(resultat)
+    path = uploaded_files[0]
+
+    document_text = read_pdf(str(path))
+
+    # Kjør sjekk
+    resultat = check_document_against_checklist(document_text, checklist_points)
+
+    print(resultat)
 
 
 
