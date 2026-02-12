@@ -109,8 +109,17 @@ async function loadChecklist() {
 }
 
 //vis planbeskrivelsen
-const filnavn = "planbeskrivelse_m.pdf";
-fetch(`${API_BASE}/uploads/${filnavn}`)
+fetch(`${API_BASE}/documents`)
+    .then(res => res.json())
+    .then(files => {
+        if (!files || files.length === 0) {
+            throw new Error("Ingen opplastet fil funnet");
+        }
+
+        const filnavn = files[0]; // alltid én fil
+
+        return fetch(`${API_BASE}/uploads/${filnavn}`);
+    })
     .then(response => {
         if (!response.ok) throw new Error("Filen finnes ikke");
         return response.blob();
@@ -127,7 +136,7 @@ fetch(`${API_BASE}/uploads/${filnavn}`)
 
 async function loadAnalysis() {
     try {
-        const response = await fetch(`${API_BASE}/analysis?filename=planbeskrivelse_m.pdf`);
+        const response = await fetch(`${API_BASE}/analysis`);
         const data = await response.json();
         
         const analysisList = document.getElementById('analysis-list');
