@@ -57,22 +57,28 @@ def check_document_against_checklist(document_text: str, checklist: list[str]):
 Du skal evaluere et dokument opp mot en sjekkliste.
 
 Obligatoriske regler (du skal følge alle nøyaktig):
+
+KRAV FOR AT ET PUNKT ER OPPFYLT:
+- Punktet er KUN "oppfylt" hvis dokumentet inneholder en EGEN OVERSKRIFT eller seksjon som eksplisitt matcher punktet ordrett (eller nesten ordrett), OG denne overskriften har tilhørende tekst under seg.
+- Det er IKKE nok at temaet nevnes i forbifarten under et annet punkt.
+- Det er IKKE nok at dokumentet omtaler noe som ligner.
+- Det er IKKE nok at dokumentet omtaler temaet i en annen sammenheng.
+- Hvis overskriften ikke finnes, eller ikke har tekst under seg, skal punktet være "ikke oppfylt".
+
+GENERELLE REGLER:
 - Du SKAL returnere alle punktene i sjekklisten, i samme rekkefølge.
 - Du SKAL bruke hvert punkt ordrett, uten endringer, uten sammenslåing, uten utelatelser.
-- Du skal KUN sjekke om dokumentet inneholder tekst som eksplisitt nevner eller direkte beskriver temaet i punktet.
+- Du skal KUN bruke tekst som står i DOKUMENT-seksjonen nedenfor.
 - Du skal IKKE tolke, IKKE anta, IKKE vurdere kvalitet, IKKE bruke indirekte eller relatert informasjon.
-- Du skal IKKE bruke semantisk likhet. Hvis teksten ikke eksplisitt støtter punktet, skal du svare "ikke oppfylt".
-- Et punkt er "oppfylt" hvis dokumentet har tekst som eksplisitt eller direkte beskriver temaet i punktet.
-- Et punkt er "ikke oppfylt" hvis dokumentet ikke har slik tekst.
+- Du skal IKKE bruke semantisk likhet.
+- Du skal IKKE bruke tekst som bare ligner.
+- Du skal IKKE bruke tekst fra andre punkter som “bevis”.
+- Du skal IKKE gjette.
 - Hvis du er usikker, skal du svare "ikke oppfylt".
-- Hvis noe er uklart, skal du svare "ikke oppfylt".
-- Du SKAL returnere alle punktene, selv om ingen av dem finnes i dokumentet.
 
 For hvert punkt i sjekklisten skal du:
 - Sette "status" til "oppfylt" eller "ikke oppfylt".
-- Hvis status er "oppfylt", SKAL du fylle ut "bevis" med eksakt tekst fra dokumentet som viser at punktet er oppfylt.
-- Hvis status er "ikke oppfylt", skal "bevis" være en tom streng.
-- Du SKAL alltid gi en kort "forklaring" på hvorfor du satte den statusen.
+- Du skal gi en kort forklaring på hvorfor status er satt.
 
 Du SKAL returnere KUN gyldig JSON i dette formatet:
 
@@ -81,7 +87,6 @@ Du SKAL returnere KUN gyldig JSON i dette formatet:
         {{
         "punkt": "...",
         "status": "oppfylt" eller "ikke oppfylt",
-        "bevis": "eksakt tekst fra dokumentet, eller tom streng",
         "forklaring": "kort forklaring på hvorfor status er satt"
         }}
     ]
@@ -93,6 +98,8 @@ SJEKKLISTE:
 DOKUMENT:
 {document_text}
 """
+
+
 
 
     response = client.chat.completions.create(
