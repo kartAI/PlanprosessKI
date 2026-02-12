@@ -107,32 +107,31 @@ async function loadChecklist() {
         console.error('Feil ved henting av sjekkliste:', error);
     }
 }
-
-//vis planbeskrivelsen
-fetch(`${API_BASE}/documents`)
-    .then(res => res.json())
-    .then(files => {
-        if (!files || files.length === 0) {
-            throw new Error("Ingen opplastet fil funnet");
-        }
-
-        const filnavn = files[0]; // alltid én fil
-
-        return fetch(`${API_BASE}/uploads/${filnavn}`);
-    })
-    .then(response => {
-        if (!response.ok) throw new Error("Filen finnes ikke");
-        return response.blob();
-    })
-    .then(blob => {
-        // Vis filen
-        const url = URL.createObjectURL(blob);
-        document.getElementById("pdfViewer").src = url;
-    })
-    .catch(error => {
-        // Håndter feil
-    alert(error.message);
-    });
+const pdfViewer = document.getElementById("pdfViewer");
+if (pdfViewer) {
+    fetch(`${API_BASE}/documents`)
+        .then(res => res.json())
+        .then(files => {
+            if (!files || files.length === 0) {
+                throw new Error("Ingen opplastet fil funnet");
+            }
+            const filnavn = files[0]; // alltid én fil
+            return fetch(`${API_BASE}/uploads/${filnavn}`);
+        })
+        .then(response => {
+            if (!response.ok) throw new Error("Filen finnes ikke");
+            return response.blob();
+        })
+        .then(blob => {
+            // Vis filen
+            const url = URL.createObjectURL(blob);
+            pdfViewer.src = url;
+        })
+        .catch(error => {
+            // Håndter feil
+            alert(error.message);
+        });
+}
 
 async function loadAnalysis() {
     try {
