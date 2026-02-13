@@ -115,6 +115,39 @@ p {
     word-break: break-word;
 }
 
+/* Select-meny for sjekkliste - matcher filopplasteren */
+.select-sjekkliste {
+    display: block;
+    width: 100%;
+    padding: 12px 30px;
+    background: #24BD76;
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 500;
+    margin: 0 auto 10px auto;
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+    box-shadow: 0 2px 8px rgba(36,189,118,0.08);
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.select-sjekkliste:hover, .select-sjekkliste:focus {
+    background: #034E31;
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(3,78,49,0.13);
+}
+
+.select-sjekkliste option {
+    color: #034E31;
+    background: #fff;
+    font-weight: 500;
+}
+
 /* Analyse knapp */
 .analyse-btn {
     width: 100%;
@@ -462,4 +495,36 @@ p {
 
 .upload-banner--info {
     background: #333;
+}
+
+/*Style for poc3*/
+.analysis-item.oppfylt {
+    background-color: #24BD76; 
+}
+
+.analysis-item.ikke-oppfylt {
+    background-color: #ee554a; 
+}
+
+#analysis-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.analysis-item {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 2px solid rgba(0, 0, 0, 0.08);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.checklist-point {
+    color: black;
 }

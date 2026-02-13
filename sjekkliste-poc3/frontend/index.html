@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sjekkliste</title>
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+
+<body>
+<div class="container">
+<h1>Last opp planbeskrivelse</h1>
+
+<form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+    <div class="upload-grid">
+        <div class="upload-box">
+            <h3>Sjekk planbeskrivelsen oppfyller mal</h3>
+            <input type="file" name="file" id="planbeskrivelse" accept=".pdf">
+            <label for="planbeskrivelse" class="upload-label">Velg fil</label>
+            <p class="file-name" id="planbeskrivelse-name">Ingen fil valgt</p>
+        </div>
+                <div class="upload-box">
+            <h3>Velg sjekkliste</h3>
+            <select name="sjekkliste" class="select-sjekkliste">
+                <option value="sjekkliste_for_planbeskrivelse_bokm_mal.pdf">Sjekkliste regjeringen</option>
+                <option value="Kristiansand-kommune-sjekkliste.pdf">Sjekkliste Kristiansand kommune</option>
+            </select>
+        </div>
+    </div>
+
+    <button type="submit" class="analyse-btn">Sjekk planbeskrivelse</button>
+</form>
+</div>
+<script src="js/script.js"></script>
+</body>
+
+</html>
