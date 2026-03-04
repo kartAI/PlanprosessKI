@@ -66,6 +66,13 @@ def get_documents():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/uploads/<filename>', methods=['GET'])
+def serve_file(filename):
+    try:
+        return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 404
+    
 @app.route('/analysis', methods=['GET'])
 def get_bestemmelse(): #husk endre navn!
 
