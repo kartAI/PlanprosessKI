@@ -16,13 +16,30 @@ client = AzureOpenAI(
 #Valg av modell
 deployment = "gpt-4.1"
 
-#tom funskjon for prompt
-def test():
+#Klassifisering av lovområder
+def law_classification(text: str) -> str:
     prompt = f"""
-
+    Du skal analysere en planbestemmelse og identifisere hvilke lover, forskrifter eller nasjonale retningslinjer den mest sannsynlig berører.
+    
+    Oppgave:
+        1. Les planbestemmelsen nøye.
+        2. Identifiser hvilke juridiske temaer den handler om 
+        3. Basert på temaene: foreslå hvilke lover, forskrifter eller nasjonale retningslinjer som normalt regulerer slike forhold i Norge.
+        4. Returner resultatet som strukturert JSON med følgende format:
+{
+    "temaer": ["..."],
+    "relevante_lover": [
+        {
+            "navn": "Lov eller forskrift",
+            "paragrafer_eller_kapitler": ["(hvis mulig)"],
+    }
+]
+}
+Vær tydelig, konkret og presis. Ikke finn opp lover som ikke finnes, og ikke gjett på detaljer du ikke kan begrunne.
+{text} 
 """
     
-    #konfgig ting
+    #konfig ting
     response = client.chat.completions.create(
         model=deployment,
         messages=[{"role": "user", "content": prompt}],
@@ -30,5 +47,7 @@ def test():
     )
 
     return response.choices[0].message.content.strip()
+
+
 
 
