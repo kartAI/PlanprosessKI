@@ -90,7 +90,9 @@ def get_bestemmelse(): #husk endre navn!
         # Kjør analysen
         resultat = law_classification(document_text)
         
-        return jsonify(resultat), 200
+        #midlertidig printing av resultat fra law_classification()
+        #return jsonify(resultat), 200
+        
     except FileNotFoundError as e:
         return jsonify({"error": str(e)}), 400
     except Exception as e:

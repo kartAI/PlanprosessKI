@@ -28,7 +28,8 @@ Du skal analysere en planbestemmelse og identifisere hvilke lover, forskrifter e
 
 Oppgave:
 1. Les planbestemmelsen nøye.
-2. Identifiser hvilke juridiske temaer den handler om.
+2. Identifiser hvilke juridiske temaer den handler om. (for eksempel bygging, arealbruk, miljø, naturinngrep, støy, kulturminner, 
+    universell utforming, trafikksikkerhet, tekniske krav, sikkerhet osv.).
 3. Basert på temaene: foreslå hvilke lover, forskrifter eller nasjonale retningslinjer som normalt regulerer slike forhold i Norge.
 
 Vær tydelig, konkret og presis. Ikke finn opp lover som ikke finnes, og ikke gjett på detaljer du ikke kan begrunne.
@@ -40,35 +41,34 @@ PLANBESTEMMELSE:
     response = client.chat.completions.create(
         model=deployment,
         messages=[{"role": "user", "content": prompt}],
-        max_completion_tokens=300,
-        response_format={{
+        max_completion_tokens=1000,
+        response_format={
             "type": "json_schema",
-            "json_schema": {{
+            "json_schema": {
                 "name": "law_classification",
-                "schema": {{
+                "schema": {
                     "type": "object",
-                    "properties": {{
-                        "temaer": {{
+                    "properties": {
+                        "temaer": {
                             "type": "array",
-                            "items": {{"type": "string"}},
-                            "description": "Juridiske temaer"
-                        }},
-                        "relevante_lover": {{
+                            "items": {"type": "string"}
+                        },
+                        "relevante_lover": {
                             "type": "array",
-                            "items": {{
+                            "items": {
                                 "type": "object",
-                                "properties": {{
-                                    "navn": {{"type": "string"}},
-                                    "paragrafer_eller_kapitler": {{"type": "string"}}
-                                }},
+                                "properties": {
+                                    "navn": {"type": "string"},
+                                    "paragrafer_eller_kapitler": {"type": "string"}
+                                },
                                 "required": ["navn", "paragrafer_eller_kapitler"]
-                            }}
-                        }}
-                    }},
+                            }
+                        }
+                    },
                     "required": ["temaer", "relevante_lover"]
-                }}
-            }}
-        }}
+                }
+            }
+        }
     )
 
     result = json.loads(response.choices[0].message.content)
