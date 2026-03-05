@@ -3,6 +3,8 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from pathlib import Path
 import os
+from services.analysis_services import law_classification
+from read_pdf import read_pdf
 
 app = Flask(__name__)
 CORS(app)
@@ -64,13 +66,37 @@ def get_documents():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# Endepunkt: serve filer fra uploads-mappen
 @app.route('/uploads/<filename>', methods=['GET'])
 def serve_file(filename):
     try:
         return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
     except Exception as e:
         return jsonify({'error': str(e)}), 404
+    
+@app.route('/analysis', methods=['GET'])
+def get_bestemmelse(): #husk endre navn!
+
+    #hvis ikke ligger fil i uploads
+    if not LAST_UPLOADS:
+        return jsonify({"error": "Ingen PDF funnet i uploads"}), 400
+
+    #hent filen som ligger i uploads
+    path = UPLOAD_FOLDER / LAST_UPLOADS[0]
+    
+    try:
+        # Les dokumentet
+        document_text = read_pdf(str(path))
+    
+        # Kjør analysen
+        resultat = law_classification(document_text)
+        
+        #midlertidig printing av resultat fra law_classification()
+        #return jsonify(resultat), 200
+        
+    except FileNotFoundError as e:
+        return jsonify({"error": str(e)}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # Start server i debug-modus
 if __name__ == "__main__":

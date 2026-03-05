@@ -145,7 +145,7 @@ window.onload = async function () {
 
     } catch (error) {
         console.error("Backend feil:", error);
-        summaryOutput.innerHTML =
+        lawOutput.innerHTML =
             `<p class="error">Kunne ikke hente analyse. Sjekk at backend kjører.</p>`;
     }
 };
