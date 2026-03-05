@@ -3,8 +3,9 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from pathlib import Path
 import os
-from services.analysis_services import law_classification
 from read_pdf import read_pdf
+from services.analysis_services import law_classification, get_filtered_law_data  
+
 
 app = Flask(__name__)
 CORS(app)
@@ -74,29 +75,37 @@ def serve_file(filename):
         return jsonify({'error': str(e)}), 404
     
 @app.route('/analysis', methods=['GET'])
-def get_bestemmelse(): #husk endre navn!
+def get_bestemmelse():  # Husk å endre navn!
 
-    #hvis ikke ligger fil i uploads
+    # Hvis ikke ligger fil i uploads
     if not LAST_UPLOADS:
         return jsonify({"error": "Ingen PDF funnet i uploads"}), 400
 
-    #hent filen som ligger i uploads
+    # Hent filen som ligger i uploads
     path = UPLOAD_FOLDER / LAST_UPLOADS[0]
     
     try:
         # Les dokumentet
         document_text = read_pdf(str(path))
     
-        # Kjør analysen
+        # Kjør analysen (steg 1)
         resultat = law_classification(document_text)
         
-        #midlertidig printing av resultat fra law_classification()
-        #return jsonify(resultat), 200
-        
+        # Kjør filtrering (steg 2: sammenlign mot XML)
+        xml_path = "lovverk.xml"  # Angi sti til XML-filen (relativ til backend-mappen)
+        filtered = get_filtered_law_data(resultat, xml_path)
+
+        print("resultat fra klassifisering:",resultat)  # Skriver ut resultat fra klassifisering
+        print("resultat fra filtrering:", filtered)  # Skriver ut filtrert data
+
+        return jsonify(filtered), 200 
+        # Returner filtrert data
+        #return jsonify(filtered), 200        
     except FileNotFoundError as e:
         return jsonify({"error": str(e)}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 # Start server i debug-modus
 if __name__ == "__main__":

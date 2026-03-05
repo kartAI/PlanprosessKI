@@ -17,11 +17,12 @@ client = AzureOpenAI(
 #Valg av modell
 deployment = "gpt-4.1"
 
-# Definer strukturen
+# Definerer strukturen
 class LawClassificationResponse(TypedDict):
     temaer: list[str]
     relevante_lover: list[dict]
 
+# steg 1 i pipelinen: les PDF og kjør analyse
 def law_classification(text: str) -> dict:
     prompt = f"""
 Du skal analysere en planbestemmelse og identifisere hvilke lover, forskrifter eller nasjonale retningslinjer den mest sannsynlig berører.
@@ -82,4 +83,69 @@ PLANBESTEMMELSE:
     
     return result
 
+#Bruker KI i looper for å sammenligne én del av JSON mot hele XML per iterasjon
+def get_filtered_law_data(result: dict, xml_file_path: str) -> list[dict]:
+    """
+    Bruker KI i looper: Itererer gjennom hver lov i 'relevante_lover' (én del av JSON), 
+    og sammenligner den mot hele XML for å trekke ut relevant data. Dette reduserer belastning per KI-kall.
+    
+    :param result: Dict fra law_classification (med 'relevante_lover')
+    :param xml_file_path: Sti til XML-filen
+    :return: Liste av dicts med filtrert data (f.eks. [{'navn': 'Lovnavn', 'paragraf': '§1-1', 'tekst': 'Samlet tekst'}])
+    """
+    try:
+        # Les hele XML-filen én gang
+        with open(xml_file_path, 'r', encoding='utf-8') as f:
+            xml_content = f.read()
+        
+        filtered_data = []
+        
+        # Loop gjennom hver lov i JSON (én del av JSON per iterasjon)
+        for law in result.get('relevante_lover', []):
+            # Eksempel på ønsket format (for å unngå format-feil)
+            example = [{'navn': 'Matchende lovnavn', 'paragraf': '§X-Y', 'tekst': 'Utdraget tekst'}]
+            
+            # Bygg prompt for denne ene loven
+            prompt = f"""
+            Du skal sammenligne én lov fra JSON mot hele XML-lovtekst og trekke ut kun relevant informasjon.
 
+            JSON-lovdata (én del):
+            {json.dumps(law, ensure_ascii=False, indent=2)}
+
+            XML-lovtekst (hele innholdet):
+            {xml_content}
+
+            XML-struktur: Loven har <paragraf id="..."> med <tittel> for navn og <ledd>/<bokstav> for tekst. Match 'paragrafer_eller_kapitler' (f.eks. §11-8) mot id-attributtet.
+
+            Oppgave:
+            1. Finn beste match for 'navn' i XML (selv om ikke identisk, f.eks. synonymer eller forkortelser).
+            2. Trekk ut teksten for paragrafene eller kapitlene i 'paragrafer_eller_kapitler' (f.eks. §11-8, §11-9) ved å matche mot <paragraf id="..."> og samle tekst fra <ledd> og <bokstav>.
+            3. Returner et objekt med nøkkelen "result" som inneholder listen av dicts med filtrert data: {json.dumps({"result": example}, ensure_ascii=False)}. Ignorer hvis ingen match.
+
+            Vær presis og returner kun JSON-objekt uten ekstra tekst.
+            """
+            
+            # Send til KI per lov
+            response = client.chat.completions.create(
+                model=deployment,
+                messages=[{"role": "user", "content": prompt}],
+                max_completion_tokens=1500,  # Juster for mindre belastning
+                response_format={"type": "json_schema", "json_schema": {"name": "filtered_data", "schema": {"type": "object", "properties": {"result": {"type": "array", "items": {"type": "object", "properties": {"navn": {"type": "string"}, "paragraf": {"type": "string"}, "tekst": {"type": "string"}}, "required": ["navn", "paragraf", "tekst"]}}}, "required": ["result"]}}}
+            )
+            
+            # Parse og legg til respons
+            law_filtered_response = json.loads(response.choices[0].message.content)
+            law_filtered = law_filtered_response.get("result", [])
+            if isinstance(law_filtered, list):
+                filtered_data.extend(law_filtered)
+        
+        return filtered_data if filtered_data else [{'error': 'Ingen matchende data funnet'}]
+    
+    except FileNotFoundError:
+        return [{'error': 'XML-fil ikke funnet'}]
+    except json.JSONDecodeError:
+        return [{'error': 'Feil ved parsing av KI-respons'}]
+    except Exception as e:
+        return [{'error': f'Uventet feil: {str(e)}'}]
+    
+#metode for å skrive ut lovene returnert av den metoden over

@@ -123,25 +123,36 @@ window.onload = async function () {
         }
 
         const data = await response.json();
-        const lawInformation = data.law_information || {};
 
-        // Genererer liste over lover som knapper
-        let html = `<h3>Lover</h3><ul class="law-buttons">`;
-        for (const law of data.auto_laws.laws) {
-            html += `<li><button type="button" class="law-item" data-law="${law.name}">${law.name}</button></li>`;
+        // hent ut filtered-liste (eller bruk hele data hvis du returnerer bare lista)
+        const filtered = data.filtered || data;
+
+        const lawOutput = document.getElementById('law-output');
+        if (!lawOutput) return;
+
+        if (Array.isArray(filtered) && filtered.length > 0) {
+            let html = '<h3>Funnet paragrafer</h3><ul class="law-buttons">';
+            filtered.forEach(item => {
+                html += `<li>
+                    <strong>${item.navn}</strong> ${item.paragraf}<br>
+                    ${item.tekst}
+                </li>`;
+            });
+            html += '</ul>';
+            lawOutput.innerHTML = html;
+        } else {
+            lawOutput.innerHTML = '<p class="error">Ingen matchende data funnet</p>';
         }
-        html += `</ul>`;
-
-        lawOutput.innerHTML = html;
         
         // Legger til klikk-event for hver lov
-        const lawButtons = lawOutput.querySelectorAll('.law-item');
+        /*const lawButtons = lawOutput.querySelectorAll('.law-item');
         lawButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const name = button.getAttribute('data-law');
                 showSummary(name);
             });
         });
+        */
 
     } catch (error) {
         console.error("Backend feil:", error);
