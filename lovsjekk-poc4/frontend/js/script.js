@@ -124,35 +124,47 @@ window.onload = async function () {
 
         const data = await response.json();
 
-        // hent ut filtered-liste (eller bruk hele data hvis du returnerer bare lista)
-        const filtered = data.filtered || data;
+        const rawItems = Array.isArray(data?.filtered)
+            ? data.filtered
+            : (Array.isArray(data) ? data : []);
+
+        const backendErrors = rawItems
+            .filter(item => item && typeof item === 'object' && item.error)
+            .map(item => item.error);
+
+        const filtered = rawItems.filter(item =>
+            item &&
+            typeof item === 'object' &&
+            !item.error &&
+            (item.tekst)
+        );
 
         const lawOutput = document.getElementById('law-output');
         if (!lawOutput) return;
 
-        if (Array.isArray(filtered) && filtered.length > 0) {
+        if (filtered.length > 0) {
             let html = '<h3>Funnet paragrafer</h3><ul class="law-buttons">';
             filtered.forEach(item => {
+                const navn = item.navn || 'Uten navn';
+                const tekst = item.tekst || 'Ingen tekst tilgjengelig';
+                const ledd = item.ledd || 'Ingen ledd';
+                const begrunnelse = item.begrunnelse || 'Ingen begrunnelse';
+
                 html += `<li>
-                    <strong>${item.navn}</strong> ${item.paragraf}<br>
-                    ${item.tekst}
+                    <strong>${navn}</strong> ${item.bokstav_eller_punkt}<br>
+                    ${tekst}<br>
+                    <small><em>${ledd}</em></small><br>
+                    <p><em>Begrunnelse:</em> ${begrunnelse}</p>
                 </li>`;
             });
             html += '</ul>';
             lawOutput.innerHTML = html;
+        } else if (backendErrors.length > 0) {
+            lawOutput.innerHTML = `<p class="error">${backendErrors.join(' | ')}</p>`;
         } else {
             lawOutput.innerHTML = '<p class="error">Ingen matchende data funnet</p>';
         }
         
-        // Legger til klikk-event for hver lov
-        /*const lawButtons = lawOutput.querySelectorAll('.law-item');
-        lawButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const name = button.getAttribute('data-law');
-                showSummary(name);
-            });
-        });
-        */
 
     } catch (error) {
         console.error("Backend feil:", error);
