@@ -5,24 +5,24 @@ from dotenv import load_dotenv
 from openai import AzureOpenAI
 from typing import TypedDict
 
+#laster inn miljøvariabler fra .env-filen
 load_dotenv()
 
-#Koble til modellen
+#Kobler til modellen
 client = AzureOpenAI(
     api_key=os.getenv("AZURE_OPENAI_API_KEY"),
     azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
     api_version=os.getenv("AZURE_OPENAI_API_VERSION")
 )
-
 #Valg av modell
 deployment = "gpt-4.1"
 
-# Definerer strukturen
+# Definerer typehint for respons fra law_classification
 class LawClassificationResponse(TypedDict):
-    temaer: list[str]
-    relevante_lover: list[dict]
+    temaer: list[str] #liste over juridiske temaer
+    relevante_lover: list[dict] #liste over relevante lover med navn og paragrafer
 
-# steg 1 i pipelinen: les PDF og kjør analyse
+# steg 1 i pipelinen: les PDF og kjør analyse for å klassifisere planbestemmelsen
 def law_classification(text: str) -> dict:
     prompt = f"""
 Du skal analysere en planbestemmelse og identifisere hvilke lover, forskrifter eller nasjonale retningslinjer den mest sannsynlig berører.
@@ -38,7 +38,7 @@ Vær tydelig, konkret og presis. Ikke finn opp lover som ikke finnes, og ikke gj
 PLANBESTEMMELSE:
 {text}
 """
-    
+    #sender prompt til KI og ber om JSON-respons med spesifisert schema
     response = client.chat.completions.create(
         model=deployment,
         messages=[{"role": "user", "content": prompt}],
@@ -72,9 +72,10 @@ PLANBESTEMMELSE:
         }
     )
 
+    #parser KI-respons som JSON
     result = json.loads(response.choices[0].message.content)
     
-    # Valider og konverter til liste (sikrer at det er liste, ikke set)
+    # Valider og konverter til liste (KI kan noen ganger returnere sets)
     if isinstance(result.get("relevante_lover"), (set, frozenset)):
         result["relevante_lover"] = list(result["relevante_lover"])
     
@@ -91,14 +92,14 @@ def get_filtered_law_data(result: dict, xml_file_path: str) -> list[dict]:
     
     :param result: Dict fra law_classification (med 'relevante_lover')
     :param xml_file_path: Sti til XML-filen
-    :return: Liste av dicts med filtrert data (f.eks. [{'navn': 'Lovnavn', 'paragraf': '§1-1', 'tekst': 'Samlet tekst'}])
+    :return: Liste av dicts med filtrert data 
     """
     try:
-        # Les hele XML-filen én gang
+        # Les hele XML-filen én gang u alle KI-kall
         with open(xml_file_path, 'r', encoding='utf-8') as f:
             xml_content = f.read()
         
-        filtered_data = []
+        filtered_data = [] # Liste for å samle filtrert data fra alle lover
         
         # Loop gjennom hver lov i JSON (én del av JSON per iterasjon)
         for law in result.get('relevante_lover', []):
@@ -125,7 +126,7 @@ def get_filtered_law_data(result: dict, xml_file_path: str) -> list[dict]:
             Vær presis og returner kun JSON-objekt uten ekstra tekst.
             """
             
-            # Send til KI per lov
+            # Send til KI per lov med JSON-schema for strutrert respons
             response = client.chat.completions.create(
                 model=deployment,
                 messages=[{"role": "user", "content": prompt}],
@@ -133,12 +134,13 @@ def get_filtered_law_data(result: dict, xml_file_path: str) -> list[dict]:
                 response_format={"type": "json_schema", "json_schema": {"name": "filtered_data", "schema": {"type": "object", "properties": {"result": {"type": "array", "items": {"type": "object", "properties": {"navn": {"type": "string"}, "paragraf": {"type": "string"}, "tekst": {"type": "string"}}, "required": ["navn", "paragraf", "tekst"]}}}, "required": ["result"]}}}
             )
             
-            # Parse og legg til respons
+            # Parser KI-respons og henter "result"-listen
             law_filtered_response = json.loads(response.choices[0].message.content)
             law_filtered = law_filtered_response.get("result", [])
             if isinstance(law_filtered, list):
                 filtered_data.extend(law_filtered)
         
+        #returnerer filtrert data eller feilmelding hvis ingen match
         return filtered_data if filtered_data else [{'error': 'Ingen matchende data funnet'}]
     
     except FileNotFoundError:
@@ -148,4 +150,3 @@ def get_filtered_law_data(result: dict, xml_file_path: str) -> list[dict]:
     except Exception as e:
         return [{'error': f'Uventet feil: {str(e)}'}]
     
-#metode for å skrive ut lovene returnert av den metoden over

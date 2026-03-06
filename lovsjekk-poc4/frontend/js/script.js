@@ -60,7 +60,7 @@ if (uploadForm) {
             return;
         }
 
-        formData.append('files', files[0]);
+        formData.append('file', files[0]);
 
         try {
             const response = await fetch(`${API_BASE}/upload`, {
