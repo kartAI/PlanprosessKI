@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 from pathlib import Path
 import os
 from read_pdf import read_pdf
-from services.analysis_services import law_classification, get_filtered_law_data  
+from services.analysis_services import law_classification, get_filtered_law_data, analyse_law_conflict  
 
 #oppretter Flask-app og aktiverer CORS for å tillate forespørsler fra frontend
 app = Flask(__name__)
@@ -94,12 +94,15 @@ def get_bestemmelse():  # Husk å endre navn!
         xml_path = "lovverk.xml"  #sti til XML-fil
         filtered = get_filtered_law_data(resultat, xml_path)
 
+        #steg 3: sjekk for strid
+        conflict_analyse = analyse_law_conflict(document_text, filtered)
+
         #Valgfritt: print resultater til terminal
-        print("resultat fra klassifisering:",resultat) 
+        #print("resultat fra klassifisering:",resultat) 
         #print("resultat fra filtrering:", filtered)  
 
         #returnerer filtrert data som JSON-respons
-        return jsonify(filtered), 200       
+        return jsonify(conflict_analyse), 200       
     except FileNotFoundError as e:
         return jsonify({"error": str(e)}), 400
     except Exception as e:
