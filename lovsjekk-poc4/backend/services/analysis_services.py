@@ -117,7 +117,7 @@ def get_filtered_law_data(result: dict, xml_file_path: str) -> list[dict]:
                     - Hvis bokstav/punkt ikke finnes: returner relevante ledd.
                     - Ikke gjenta tekst eller lag synonymer.
                     - "begrunnelse" skal være kort: maks 1 setning og forklare hvorfor dette er relevant i forhold til innhold.
-                    - Kun nev det som faktisk finnes i XML, ikke gjetninger.
+                    - Kun nevn det som faktisk finnes i XML, ikke gjetninger.
                     - Skriv ut bokstav og punkt hvis det finnes, ellers bare ledd.
                     - IKKE gjenta informasjon som allerede er nevnt.
                     - Skriv hvilken paragraf punkt og bokstav tilhører i "bokstav_eller_punkt" for å unngå forvirring.
