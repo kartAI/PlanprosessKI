@@ -95,7 +95,7 @@ def get_bestemmelse():  # Husk å endre navn!
         filtered = get_filtered_law_data(resultat, xml_path)
 
         #Valgfritt: print resultater til terminal
-        #print("resultat fra klassifisering:",resultat) 
+        print("resultat fra klassifisering:",resultat) 
         #print("resultat fra filtrering:", filtered)  
 
         #returnerer filtrert data som JSON-respons

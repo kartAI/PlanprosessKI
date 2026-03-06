@@ -29,9 +29,9 @@ Du skal analysere en planbestemmelse og identifisere hvilke lover, forskrifter e
 
 Oppgave:
 1. Les planbestemmelsen nøye.
-2. Identifiser hvilke juridiske temaer den handler om. (for eksempel bygging, arealbruk, miljø, naturinngrep, støy, kulturminner, 
-    universell utforming, trafikksikkerhet, tekniske krav, sikkerhet osv.).
+2. Identifiser hvilke juridiske temaer den handler om.
 3. Basert på temaene: foreslå hvilke lover, forskrifter eller nasjonale retningslinjer som normalt regulerer slike forhold i Norge.
+4. Hent kun lover fra Plan- og bygningsloven.
 
 Vær tydelig, konkret og presis. Ikke finn opp lover som ikke finnes, og ikke gjett på detaljer du ikke kan begrunne.
 
@@ -43,6 +43,8 @@ PLANBESTEMMELSE:
         model=deployment,
         messages=[{"role": "user", "content": prompt}],
         max_completion_tokens=1000,
+        temperature=0.1,
+        top_p=1,
         response_format={
             "type": "json_schema",
             "json_schema": {
@@ -95,7 +97,7 @@ def get_filtered_law_data(result: dict, xml_file_path: str) -> list[dict]:
     :return: Liste av dicts med filtrert data 
     """
     try:
-        # Les hele XML-filen én gang u alle KI-kall
+        # Les hele XML-filen én gang før alle KI-kall
         with open(xml_file_path, 'r', encoding='utf-8') as f:
             xml_content = f.read()
         
@@ -103,35 +105,76 @@ def get_filtered_law_data(result: dict, xml_file_path: str) -> list[dict]:
         
         # Loop gjennom hver lov i JSON (én del av JSON per iterasjon)
         for law in result.get('relevante_lover', []):
-            # Eksempel på ønsket format (for å unngå format-feil)
-            example = [{'navn': 'Matchende lovnavn', 'paragraf': '§X-Y', 'tekst': 'Utdraget tekst'}]
-            
             # Bygg prompt for denne ene loven
             prompt = f"""
-            Du skal sammenligne én lov fra JSON mot hele XML-lovtekst og trekke ut kun relevant informasjon.
+                Du skal sammenligne én lov fra JSON mot hele XML-lovtekst og trekke ut kun relevant informasjon.
 
-            JSON-lovdata (én del):
-            {json.dumps(law, ensure_ascii=False, indent=2)}
+                Krav:
+                    - Bruk kun informasjon som finnes i XML.
+                    - Hvis ingen treff: returner tom "result"-liste.
+                    - Hver bokstav/punkt skal være eget objekt.
+                    - Hvis bokstav/punkt finnes: prioriter relevante bokstav/punkt + relevante ledd.
+                    - Hvis bokstav/punkt ikke finnes: returner relevante ledd.
+                    - Ikke gjenta tekst eller lag synonymer.
+                    - "begrunnelse" skal være kort: maks 1 setning og forklare hvorfor dette er relevant i forhold til innhold.
+                    - Kun nev det som faktisk finnes i XML, ikke gjetninger.
+                    - Skriv ut bokstav og punkt hvis det finnes, ellers bare ledd.
+                    - IKKE gjenta informasjon som allerede er nevnt.
+                    - Skriv hvilken paragraf punkt og bokstav tilhører i "bokstav_eller_punkt" for å unngå forvirring.
 
-            XML-lovtekst (hele innholdet):
-            {xml_content}
+                JSON-lovdata (én del):
+                {json.dumps(law, ensure_ascii=False, indent=2)}
 
-            XML-struktur: Loven har <paragraf id="..."> med <tittel> for navn og <ledd>/<bokstav> for tekst. Match 'paragrafer_eller_kapitler' (f.eks. §11-8) mot id-attributtet.
+                XML-lovtekst (hele innholdet):
+                {xml_content}
 
-            Oppgave:
-            1. Finn beste match for 'navn' i XML (selv om ikke identisk, f.eks. synonymer eller forkortelser).
-            2. Trekk ut teksten for paragrafene eller kapitlene i 'paragrafer_eller_kapitler' (f.eks. §11-8, §11-9) ved å matche mot <paragraf id="..."> og samle tekst fra <ledd> og <bokstav>.
-            3. Returner et objekt med nøkkelen "result" som inneholder listen av dicts med filtrert data: {json.dumps({"result": example}, ensure_ascii=False)}. Ignorer hvis ingen match.
-
-            Vær presis og returner kun JSON-objekt uten ekstra tekst.
-            """
+                Returner KUN gyldig JSON med format:
+                    {{
+                    "result": [
+                        {{
+                        "navn": "Paragrafens navn",
+                        "bokstav_eller_punkt": "a" eller "1" (identifikator),
+                        "tekst": "Teksten fra bokstaven eller punktet",
+                        "ledd": "Tilhørende leddtekst (hvis relevant)",
+                        "begrunnelse": "Kort forklaring på hvorfor dette er relevant og hvorfor annet er ignorert"
+                        }}
+                    ]
+                    }}
+                """
             
-            # Send til KI per lov med JSON-schema for strutrert respons
+            # Send til KI per lov med JSON-schema for strukturert respons
             response = client.chat.completions.create(
                 model=deployment,
                 messages=[{"role": "user", "content": prompt}],
-                max_completion_tokens=1500,  # Juster for mindre belastning
-                response_format={"type": "json_schema", "json_schema": {"name": "filtered_data", "schema": {"type": "object", "properties": {"result": {"type": "array", "items": {"type": "object", "properties": {"navn": {"type": "string"}, "paragraf": {"type": "string"}, "tekst": {"type": "string"}}, "required": ["navn", "paragraf", "tekst"]}}}, "required": ["result"]}}}
+                max_completion_tokens=1500, 
+                temperature=0.1,
+                top_p=1,
+                response_format={
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": "filtered_data", 
+                        "schema": {
+                            "type": "object", 
+                            "properties": {
+                                "result": {
+                                    "type": "array", 
+                                    "items": {
+                                        "type": "object", 
+                                        "properties": {
+                                            "navn": {"type": "string"},
+                                            "bokstav_eller_punkt": {"type": "string"},
+                                            "tekst": {"type": "string"},
+                                            "ledd": {"type": "string"},
+                                            "begrunnelse": {"type": "string"}
+                                        }, 
+                                        "required": ["navn","bokstav_eller_punkt", "tekst", "ledd", "begrunnelse"]
+                                    }
+                                }
+                            }, 
+                            "required": ["result"]
+                        }
+                    }
+                }
             )
             
             # Parser KI-respons og henter "result"-listen
@@ -140,9 +183,9 @@ def get_filtered_law_data(result: dict, xml_file_path: str) -> list[dict]:
             if isinstance(law_filtered, list):
                 filtered_data.extend(law_filtered)
         
-        #returnerer filtrert data eller feilmelding hvis ingen match
+        # Returnerer filtrert data eller feilmelding hvis ingen matc
         return filtered_data if filtered_data else [{'error': 'Ingen matchende data funnet'}]
-    
+            
     except FileNotFoundError:
         return [{'error': 'XML-fil ikke funnet'}]
     except json.JSONDecodeError:
