@@ -91,10 +91,10 @@ if (uploadForm) {
 
 // Hent analyse
 window.onload = async function () {
-    // Hent opplastede dokumenter og vis første PDF
+    // Hent opplastet dokument og vis første PDF i viewer.
     try {
         const docRes = await fetch(`${API_BASE}/documents`);
-        if (!docRes.ok) throw new Error("Kunne ikke hente dokumentliste");
+        if (!docRes.ok) throw new Error('Kunne ikke hente dokumentliste');
 
         const docList = await docRes.json();
         if (docList.length > 0) {
@@ -104,13 +104,13 @@ window.onload = async function () {
             }
         }
     } catch (error) {
-        console.error("Kunne ikke hente dokument:", error);
+        console.error('Kunne ikke hente dokument:', error);
     }
 
     const lawOutput = document.getElementById('law-output');
     const summaryOutput = document.getElementById('summary-output');
 
-    // Hent analyse fra backend
+    // Hent konfliktanalyse fra backend.
     try {
         const response = await fetch(`${API_BASE}/analysis`);
 
@@ -124,51 +124,67 @@ window.onload = async function () {
 
         const data = await response.json();
 
-        const rawItems = Array.isArray(data?.filtered)
-            ? data.filtered
+        // Stott begge svarformer: { result: [...] } eller bare [...].
+        const rawItems = Array.isArray(data?.result)
+            ? data.result
             : (Array.isArray(data) ? data : []);
 
         const backendErrors = rawItems
             .filter(item => item && typeof item === 'object' && item.error)
             .map(item => item.error);
 
-        const filtered = rawItems.filter(item =>
+        // analyse_law_conflict returnerer vurdering/konfliktgrad, ikke tekst/ledd.
+        const conflicts = rawItems.filter(item =>
             item &&
             typeof item === 'object' &&
             !item.error &&
-            (item.tekst)
+            item.vurdering
         );
 
-        const lawOutput = document.getElementById('law-output');
         if (!lawOutput) return;
 
-        if (filtered.length > 0) {
-            let html = '<h3>Funnet paragrafer</h3><ul class="law-buttons">';
-            filtered.forEach(item => {
+        if (conflicts.length > 0) {
+            let html = '<h3>Vurdering mot lovverk</h3><ul class="law-buttons">';
+
+            conflicts.forEach(item => {
                 const navn = item.navn || 'Uten navn';
-                const tekst = item.tekst || 'Ingen tekst tilgjengelig';
-                const ledd = item.ledd || 'Ingen ledd';
+                const punkt = item.bokstav_eller_punkt || '-';
+                const vurdering = item.vurdering || 'uklar';
+                const konfliktgrad = item.konfliktgrad || '-';
+                const planutdrag = item.planutdrag || 'Ingen planutdrag';
+                const lovutdrag = item.lovutdrag || 'Ingen lovutdrag';
                 const begrunnelse = item.begrunnelse || 'Ingen begrunnelse';
 
                 html += `<li>
-                    <strong>${navn}</strong> ${item.bokstav_eller_punkt}<br>
-                    ${tekst}<br>
-                    <small><em>${ledd}</em></small><br>
+                    <strong>${navn}</strong> (${punkt})<br>
+                    <strong>Vurdering:</strong> ${vurdering}<br>
+                    <strong>Konfliktgrad:</strong> ${konfliktgrad}<br>
+                    <strong>Planutdrag:</strong> ${planutdrag}<br>
+                    <strong>Lovutdrag:</strong> ${lovutdrag}<br>
                     <p><em>Begrunnelse:</em> ${begrunnelse}</p>
                 </li>`;
             });
+
             html += '</ul>';
             lawOutput.innerHTML = html;
+
+            if (summaryOutput && data?.oppsummering) {
+                const o = data.oppsummering;
+                summaryOutput.innerHTML = `
+                    <p><strong>Oppsummering:</strong>
+                    Vurdert: ${o.totalt_vurdert}, Strider: ${o.strider},
+                    Delvis: ${o.delvis_strider}, Ikke strider: ${o.ikke_strider}</p>
+                `;
+            }
         } else if (backendErrors.length > 0) {
             lawOutput.innerHTML = `<p class="error">${backendErrors.join(' | ')}</p>`;
         } else {
-            lawOutput.innerHTML = '<p class="error">Ingen matchende data funnet</p>';
+            lawOutput.innerHTML = '<p class="error">Ingen konfliktanalyse funnet</p>';
         }
-        
-
     } catch (error) {
-        console.error("Backend feil:", error);
-        lawOutput.innerHTML =
-            `<p class="error">Kunne ikke hente analyse. Sjekk at backend kjører.</p>`;
+        console.error('Backend feil:', error);
+        if (lawOutput) {
+            lawOutput.innerHTML = '<p class="error">Kunne ikke hente analyse. Sjekk at backend kjører.</p>';
+        }
     }
 };

@@ -42,7 +42,7 @@ PLANBESTEMMELSE:
     response = client.chat.completions.create(
         model=deployment,
         messages=[{"role": "user", "content": prompt}],
-        max_completion_tokens=1000,
+        max_completion_tokens=700,
         temperature=0.1,
         top_p=1,
         response_format={
@@ -183,9 +183,9 @@ def get_filtered_law_data(result: dict, xml_file_path: str) -> list[dict]:
             if isinstance(law_filtered, list):
                 filtered_data.extend(law_filtered)
         
-        # Returnerer filtrert data eller feilmelding hvis ingen matc
+        # Returnerer filtrert data eller feilmelding hvis ingen match
         return filtered_data if filtered_data else [{'error': 'Ingen matchende data funnet'}]
-            
+    
     except FileNotFoundError:
         return [{'error': 'XML-fil ikke funnet'}]
     except json.JSONDecodeError:
@@ -193,3 +193,129 @@ def get_filtered_law_data(result: dict, xml_file_path: str) -> list[dict]:
     except Exception as e:
         return [{'error': f'Uventet feil: {str(e)}'}]
     
+
+#funskjon for å sjekke om bestemmelsen strider imot lovverket
+def analyse_law_conflict(text: str, filtered_data: list[dict]) -> dict:
+    try:
+        analysed_data = []  # Samler alle vurderinger
+
+        # filtered_data kommer inn som liste fra get_filtered_law_data
+        if not isinstance(filtered_data, list):
+            return {"result": [{"error": "Ugyldig input til analyse_law_conflict"}]}
+
+        # Hvis forrige steg allerede ga en feilmelding, send den videre
+        upstream_errors = [
+            item for item in filtered_data
+            if isinstance(item, dict) and item.get("error")
+        ]
+        if upstream_errors:
+            return {"result": upstream_errors}
+
+        # Loop direkte over listen (ikke .get på list)
+        for law in filtered_data:
+            prompt = f"""
+                Du skal analysere en planbestemmelse og vurdere om den strider imot lovverket basert på filtrert data fra XML.
+
+                Instruks:
+                - Sammenlign planbestemmelsen med hvert lovpunkt.
+                - Sett vurdering: "strider", "delvis_strider", "ikke_strider" eller "uklar".
+                - Sett konfliktgrad: "lav", "middels" eller "hoy".
+                - planutdrag og lovutdrag skal være korte sitater (1–3 linjer).
+                - Begrunnelse maks 2 setninger.
+                - Bruk kun informasjon fra teksten og lovpunktet. Ikke anta noe.
+
+                Planbestemmelse:
+                {text}
+                
+                Filtrerte lover (én del):
+                {json.dumps(law, ensure_ascii=False, indent=2)}
+
+                Returner KUN gyldig JSON med format:
+                        {{
+                        "result": [
+                            {{
+                            "navn": "Paragrafens navn",
+                            "bokstav_eller_punkt": "a" eller "1" (identifikator),
+                            "tekst": "Teksten fra bokstaven eller punktet",
+                            "ledd": "Tilhørende leddtekst (hvis relevant)",
+                            "begrunnelse": "Kort forklaring på hvorfor dette er relevant og hvorfor annet er ignorert"
+                            }}
+                        ]
+                        }}
+            """
+
+            response = client.chat.completions.create(
+                    model=deployment,
+                    messages=[{"role": "user", "content": prompt}],
+                    max_completion_tokens=2000, 
+                    temperature=0.3,
+                    top_p=1,
+                    response_format={
+                        "type": "json_schema",
+                        "json_schema": {
+                            "name": "law_conflict_analysis",
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "result": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "navn": {"type": "string"},
+                                                "bokstav_eller_punkt": {"type": "string"},
+                                                "vurdering": {
+                                                    "type": "string",
+                                                    "enum": ["strider", "delvis_strider", "ikke_strider", "uklar"]
+                                                },
+                                                "konfliktgrad": {
+                                                    "type": "string",
+                                                    "enum": ["lav", "middels", "hoy"]
+                                                },
+                                                "planutdrag": {"type": "string"},
+                                                "lovutdrag": {"type": "string"},
+                                                "begrunnelse": {"type": "string"}
+                                            },
+                                            "required": [
+                                                "navn",
+                                                "bokstav_eller_punkt",
+                                                "vurdering",
+                                                "konfliktgrad",
+                                                "planutdrag",
+                                                "lovutdrag",
+                                                "begrunnelse"
+                                            ]
+                                        }
+                                    },
+                                    "oppsummering": {
+                                        "type": "object",
+                                        "properties": {
+                                            "totalt_vurdert": {"type": "integer"},
+                                            "strider": {"type": "integer"},
+                                            "delvis_strider": {"type": "integer"},
+                                            "ikke_strider": {"type": "integer"}
+                                        },
+                                        "required": ["totalt_vurdert", "strider", "delvis_strider", "ikke_strider"]
+                                    }
+                                },
+                                "required": ["result", "oppsummering"]
+                            }
+                        }
+                    }
+                )
+                # Parser KI-respons og henter "result"-listen
+            analyse_response = json.loads(response.choices[0].message.content)
+            result_items = analyse_response.get("result", [])
+            if isinstance(result_items, list):
+                analysed_data.extend(result_items)
+                    
+        # Returnerer filtrert data eller feilmelding hvis ingen match
+        return {
+            "result": analysed_data if analysed_data else [{"error": "Ingen matchende data funnet i analysen"}]
+        }
+
+        
+    except json.JSONDecodeError:
+        return {"result": [{"error": "Feil ved parsing av KI-respons"}]}
+    except Exception as e:
+        return {"result": [{"error": f"Uventet feil: {str(e)}"}]}
