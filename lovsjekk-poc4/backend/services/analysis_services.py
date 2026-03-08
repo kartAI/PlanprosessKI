@@ -3,8 +3,6 @@ import os
 import json
 from dotenv import load_dotenv
 from openai import AzureOpenAI
-from typing import TypedDict
-
 #laster inn miljøvariabler fra .env-filen
 load_dotenv()
 
@@ -17,32 +15,19 @@ client = AzureOpenAI(
 #Valg av modell
 deployment = "gpt-4.1"
 
-# Definerer typehint for respons fra law_classification
-class LawClassificationResponse(TypedDict):
-    temaer: list[str] #liste over juridiske temaer
-    relevante_lover: list[dict] #liste over relevante lover med navn og paragrafer
-
-# steg 1 i pipelinen: les PDF og kjør analyse for å klassifisere planbestemmelsen
+# Steg 1: identifiser relevante lover fra Plan- og bygningsloven (input til get_filtered_law_data)
 def law_classification(text: str) -> dict:
     prompt = f"""
-Du skal analysere en planbestemmelse og identifisere hvilke lover, forskrifter eller nasjonale retningslinjer den mest sannsynlig berører.
-
-Oppgave:
-1. Les planbestemmelsen nøye.
-2. Identifiser hvilke juridiske temaer den handler om.
-3. Basert på temaene: foreslå hvilke lover, forskrifter eller nasjonale retningslinjer som normalt regulerer slike forhold i Norge.
-4. Hent kun lover fra Plan- og bygningsloven.
-
-Vær tydelig, konkret og presis. Ikke finn opp lover som ikke finnes, og ikke gjett på detaljer du ikke kan begrunne.
+Identifiser juridiske temaer i planbestemmelsen og velg fra Plan- og bygningsloven hvilke paragrafer som normalt regulerer slike forhold.
+Kun lover fra Plan- og bygningsloven. Finn ikke opp lover som ikke finnes.
 
 PLANBESTEMMELSE:
 {text}
 """
-    #sender prompt til KI og ber om JSON-respons med spesifisert schema
     response = client.chat.completions.create(
         model=deployment,
         messages=[{"role": "user", "content": prompt}],
-        max_completion_tokens=700,
+        max_completion_tokens=600,
         temperature=0.1,
         top_p=1,
         response_format={
@@ -52,10 +37,7 @@ PLANBESTEMMELSE:
                 "schema": {
                     "type": "object",
                     "properties": {
-                        "temaer": {
-                            "type": "array",
-                            "items": {"type": "string"}
-                        },
+                        "temaer": {"type": "array", "items": {"type": "string"}},
                         "relevante_lover": {
                             "type": "array",
                             "items": {
@@ -74,79 +56,37 @@ PLANBESTEMMELSE:
         }
     )
 
-    #parser KI-respons som JSON
     result = json.loads(response.choices[0].message.content)
-    
-    # Valider og konverter til liste (KI kan noen ganger returnere sets)
     if isinstance(result.get("relevante_lover"), (set, frozenset)):
         result["relevante_lover"] = list(result["relevante_lover"])
-    
     if isinstance(result.get("temaer"), (set, frozenset)):
         result["temaer"] = list(result["temaer"])
-    
     return result
 
-#Bruker KI i looper for å sammenligne én del av JSON mot hele XML per iterasjon
+# Steg 2: trekk ut relevante lovtekster fra XML (input til analyse_law_conflict)
 def get_filtered_law_data(result: dict, xml_file_path: str) -> list[dict]:
-    """
-    Bruker KI i looper: Itererer gjennom hver lov i 'relevante_lover' (én del av JSON), 
-    og sammenligner den mot hele XML for å trekke ut relevant data. Dette reduserer belastning per KI-kall.
-    
-    :param result: Dict fra law_classification (med 'relevante_lover')
-    :param xml_file_path: Sti til XML-filen
-    :return: Liste av dicts med filtrert data 
-    """
     try:
-        # Les hele XML-filen én gang før alle KI-kall
         with open(xml_file_path, 'r', encoding='utf-8') as f:
             xml_content = f.read()
-        
-        filtered_data = [] # Liste for å samle filtrert data fra alle lover
-        
-        # Loop gjennom hver lov i JSON (én del av JSON per iterasjon)
+        filtered_data = []
         for law in result.get('relevante_lover', []):
-            # Bygg prompt for denne ene loven
-            prompt = f"""
-                Du skal sammenligne én lov fra JSON mot hele XML-lovtekst og trekke ut kun relevant informasjon.
+            prompt = f"""Finn i XML bokstavene/punktene som matcher JSON-lovdata. 
+            For hvert treff: navn, bokstav_eller_punkt, tekst, ledd, begrunnelse (kort hvorfor relevant). 
+            Bruk kun innhold fra XML. 
+            Hvis ingen treff: returner tom "result"-liste. 
+            Hver bokstav/punkt = eget objekt.
 
-                Krav:
-                    - Bruk kun informasjon som finnes i XML.
-                    - Hvis ingen treff: returner tom "result"-liste.
-                    - Hver bokstav/punkt skal være eget objekt.
-                    - Hvis bokstav/punkt finnes: prioriter relevante bokstav/punkt + relevante ledd.
-                    - Hvis bokstav/punkt ikke finnes: returner relevante ledd.
-                    - Ikke gjenta tekst eller lag synonymer.
-                    - "begrunnelse" skal være kort: maks 1 setning og forklare hvorfor dette er relevant i forhold til innhold.
-                    - Kun nevn det som faktisk finnes i XML, ikke gjetninger.
-                    - Skriv ut bokstav og punkt hvis det finnes, ellers bare ledd.
-                    - IKKE gjenta informasjon som allerede er nevnt.
-                    - Skriv hvilken paragraf punkt og bokstav tilhører i "bokstav_eller_punkt" for å unngå forvirring.
+JSON-lovdata:
+{json.dumps(law, ensure_ascii=False, indent=2)}
 
-                JSON-lovdata (én del):
-                {json.dumps(law, ensure_ascii=False, indent=2)}
+XML-lovtekst:
+{xml_content}
 
-                XML-lovtekst (hele innholdet):
-                {xml_content}
-
-                Returner KUN gyldig JSON med format:
-                    {{
-                    "result": [
-                        {{
-                        "navn": "Paragrafens navn",
-                        "bokstav_eller_punkt": "a" eller "1" (identifikator),
-                        "tekst": "Teksten fra bokstaven eller punktet",
-                        "ledd": "Tilhørende leddtekst (hvis relevant)",
-                        "begrunnelse": "Kort forklaring på hvorfor dette er relevant og hvorfor annet er ignorert"
-                        }}
-                    ]
-                    }}
-                """
-            
-            # Send til KI per lov med JSON-schema for strukturert respons
+Returner JSON med "result"-array av objekt med navn, bokstav_eller_punkt, tekst, ledd, begrunnelse."""
             response = client.chat.completions.create(
                 model=deployment,
                 messages=[{"role": "user", "content": prompt}],
-                max_completion_tokens=1500, 
+                max_completion_tokens=1200,
                 temperature=0.1,
                 top_p=1,
                 response_format={
@@ -166,8 +106,8 @@ def get_filtered_law_data(result: dict, xml_file_path: str) -> list[dict]:
                                             "tekst": {"type": "string"},
                                             "ledd": {"type": "string"},
                                             "begrunnelse": {"type": "string"}
-                                        }, 
-                                        "required": ["navn","bokstav_eller_punkt", "tekst", "ledd", "begrunnelse"]
+                                        },
+                                        "required": ["navn", "bokstav_eller_punkt", "tekst", "ledd", "begrunnelse"]
                                     }
                                 }
                             }, 
@@ -177,13 +117,11 @@ def get_filtered_law_data(result: dict, xml_file_path: str) -> list[dict]:
                 }
             )
             
-            # Parser KI-respons og henter "result"-listen
             law_filtered_response = json.loads(response.choices[0].message.content)
             law_filtered = law_filtered_response.get("result", [])
             if isinstance(law_filtered, list):
                 filtered_data.extend(law_filtered)
-        
-        # Returnerer filtrert data eller feilmelding hvis ingen match
+
         return filtered_data if filtered_data else [{'error': 'Ingen matchende data funnet'}]
     
     except FileNotFoundError:
@@ -194,16 +132,12 @@ def get_filtered_law_data(result: dict, xml_file_path: str) -> list[dict]:
         return [{'error': f'Uventet feil: {str(e)}'}]
     
 
-#funskjon for å sjekke om bestemmelsen strider imot lovverket
+# Steg 3: vurder bestemmelsen deler mot lovverket (det som vises i frontend)
 def analyse_law_conflict(text: str, filtered_data: list[dict]) -> dict:
     try:
-        analysed_data = []  # Samler alle vurderinger
-
-        # filtered_data kommer inn som liste fra get_filtered_law_data
         if not isinstance(filtered_data, list):
             return {"result": [{"error": "Ugyldig input til analyse_law_conflict"}]}
 
-        # Hvis forrige steg allerede ga en feilmelding, send den videre
         upstream_errors = [
             item for item in filtered_data
             if isinstance(item, dict) and item.get("error")
@@ -211,110 +145,109 @@ def analyse_law_conflict(text: str, filtered_data: list[dict]) -> dict:
         if upstream_errors:
             return {"result": upstream_errors}
 
-        # Loop direkte over listen (ikke .get på list)
-        for law in filtered_data:
-            prompt = f"""
-                Du skal analysere en planbestemmelse og vurdere om den strider imot lovverket basert på filtrert data fra XML.
+        # Én felles kall: hele bestemmelsen + alle relevante lovpunkter
+        laws_json = json.dumps(filtered_data, ensure_ascii=False, indent=2)
+        prompt = f"""
+            Du skal analysere og tolke planbestemmelsen og lovverksteksten, og vurdere om planens deler strider mot loven.
 
-                Instruks:
-                - Sammenlign planbestemmelsen med hvert lovpunkt.
-                - Sett vurdering: "strider", "delvis_strider", "ikke_strider" eller "uklar".
-                - Sett konfliktgrad: "lav", "middels" eller "hoy".
-                - planutdrag og lovutdrag skal være korte sitater (1–3 linjer).
-                - Begrunnelse maks 2 setninger.
-                - Bruk kun informasjon fra teksten og lovpunktet. Ikke anta noe.
+            Oppgave:
+            1. Tolke planbestemmelsen: Identifiser meningsfulle deler/punkter/avsnitt (bestemmelser, krav, temaer). Du kan tolke hva planen faktisk krever, tillater eller begrenser – også implisitt.
+            2. Tolke lovene: Bruk lovteksten og eventuelle tolkninger som er gitt. Vurder hva hver lovbestemmelse krever, tillater eller begrenser i praksis.
 
-                Planbestemmelse:
-                {text}
-                
-                Filtrerte lover (én del):
-                {json.dumps(law, ensure_ascii=False, indent=2)}
+            3. Vurdering per plan-del:
+            - "strider": Plan-delen er i klar konflikt med loven (tillater noe loven forbyr, svekker et krav, eller bryter med lovens intensjon).
+            - "delvis strider": Plan-delen har både elementer som er i konflikt og elementer som er i samsvar/strengere, eller deler av teksten er uklare mens andre viser konflikt.
+            - "ikke strider": Plan-delen er forenlig med loven eller strengere enn loven, uten å svekke krav.
+            - "uklar": Tekstene er for vage, eller det er for lite overlapp til å vurdere konflikt.
 
-                Returner KUN gyldig JSON med format:
-                        {{
-                        "result": [
-                            {{
-                            "navn": "Paragrafens navn",
-                            "bokstav_eller_punkt": "a" eller "1" (identifikator),
-                            "tekst": "Teksten fra bokstaven eller punktet",
-                            "ledd": "Tilhørende leddtekst (hvis relevant)",
-                            "begrunnelse": "Kort forklaring på hvorfor dette er relevant og hvorfor annet er ignorert"
-                            }}
-                        ]
-                        }}
-            """
+            Beslutningsregler:
+            - Hvis det finnes én tydelig konflikt uten kompenserende innstramming → "strider".
+            - Hvis det finnes både konflikt og samsvar/strengere krav, eller konflikt + uklarhet → "delvis strider".
+            - Hvis ingen deler svekker lovens krav → "ikke strider".
+            - Hvis du ikke kan avgjøre → "uklar".
 
-            response = client.chat.completions.create(
-                    model=deployment,
-                    messages=[{"role": "user", "content": prompt}],
-                    max_completion_tokens=2000, 
-                    temperature=0.3,
-                    top_p=1,
-                    response_format={
-                        "type": "json_schema",
-                        "json_schema": {
-                            "name": "law_conflict_analysis",
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "result": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "object",
-                                            "properties": {
-                                                "navn": {"type": "string"},
-                                                "bokstav_eller_punkt": {"type": "string"},
-                                                "vurdering": {
-                                                    "type": "string",
-                                                    "enum": ["strider", "delvis_strider", "ikke_strider", "uklar"]
-                                                },
-                                                "konfliktgrad": {
-                                                    "type": "string",
-                                                    "enum": ["lav", "middels", "hoy"]
-                                                },
-                                                "planutdrag": {"type": "string"},
-                                                "lovutdrag": {"type": "string"},
-                                                "begrunnelse": {"type": "string"}
-                                            },
-                                            "required": [
-                                                "navn",
-                                                "bokstav_eller_punkt",
-                                                "vurdering",
-                                                "konfliktgrad",
-                                                "planutdrag",
-                                                "lovutdrag",
-                                                "begrunnelse"
-                                            ]
-                                        }
-                                    },
-                                    "oppsummering": {
-                                        "type": "object",
-                                        "properties": {
-                                            "totalt_vurdert": {"type": "integer"},
-                                            "strider": {"type": "integer"},
-                                            "delvis_strider": {"type": "integer"},
-                                            "ikke_strider": {"type": "integer"}
+            4. I "begrunnelse": forklar vurderingen (2–4 setninger). Ved strider eller delvis strider: hvilken lov og hvorfor. Ved ikke-strider: kort hvorfor den er forenlig.
+
+            5. Hvis plan-del strider eller delvis strider: fyll ut "motstridende_lov" med paragraf/lovpunkt (f.eks. "§ 11-8 bokstav a") og kort lovtekst. Ellers tom streng.
+
+            6. Når du fyller ut "lovtekst":
+            - Finn riktig lovpunkt i "Relevante lovpunkter".
+            - Kopier relevant tekst direkte fra lovpunktet (1–3 linjer).
+            - Ta med både tekst, ledd og bokstav/punkt hvis tilgjengelig.
+            - Dette gjelder både "strider" og "delvis strider".
+
+            Planbestemmelse:
+            {text}
+
+            Relevante lovpunkter fra lovverket:
+            {laws_json}
+
+            Returner KUN gyldig JSON med dette formatet:
+            {{
+            "result": [
+                {{
+                "plan_del": "nummer eller tittel og kort sitat eller beskrivelse av dette punktet i planen",
+                "vurdering": "strider" eller "delvis strider" eller "ikke strider" eller "uklar",
+                "motstridende_lov": "F.eks. § 11-8 bokstav a. Skal fylles ut ved strider og delvis strider. Tom streng kun ved ikke strider eller uklar.",
+                "lovtekst": "Kort utdrag av lovteksten som er i konflikt. Skal fylles ut ved strider og delvis strider. Tom streng ved ikke strider eller uklar.",
+                "begrunnelse": "Begrunnelse for vurderingen; ved konflikt hvilken lov og hvorfor. 2–4 setninger er greit."
+                }}
+            ]
+            }}
+        """
+
+        response = client.chat.completions.create(
+            model=deployment,
+            messages=[{"role": "user", "content": prompt}],
+            max_completion_tokens=4000,
+            temperature=0.25,
+            top_p=1,
+            response_format={
+                "type": "json_schema",
+                "json_schema": {
+                    "name": "plan_conflict_analysis",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "result": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "plan_del": {"type": "string"},
+                                        "vurdering": {
+                                            "type": "string",
+                                            "enum": ["strider", "ikke strider", "delvis strider", "uklar"]
                                         },
-                                        "required": ["totalt_vurdert", "strider", "delvis_strider", "ikke_strider"]
-                                    }
-                                },
-                                "required": ["result", "oppsummering"]
+                                        "motstridende_lov": {
+                                            "type": "string",
+                                            "description": "Obligatorisk ved 'strider' og 'delvis strider'. Tom streng ellers."
+                                        },
+                                        "lovtekst": {
+                                            "type": "string",
+                                            "description": "Kort utdrag av lovteksten som er i konflikt. Skal fylles ut ved strider og delvis strider."
+                                        },
+                                        "begrunnelse": {"type": "string"}
+                                    },
+                                    "required": ["plan_del", "vurdering", "lovtekst", "begrunnelse"]
+                                }
                             }
-                        }
+                        },
+                        "required": ["result"]
                     }
-                )
-                # Parser KI-respons og henter "result"-listen
-            analyse_response = json.loads(response.choices[0].message.content)
-            result_items = analyse_response.get("result", [])
-            if isinstance(result_items, list):
-                analysed_data.extend(result_items)
-                    
-        # Returnerer filtrert data eller feilmelding hvis ingen match
+                }
+            }
+        )
+
+        analyse_response = json.loads(response.choices[0].message.content)
+        result_items = analyse_response.get("result", [])
+        if not isinstance(result_items, list):
+            result_items = []
+
         return {
-            "result": analysed_data if analysed_data else [{"error": "Ingen matchende data funnet i analysen"}]
+            "result": result_items if result_items else [{"error": "Ingen deler kunne vurderes i planbestemmelsen"}]
         }
 
-        
     except json.JSONDecodeError:
         return {"result": [{"error": "Feil ved parsing av KI-respons"}]}
     except Exception as e:

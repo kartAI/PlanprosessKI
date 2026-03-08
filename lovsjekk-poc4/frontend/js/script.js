@@ -133,7 +133,7 @@ window.onload = async function () {
             .filter(item => item && typeof item === 'object' && item.error)
             .map(item => item.error);
 
-        // analyse_law_conflict returnerer vurdering/konfliktgrad, ikke tekst/ledd.
+        // Planorientert: hver rad er en del i planen med vurdering og evt. motstridende lov
         const conflicts = rawItems.filter(item =>
             item &&
             typeof item === 'object' &&
@@ -144,38 +144,33 @@ window.onload = async function () {
         if (!lawOutput) return;
 
         if (conflicts.length > 0) {
-            let html = '<h3>Vurdering mot lovverk</h3><ul class="law-buttons">';
+            let html = '<h3>Vurdering av planbestemmelsen</h3><p class="summary-intro">Deler/punkter i planen og om de strider mot lovverket.</p><ul class="law-buttons">';
 
             conflicts.forEach(item => {
-                const navn = item.navn || 'Uten navn';
-                const punkt = item.bokstav_eller_punkt || '-';
+                const planDel = item.plan_del || 'Uten beskrivelse';
+                const analyse = (item.analyse || '').trim();
                 const vurdering = item.vurdering || 'uklar';
-                const konfliktgrad = item.konfliktgrad || '-';
-                const planutdrag = item.planutdrag || 'Ingen planutdrag';
-                const lovutdrag = item.lovutdrag || 'Ingen lovutdrag';
+                const motstridendeLov = (item.motstridende_lov || '').trim();
                 const begrunnelse = item.begrunnelse || 'Ingen begrunnelse';
 
                 html += `<li>
-                    <strong>${navn}</strong> (${punkt})<br>
-                    <strong>Vurdering:</strong> ${vurdering}<br>
-                    <strong>Konfliktgrad:</strong> ${konfliktgrad}<br>
-                    <strong>Planutdrag:</strong> ${planutdrag}<br>
-                    <strong>Lovutdrag:</strong> ${lovutdrag}<br>
-                    <p><em>Begrunnelse:</em> ${begrunnelse}</p>
+                    <strong>Plan-del:</strong> ${planDel}<br>`;
+                if (analyse) {
+                    html += `<strong>Analyse:</strong> ${analyse}<br>`;
+                }
+                html += `<strong>Vurdering:</strong> ${vurdering}`;
+                if (['strider', 'delvis strider'].includes(vurdering) && motstridendeLov) {
+                    html += `<br><strong>Motstridende lov:</strong> ${motstridendeLov}`;
+                    if (item.lovtekst) {
+                        html += `<br><strong>Lovtekst:</strong> ${item.lovtekst}`;
+                    }
+                }
+                html += `<br><p id="begrunnelse"><strong>Begrunnelse:</strong> ${begrunnelse} </p>
                 </li>`;
             });
 
             html += '</ul>';
             lawOutput.innerHTML = html;
-
-            if (summaryOutput && data?.oppsummering) {
-                const o = data.oppsummering;
-                summaryOutput.innerHTML = `
-                    <p><strong>Oppsummering:</strong>
-                    Vurdert: ${o.totalt_vurdert}, Strider: ${o.strider},
-                    Delvis: ${o.delvis_strider}, Ikke strider: ${o.ikke_strider}</p>
-                `;
-            }
         } else if (backendErrors.length > 0) {
             lawOutput.innerHTML = `<p class="error">${backendErrors.join(' | ')}</p>`;
         } else {

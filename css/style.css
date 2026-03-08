@@ -55,6 +55,13 @@ p {
     margin-bottom: 30px;
 }
 
+#begrunnelse {
+    font-size: 1rem;
+    color: #666;
+    text-align: left;
+    margin-bottom: 30px;
+}
+
 /* Upload grid */
 .upload-grid {
     display: grid;
