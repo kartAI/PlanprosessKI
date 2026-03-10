@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lovsjekk</title>
+<!--Kobling til CSS stilark-->
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<main>
+    <div class="container">
+    <h1>Last opp planbestemmelse</h1>
+    <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+        <div class="upload-grid">
+            <div class="upload-box">
+                <h3>Sjekk om planbestemmelse følger loven</h3>
+                <input type="file" name="file" id="planbestemmelse" accept=".pdf" required>
+                <label for="planbestemmelse" class="upload-label">Velg fil</label>
+                <p class="file-name" id="planbestemmelse-name">Ingen fil valgt</p>
+            </div>
+        </div>
+
+        <button type="submit" class="analyse-btn">Gjør lovsjekk</button>
+    </form>
+    </div>
+</main>
+<!--Kobling til javascript-->
+<script src="js/script.js"></script>
+</body>
+
+</html>

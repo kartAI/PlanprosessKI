@@ -1,0 +1,121 @@
+<lov>
+    <paragraf id="11-8">
+        <tittel>Hensynssoner</tittel>
+        <ledd>
+            Kommuneplanens arealdel skal i nødvendig utstrekning vise hensyn og restriksjoner som
+            har betydning for bruken av areal. Hensyn og forhold som inngår i tredje ledd bokstav a
+            til f, kan markeres i arealdelen som hensynssoner med tilhørende retningslinjer og
+            bestemmelser. Det kan angis flere soner for samme areal.
+            Til hensynssone skal det i nødvendig utstrekning angis hvilke bestemmelser og
+            retningslinjer som gjelder eller skal gjelde i medhold av loven eller andre lover for å
+            ivareta det hensynet sonen viser.
+            Det kan fastsettes følgende hensynssoner:
+        </ledd>
+
+        <bokstav id="a">
+            <tittel>Sikrings-, støy- og faresoner</tittel>
+            <tekst>Det kan gis bestemmelser som forbyr eller setter vilkår for tiltak eller
+                virksomheter, jf. § 1-6, innenfor sonen.</tekst>
+        </bokstav>
+
+        <bokstav id="b">
+            <tittel>Sone med særlige krav til infrastruktur</tittel>
+            <tekst>Det kan gis bestemmelser om krav til infrastruktur i et utbyggingsområde etter §
+                11-9 nr. 3, og om omfang, utforming, funksjons- og kvalitetskrav, standardnivå,
+                avstand til midtlinje i veg og byggegrenser, samt forbud mot eller påbud om bestemte
+                løsninger.</tekst>
+        </bokstav>
+
+        <bokstav id="c">
+            <tittel>Sone med særlig hensyn til landbruk, reindrift, mineralressurser, friluftsliv,
+                grønnstruktur, landskap eller bevaring av naturmiljø eller kulturmiljø</tittel>
+            <tekst>
+                For randsonen til nasjonalparker og landskapsvernområder kan det fastsettes
+                bestemmelser for å hindre vesentlig forringelse av verneverdiene i verneområdet. Det
+                kan gis retningslinjer om begrensninger av virksomhet og vilkår for tiltak for å
+                ivareta interessen i sonen. Det kan gis retningslinjer om hvilke hensyn som skal
+                vektlegges ved praktisering av annen lovgivning så langt kommunen er tillagt
+                myndighet etter vedkommende lov.
+            </tekst>
+        </bokstav>
+
+        <bokstav id="d">
+            <tittel>Sone for båndlegging</tittel>
+            <tekst>
+                Båndlegging i påvente av vedtak etter plan- og bygningsloven eller andre lover er
+                tidsbegrenset til fire år, men kan etter søknad til departementet forlenges med fire
+                år.
+            </tekst>
+        </bokstav>
+
+        <bokstav id="e">
+            <tittel>Sone for felles planlegging, fortetting, omforming og fornyelse</tittel>
+            <tekst>Ved bruk av denne hensynssonen gjelder § 11-8 a.</tekst>
+        </bokstav>
+
+        <bokstav id="f">
+            <tittel>Sone hvor gjeldende reguleringsplan fortsatt skal gjelde</tittel>
+            <tekst>Ved bruk av denne hensynssonen skal kommunen vurdere om reguleringsplanene er i
+                samsvar med nasjonale og regionale interesser.</tekst>
+        </bokstav>
+    </paragraf>
+
+    <paragraf id="11-8a">
+        <tittel>Utarbeiding av plan som gjelder felles planlegging for flere eiendommer</tittel>
+        <ledd>
+            Til hensynssoner som nevnt i § 11-8 tredje ledd bokstav e kan kommunen gi bestemmelser
+            om krav om felles planlegging for flere eiendommer, herunder om særlige samarbeids-
+            eller eierformer samt fortetting, omforming og fornyelse, og krav til infrastruktur som
+            nevnt i § 11-8 tredje ledd bokstav b.
+            Kommunen kan gi retningslinjer til hensynssoner som nevnt i § 11-8 tredje ledd bokstav
+            e, blant annet om forhold som skal avklares og belyses i videre reguleringsarbeid, og om
+            samordning internt i kommunen og med statlige eller regionale myndigheter.
+            Kommunen kan fastsette en strategi for utviklingen av området som omfatter hensynssoner
+            etter § 11-8 tredje ledd bokstav e. Strategien skal omtale mål, rammer og hensyn som
+            skal være retningsgivende for den etterfølgende planleggingen og utbyggingen av området.
+            Før kommunen fastsetter hensynssoner etter § 11-8 tredje ledd bokstav e, skal den legge
+            til rette for at planen kan gjennomføres effektivt. Kommunen skal aktivt legge til rette
+            for samarbeid om planforslaget med berørte grunneiere, festere, utbyggere, statlige og
+            regionale myndigheter, beboere og virksomheter i området og andre interesserte.
+            Innspill i samarbeids- og medvirkningsprosessen skal dokumenteres, behandles og besvares
+            på en måte som gjør etterprøving mulig.
+        </ledd>
+    </paragraf>
+
+    <paragraf id="11-9">
+        <tittel>Generelle bestemmelser til kommuneplanens arealdel</tittel>
+        <ledd>
+            Kommunen kan uavhengig av arealformål vedta bestemmelser til kommuneplanens arealdel om:
+        </ledd>
+        <punkt nr="1">krav om reguleringsplan for visse arealer eller tiltak</punkt>
+        <punkt nr="2">innholdet i utbyggingsavtaler, jf. § 17-2</punkt>
+        <punkt nr="3">krav til løsninger for vannforsyning, avløp, avfallssystem, veg og transport</punkt>
+        <punkt nr="4">rekkefølgekrav for etablering av samfunnsservice og infrastruktur</punkt>
+        <punkt nr="5">tomtestørrelse, byggegrenser, utbyggingsvolum og funksjonskrav</punkt>
+        <punkt nr="6">miljøkvalitet, estetikk, natur, landskap og grønnstruktur</punkt>
+        <punkt nr="7">hensyn til bevaring av bygninger og kulturmiljø</punkt>
+        <punkt nr="8">forhold som skal avklares i videre reguleringsarbeid</punkt>
+    </paragraf>
+
+    <paragraf id="11-10">
+        <tittel>Bestemmelser til arealformål etter § 11-7 nr. 1–4</tittel>
+        <ledd>Til arealformål nr. 1–4 kan det gis bestemmelser om:</ledd>
+        <punkt nr="1">at mindre utbyggingstiltak ikke krever ytterligere plan</punkt>
+        <punkt nr="2">fysisk utforming av anlegg</punkt>
+        <punkt nr="3">offentlige formål eller fellesareal</punkt>
+        <punkt nr="4">lokalisering og strenghetsklasser for avkjørsler</punkt>
+        <punkt nr="5">områder der Forsvaret selv kan fatte vedtak</punkt>
+    </paragraf>
+
+    <paragraf id="11-11">
+        <tittel>Bestemmelser til arealformål etter § 11-7 nr. 5 og 6</tittel>
+        <ledd>Til arealformål nr. 5 og 6 kan det gis bestemmelser om:</ledd>
+        <punkt nr="1">utforming av bygninger og anlegg til landbruk og reindrift</punkt>
+        <punkt nr="2">spredt bolig-, fritids- eller næringsbebyggelse</punkt>
+        <punkt nr="3">bruk og vern av vannflate, vannsøyle og bunn</punkt>
+        <punkt nr="4">tiltak i 100-metersbeltet langs sjøen</punkt>
+        <punkt nr="5">forbud mot tiltak langs vassdrag</punkt>
+        <punkt nr="6">ferdsel i områder med vernehensyn</punkt>
+        <punkt nr="7">arter av akvakultur som kan etableres</punkt>
+    </paragraf>
+</lov>

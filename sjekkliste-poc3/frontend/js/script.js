@@ -18,7 +18,7 @@ function getSelectedChecklist() {
 const fileInputs = document.querySelectorAll('input[type="file"]');
 fileInputs.forEach(input => {
     input.addEventListener('change', function(e) {
-        const files = e.target.files;  // ← Endre fra .file til .files
+        const files = e.target.files;  
         const nameElement = document.getElementById(e.target.id + '-name');
         if (!files || files.length === 0) {
             nameElement.textContent = 'Ingen fil valgt';
