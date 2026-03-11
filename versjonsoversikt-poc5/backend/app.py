@@ -14,9 +14,7 @@ UPLOAD_FOLDER = Path(__file__).parent / "uploads"
 UPLOAD_FOLDER.mkdir(exist_ok=True)
 app.config["UPLOAD_FOLDER"] = str(UPLOAD_FOLDER)
 
-# Keep track of the latest upload in this runtime.
-LAST_UPLOADS = []
-
+#Håndter opplastning av fil
 @app.route("/upload", methods=["POST"])
 def upload():
     files = request.files.getlist("files")
@@ -40,18 +38,18 @@ def upload():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-    global LAST_UPLOADS
     response = {'uploaded': saved}
     if duplicates:
         response['duplicates'] = duplicates
         
     return jsonify(response), 200
 
-#liste over dokumenter
+#liste over opplastede filer
 @app.route('/documents', methods=['GET'])
 def get_documents():
     try:
-        return jsonify(LAST_UPLOADS)
+        files = [f for f in os.listdir(app.config["UPLOAD_FOLDER"]) if f.endswith(".pdf")]
+        return jsonify(files)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
