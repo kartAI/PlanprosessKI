@@ -19,7 +19,7 @@
         <div class="upload-box">
             <h3>Last opp nyeste versjon av planbeskrivelsen</h3>
 
-            <input type="file" name="file" id="versjonsoversikt-fil" accept=".pdf">
+            <input type="file" name="file" id="versjonsoversikt-fil" accept=".pdf" multiple>
             <label for="versjonsoversikt-fil" class="upload-label">Velg fil</label>
 
             <p class="file-name" id="versjonsoversikt-navn">Ingen fil valgt</p>
@@ -28,9 +28,7 @@
         <!-- Liste over filer -->
         <div class="upload-box">
             <h3>Filer i uploads-mappen</h3>
-            <ul class="file-list" id="file-list">
-                <li>Ingen filer er lastet opp enda</li>
-            </ul>
+            <div id="file-list" class="file-list"></div>
         </div>
 
     </div>
