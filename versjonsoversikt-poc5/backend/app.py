@@ -58,6 +58,17 @@ def serve_file(filename):
         return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
     except Exception as e:
         return jsonify({'error': str(e)}), 404
+    
+#leser filene i /uploads og gjør dem om til json
+@app.route('/list-uploads', methods=['GET'])
+def list_uploads():
+    try:
+        files = os.listdir(app.config["UPLOAD_FOLDER"])
+        files = [f for f in files if not f.startswith('.')]  # fjern skjulte filer
+        return jsonify(files)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 
 if __name__ == "__main__":
     app.run(debug=True)
