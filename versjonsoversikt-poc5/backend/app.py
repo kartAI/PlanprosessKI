@@ -6,7 +6,6 @@ from services.diff_analyse import analyse_all_diff
 from werkzeug.utils import secure_filename
 from pathlib import Path
 
-
 app = Flask(__name__)
 CORS(app)
 
@@ -44,15 +43,7 @@ def upload():
         
     return jsonify(response), 200
 
-#liste over opplastede filer
-@app.route('/documents', methods=['GET'])
-def get_documents():
-    try:
-        files = [f for f in os.listdir(app.config["UPLOAD_FOLDER"]) if f.endswith(".pdf")]
-        return jsonify(files)
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
+# Frontend kan hente en fil
 @app.route('/uploads/<filename>', methods=['GET'])
 def serve_file(filename):
     try:
@@ -70,6 +61,18 @@ def list_uploads():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+#Slette en fil i uploads
+@app.route('/delete/<filename>', methods=['DELETE'])
+def delete_file(filename):
+    try:
+        path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+        if os.path.exists(path):
+            os.remove(path)
+            return jsonify({'message': 'File deleted'}), 200
+        else:
+            return jsonify({'error': 'File not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
