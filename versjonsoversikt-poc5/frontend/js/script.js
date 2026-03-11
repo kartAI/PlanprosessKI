@@ -140,6 +140,31 @@ function showBanner(message, type = 'info') {
     }, 3000);
 }
 
+//Funksjon som laster inn opplastede filer
+function loadUploadedFiles() {
+    fetch("http://127.0.0.1:5000/list-uploads")
+        .then(res => res.json())
+        .then(files => {
+            const container = document.getElementById("file-list");
+            container.innerHTML = "";
+
+            if (files.length === 0) {
+                container.innerHTML = "<p>Ingen filer er lastet opp enda</p>";
+                return;
+            }
+
+            files.forEach(file => {
+                const div = document.createElement("div");
+                div.textContent = file;
+                container.appendChild(div);
+            });
+        })
+        .catch(err => console.error("Feil ved henting av filer:", err));
+}
+
+loadUploadedFiles();
+
+
 
 // Include header and footer
 includeHTML("header", "header.html");
