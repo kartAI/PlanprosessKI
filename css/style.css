@@ -267,6 +267,16 @@ p {
     max-height: 600px;
 }
 
+.content-area-changes {
+    flex: 0 1 calc(80%);
+    padding: 20px;
+    overflow-y: auto;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    height: 80vh;
+}
+
 .containers-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -546,8 +556,6 @@ p {
     color: black;
 }
 
-
-
 /* Style for meny */
 #meny {
     background-color: #034E31; /* mørk grå */
@@ -575,3 +583,47 @@ p {
     background-color: #24BD76; /* mørk grønn */
     color: #F9F7F7; /* lys hvit */
 }
+/*Style for poc5*/
+.sammenligning-container {
+    max-width: 1250px;
+    }
+
+.sammenligning-wrapper {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    padding: 0;
+    max-height: none;
+    overflow: visible;
+    }
+
+@media (max-width: 1024px) {
+    .sammenligning-wrapper {
+        grid-template-columns: 1fr;
+        }
+}
+
+.pdf-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-height: none;
+}
+
+.pdf-block {
+    margin: 0;
+}
+
+.pdf-select {
+    width: 240px;
+    margin-bottom: 12px;
+}
+
+.pdf-viewer {
+    width: 100%;
+    height: 250px;
+    border: 1px solid #d8d8d8;
+    border-radius: 8px;
+    background: #fff;
+    }
+

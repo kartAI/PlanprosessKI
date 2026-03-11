@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sammenligning</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+    <div id="header"></div>
+    <div class="container sammenligning-container">
+        <h1>Sammenligning av to versjoner</h1>
+        <p>Velg to PDF-filer fra uploads for visning.</p>
+
+        <div class="content-wrapper sammenligning-wrapper">
+            <div class="content-area pdf-column">
+                <div class="documents-container pdf-block">
+                    <h2>Versjon 1</h2>
+                    <select id="pdfSelect1" class="select-sjekkliste pdf-select">
+                        <option value="">Velg PDF...</option>
+                    </select>
+                    <iframe id="pdfViewer1" class="pdf-viewer" title="PDF 1"></iframe>
+                </div>
+
+                <div class="documents-container pdf-block">
+                    <h2>Versjon 2</h2>
+                    <select id="pdfSelect2" class="select-sjekkliste pdf-select">
+                        <option value="">Velg PDF...</option>
+                    </select>
+                    <iframe id="pdfViewer2" class="pdf-viewer" title="PDF 2"></iframe>
+                </div>
+            </div>
+
+            <div class="content-area2 endringer-column">
+                <div class="analysis-container">
+                    <h2>Endringer</h2>
+                    <ul id="endringer-output" class="endringer-list">
+                        <li>Velg to dokumenter for å se detaljer her.</li>
+                        <li>Valgte filnavn vises i denne listen.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="statusText" class="status-text"></div>
+
+    </div>
+    <script src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>versjonsoversikt</title>
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+
+<body>
+    <div id="header"></div>
+<div class="container">
+<h1>Last opp planbeskrivelse</h1>
+
+<form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+    <div class="upload-grid">
+
+        <!-- Opplastingsboks -->
+        <div class="upload-box">
+            <h3>Last opp nyeste versjon av planbeskrivelsen</h3>
+
+            <input type="file" name="file" id="versjonsoversikt-fil" accept=".pdf">
+            <label for="versjonsoversikt-fil" class="upload-label">Velg fil</label>
+
+            <p class="file-name" id="versjonsoversikt-navn">Ingen fil valgt</p>
+        </div>
+
+        <!-- Liste over filer -->
+        <div class="upload-box">
+            <h3>Filer i uploads-mappen</h3>
+            <ul class="file-list" id="file-list">
+                <li>Ingen filer er lastet opp enda</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <button type="submit" class="analyse-btn">Gå til versjonsoversikt</button>
+</form>
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>
