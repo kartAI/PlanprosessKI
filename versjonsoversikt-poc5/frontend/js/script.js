@@ -21,6 +21,9 @@
         });
     }
 
+// Include header and footer
+includeHTML("header", "header.html");
+
 // Velger riktig backend-base URL for alle maskiner
 const API_BASE =
 window.location.hostname === "127.0.0.1"
@@ -167,5 +170,3 @@ loadUploadedFiles();
 
 
 
-// Include header and footer
-includeHTML("header", "header.html");
