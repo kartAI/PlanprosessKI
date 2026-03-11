@@ -545,3 +545,46 @@ p {
 .checklist-point {
     color: black;
 }
+/*Style for poc5*/
+.sammenligning-container {
+    max-width: 1250px;
+    }
+
+.sammenligning-wrapper {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    padding: 0;
+    max-height: none;
+    overflow: visible;
+    }
+
+@media (max-width: 1024px) {
+    .sammenligning-wrapper {
+        grid-template-columns: 1fr;
+        }
+}
+
+.pdf-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-height: none;
+}
+
+.pdf-block {
+    margin: 0;
+}
+
+.pdf-select {
+    width: 240px;
+    margin-bottom: 12px;
+}
+
+.pdf-viewer {
+    width: 100%;
+    height: 250px;
+    border: 1px solid #d8d8d8;
+    border-radius: 8px;
+    background: #fff;
+    }
