@@ -545,3 +545,33 @@ p {
 .checklist-point {
     color: black;
 }
+
+
+
+/* Style for meny */
+#meny {
+    background-color: #034E31; /* mørk grå */
+    padding: 15px 0;
+    width: 100%;
+}
+
+#meny nav {
+    display: flex;
+    gap: 30px;
+    justify-content: top;
+}
+
+#meny nav a {
+    color: #FFFFFF; /* hvit tekst */
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: 0.25s ease;
+}
+
+#meny nav a:hover {
+    background-color: #24BD76; /* mørk grønn */
+    color: #F9F7F7; /* lys hvit */
+}
