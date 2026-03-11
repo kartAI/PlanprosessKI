@@ -627,3 +627,15 @@ p {
     background: #fff;
     }
 
+.page-with-header {
+    display: block;
+    min-height: 100vh;
+    padding: 0;
+}
+
+.page-with-header #meny {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
