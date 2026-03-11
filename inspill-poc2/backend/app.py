@@ -61,7 +61,7 @@ def upload():
     
     return jsonify(response), 200
 
-#liste over dokumenter
+# Liste over dokumenter
 @app.route('/documents', methods=['GET'])
 def get_documents():
     try:

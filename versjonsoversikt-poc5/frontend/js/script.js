@@ -1,8 +1,8 @@
 
 /**
- * Loads an HTML file and inserts it into the target element.
- * @param {string} elementId - The ID of the target element.
- * @param {string} filePath - Path to the HTML file to include.
+ * Laster inn en HTML‑fil og setter den inn i mål‑elementet.
+ * @param {string} elementId - ID‑en til mål‑elementet.
+ * @param {string} filePath - Stien til HTML‑filen som skal inkluderes.
  */
     function includeHTML(elementId, filePath) {
     fetch(filePath)
@@ -21,7 +21,7 @@
         });
     }
 
-// Include header and footer
+// Inkluderer header elementet HTML
 includeHTML("header", "header.html");
 
 // Velger riktig backend-base URL for alle maskiner
@@ -40,7 +40,7 @@ if (uploadForm) {
         const files = document.getElementById('versjonsoversikt-fil').files;
 
         if (!files || files.length === 0) {
-            // Ikke-blokkerende tilbakemelding
+            // Ikke-blokkerende tilbakemelding hvis ingen fil er valgt
             showBanner('Vennligst velg minst én fil', 'error');
             return;
         }
@@ -97,7 +97,7 @@ function showBanner(message, type = 'info') {
 
     document.body.appendChild(banner);
     setTimeout(() => {
-        // fade out then remove for a smooth UX
+        // fade out på bannermelding for brukervennlig UX
         banner.style.opacity = '0';
         banner.style.transform = 'translateX(-50%) translateY(-6px)';
         setTimeout(() => banner.remove(), 250);

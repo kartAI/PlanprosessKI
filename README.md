@@ -1,6 +1,6 @@
 # Bachelorprosjket - PlanprosessKI
 
-Repo for Grupp 7 - 2026
+Repo for Gruppe 7 - 2026
 
 ## Hovedproblemstilling
 
@@ -21,6 +21,13 @@ Det kan komme mange innspill og høringer knyttet til hver planendring som kan v
 ## Proof of Concept 3 - Sjekkliste for planbeskrivelse
 
 Det kan være utfordrende å sørge for at alle punktene i sjekklisten/malen (sjekkliste fra regjeringen, mal Kristiansand Kommune) er oppfylt i planbeskrivelsen. Kan KI brukes til å automatisk sjekke at kravene i sjekklisten er inkludert, eventuelt også oppfylt, i planbeskrivelsen?
+
+## Proof of Concept 4 - Lovsjekk
+Hvordan kan KI brukes til sjekke om en planbestemmelse samsvarer med lovverket?(sjekke om man har hjemmel iht. Plan- og bygningsloven til å stille kravet).
+
+## Proof of Concept 5 - Versjonsoversikt
+
+Det kan være vanskelig å følge med og holde styr på endringer som kommer i løpet av planprosessen. Kan KI brukes som versjonsoversikt for endringene som skjer fortløpende i planprosessen? Sjekke en gammel mot en ny, med endringer. (Github lignenede) 
 
 ## Setup and run (Windows, PowerShell)
 
