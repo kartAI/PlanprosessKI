@@ -20,7 +20,7 @@ UPLOAD_FOLDER = Path(__file__).parent / "uploads"
 UPLOAD_FOLDER.mkdir(exist_ok=True)
 app.config["UPLOAD_FOLDER"] = str(UPLOAD_FOLDER)
 
-# Keep track of the latest upload in this runtime.
+# Holder styr på sist opplastede dokumenter (kun filnavn)
 LAST_UPLOADS = []
 
 def _clear_uploads(folder: Path) -> None:
