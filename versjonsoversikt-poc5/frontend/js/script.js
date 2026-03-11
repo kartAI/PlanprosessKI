@@ -115,7 +115,8 @@ const fileNameDisplay = document.getElementById("versjonsoversikt-navn");
 // Oppdater tekst når bruker velger fil
 fileInput.addEventListener("change", () => {
     if (fileInput.files.length > 0) {
-        fileNameDisplay.textContent = fileInput.files[0].name;
+        const names = Array.from(fileInput.files).map(f => f.name).join(', ');
+        fileNameDisplay.textContent = names;
     } else {
         fileNameDisplay.textContent = "Ingen fil valgt";
     }
