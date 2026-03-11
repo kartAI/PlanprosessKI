@@ -14,7 +14,7 @@ UPLOAD_FOLDER = Path(__file__).parent / "uploads"
 UPLOAD_FOLDER.mkdir(exist_ok=True)
 app.config["UPLOAD_FOLDER"] = str(UPLOAD_FOLDER)
 
-# Keep track of the latest upload in this runtime.
+# Hold oversikt over den siste opplastingen i denne kjøretiden
 LAST_UPLOADS = []
 
 SJEKKLISTER_DIR = Path(__file__).parent / "sjekklister"

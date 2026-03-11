@@ -1,4 +1,4 @@
-#laster inn og importer biblioteker
+# Laster inn og importer biblioteker
 import os
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
@@ -14,7 +14,7 @@ UPLOAD_FOLDER = Path(__file__).parent / "uploads"
 UPLOAD_FOLDER.mkdir(exist_ok=True)
 app.config["UPLOAD_FOLDER"] = str(UPLOAD_FOLDER)
 
-#Håndter opplastning av fil
+# Håndter opplastning av fil
 @app.route("/upload", methods=["POST"])
 def upload():
     files = request.files.getlist("files")
@@ -44,7 +44,7 @@ def upload():
         
     return jsonify(response), 200
 
-#liste over opplastede filer
+# Liste over opplastede filer
 @app.route('/documents', methods=['GET'])
 def get_documents():
     try:
@@ -60,7 +60,7 @@ def serve_file(filename):
     except Exception as e:
         return jsonify({'error': str(e)}), 404
     
-#leser filene i /uploads og gjør dem om til json
+# Leser filene i /uploads og gjør dem om til json
 @app.route('/list-uploads', methods=['GET'])
 def list_uploads():
     try:

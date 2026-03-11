@@ -1,4 +1,4 @@
-#importerer nødvendige biblioteker og moduler
+# Importerer nødvendige biblioteker og moduler
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
@@ -7,19 +7,19 @@ import os
 from read_pdf import read_pdf
 from services.analysis_services import law_classification, get_filtered_law_data, analyse_law_conflict  
 
-#oppretter Flask-app og aktiverer CORS for å tillate forespørsler fra frontend
+# Oppretter Flask-app og aktiverer CORS for å tillate forespørsler fra frontend
 app = Flask(__name__)
 CORS(app)
 
 # Setter opp opplastingsmappe: lager "uploads" hvis den ikke finnes, og lagrer stien i app-konfigurasjonen.
 UPLOAD_FOLDER = Path(__file__).parent / "uploads"
-UPLOAD_FOLDER.mkdir(exist_ok=True) #oppretter om ikke allerede eksisterer
+UPLOAD_FOLDER.mkdir(exist_ok=True) # Oppretter mappen om den ikke allerede eksisterer
 app.config["UPLOAD_FOLDER"] = str(UPLOAD_FOLDER)
 
-#Global liste for å holde styr på siste opplastede filer i runtime
+# Global liste for å holde styr på siste opplastede filer i runtime
 LAST_UPLOADS = []
 
-# Hjelpefunksjon: Sletter alle filer i uploads-mappen for å unngå opphopning av gamle filer
+# Hjelpefunksjon: Sletter alle filer i uploads-mappen for å unngå oppsamling av gamle filer
 def _clear_uploads(folder: Path) -> None:
     for item in folder.iterdir():
         if item.is_file():
@@ -58,9 +58,9 @@ def upload():
 @app.route('/documents', methods=['GET'])
 def get_documents():
     try:
-        return jsonify(LAST_UPLOADS) #returnerer listen som JSON
+        return jsonify(LAST_UPLOADS) # Returnerer listen som JSON
     except Exception as e:
-        return jsonify({'error': str(e)}), 500 #feil ved henting av dokumenter
+        return jsonify({'error': str(e)}), 500 # Feil ved henting av dokumenter
 
 
 #Endepunkt for å servere filer fra uploads-mappen
