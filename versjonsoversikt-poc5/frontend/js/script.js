@@ -30,25 +30,6 @@ window.location.hostname === "127.0.0.1"
     ? "http://127.0.0.1:5000"
     : "http://localhost:5000";
 
-
-const fileInputs = document.querySelectorAll('input[type="file"]');
-fileInputs.forEach(input => {
-    input.addEventListener('change', function(e) {
-        const files = e.target.files;
-        const nameElement = document.getElementById(e.target.id + '-name');
-        if (!files || files.length === 0) {
-            nameElement.textContent = 'Ingen fil valgt';
-            nameElement.style.color = '#999';
-        } else if (files.length === 1) {
-            nameElement.textContent = files[0].name;
-            nameElement.style.color = '#667eea';
-        } else {
-            nameElement.textContent = files.length + ' filer valgt';
-            nameElement.style.color = '#667eea';
-        }
-    });
-});
-
 // Håndter skjema-innsending
 const uploadForm = document.getElementById('uploadForm');
 if (uploadForm) {
@@ -90,27 +71,6 @@ if (uploadForm) {
     });
 }
 
-// Hent dokumenter fra backend - kun på endring.html
-async function loadDocuments() {
-    try {
-        // Bruk no-store + cache busting for å unngå gammel liste
-        const response = await fetch(`${API_BASE}/documents?t=${Date.now()}`, {
-            method: 'GET',
-            cache: 'no-store'
-        });
-        const documents = await response.json();
-        
-        const documentsList = document.getElementById('file-list');
-        if (documentsList) {
-            documentsList.innerHTML = documents.map(doc => 
-                `<a href="${API_BASE}/upload/${doc}" target="_blank" class="file-list">${doc}</a>`
-            ).join('<br>');
-        }
-    } catch (error) {
-        console.error('Feil ved henting av dokumenter:', error);
-    }
-}
-
 // Hent input og tekstfelt
 const fileInput = document.getElementById("versjonsoversikt-fil");
 const fileNameDisplay = document.getElementById("versjonsoversikt-navn");
@@ -146,7 +106,7 @@ function showBanner(message, type = 'info') {
 
 //Funksjon som laster inn opplastede filer
 function loadUploadedFiles() {
-    fetch("http://127.0.0.1:5000/list-uploads")
+    fetch(`${API_BASE}/list-uploads`)
         .then(res => res.json())
         .then(files => {
             const container = document.getElementById("file-list");
@@ -157,13 +117,53 @@ function loadUploadedFiles() {
                 return;
             }
 
+            // For hver fil i uploads lager et HTML element med link og sletteknapp(div)
             files.forEach(file => {
                 const div = document.createElement("div");
-                div.textContent = file;
+                div.className = "file-item";
+
+                // Gjøre filer klikkbare
+                const link = document.createElement("a");
+                link.href = `${API_BASE}/uploads/${file}`;
+                link.target = "_blank";
+                link.textContent = file;
+                link.className = "file-link";
+
+                // Lage en sletteknapp for filer
+                const deleteBtn = document.createElement("button");
+                deleteBtn.textContent = "Slett";
+                deleteBtn.className = "delete-btn";
+                deleteBtn.onclick = () => deleteFile(file);
+
+                // Legger filer til i DOM
+                div.appendChild(link);
+                div.appendChild(deleteBtn);
                 container.appendChild(div);
             });
         })
         .catch(err => console.error("Feil ved henting av filer:", err));
+}
+
+//funksjon for å slette filer fra uploads
+function deleteFile(filename) {
+    if (confirm(`Er du sikker på at du vil slette ${filename}?`)) {
+        fetch(`${API_BASE}/delete/${filename}`, {
+            method: 'DELETE'
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.message) {
+                showBanner('Fil slettet', 'success');
+                loadUploadedFiles(); // Oppdaterer uploads
+            } else {
+                showBanner('Feil ved sletting: ' + data.error, 'error');
+            }
+        })
+        .catch(err => {
+            showBanner('Feil ved sletting', 'error');
+            console.error('Delete error:', err);
+        });
+    }
 }
 
 loadUploadedFiles();
