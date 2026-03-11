@@ -267,6 +267,16 @@ p {
     max-height: 600px;
 }
 
+.content-area-changes {
+    flex: 0 1 calc(80%);
+    padding: 20px;
+    overflow-y: auto;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    height: 80vh;
+}
+
 .containers-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
