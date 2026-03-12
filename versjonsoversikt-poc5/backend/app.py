@@ -6,6 +6,7 @@ from services.diff_analyse import analyse_all_diff
 from werkzeug.utils import secure_filename
 from pathlib import Path
 from services.pdf_reader import read_pdf
+from services.curr_analyse import analyse_meetings
 
 app = Flask(__name__)
 CORS(app)

@@ -7,15 +7,36 @@ import re
 from datetime import datetime
 
 def analyse_meetings(all_meetings: str) -> str:
-    prompt = (
-        "Du får flere møtereferater. Hent ut alle gjeldende krav og forslag på tvers av referatene. "
-        "Kun inkluder den nyeste versjonen av et punkt dersom det er endret mellom møtene. "
-        "Behold punkter fra tidligere møter som fortsatt er gyldige og ikke er overstyrt. "
-        "Ignorer utdatert informasjon som er erstattet i et senere møtereferat. "
-        "Returner en strukturert punktliste over alle gjeldende krav og forslag, KUN som gyldig JSON.\n\n"
-        "MØTEREFERATER:\n"
-        f"{all_meetings}"
-    )
+    prompt = f"""
+        Du får flere møtereferater. Du skal:
+        - Hente ut alle gjeldende krav eller forslag på tvers av referatene. 
+
+        Regler:
+        - Kun inkluder den nyeste versjonen av et krav eller forslag dersom det er endret mellom møtene. 
+        - Hvis et krav eller forslag er nevnt i et tidligere møtereferat, og det ikke er endret eller overstyrt i senere møtereferater, skal det beholdes som gyldig.
+        - Hvis et krav eller forslag er fjernet, overstyrt eller endret i et senere møtereferat, skal kun den nyeste versjonen tas med.
+        - Ignorer utdatert informasjon som er erstattet i et senere møtereferat. 
+        - Inkluder seneste dato øverst i listen.
+        
+        Returner KUN gyldig JSON i dette formatet:
+
+        {{
+        "oppdateringer": [
+            {{
+            "dato": "YYYY-MM-DD",
+            "punkter": [
+                "Krav eller forslag 1",
+                "Krav eller forslag 2",
+                ...
+            ]
+            }},
+            ...
+        ]
+        }}
+        
+        MØTEREFERATER:
+        {all_meetings}
+    """
 
     response = client.chat.completions.create(
         model=deployment,
@@ -24,7 +45,3 @@ def analyse_meetings(all_meetings: str) -> str:
         temperature=0.1
     )
     return response.choices[0].message.content
-
-# Eksempel på bruk:
-# result = analyse_meetings_with_ai('meetings/')
-# print(result)  # Kan sendes til frontend
