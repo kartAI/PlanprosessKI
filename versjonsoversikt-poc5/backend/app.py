@@ -5,6 +5,7 @@ from flask_cors import CORS
 from services.diff_analyse import analyse_all_diff
 from werkzeug.utils import secure_filename
 from pathlib import Path
+from services.pdf_reader import read_pdf
 
 app = Flask(__name__)
 CORS(app)
@@ -73,6 +74,24 @@ def delete_file(filename):
             return jsonify({'error': 'File not found'}), 404
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+        
+@app.route('/all-changes-analysis', methods=['GET'])
+def all_changes():
+    pdfs = list(UPLOAD_FOLDER.glob("*.pdf"))
+    if not pdfs:
+        return jsonify({"error": "Ingen PDF funnet i uploads"}), 400
+
+    documents = []
+    for pdf in pdfs:
+        text = read_pdf(str(pdf))
+        documents.append({
+            "filename": pdf.name,
+            "text": text,
+        })
+
+    result = analyse_all_diff(documents)
+    return jsonify(result), 200
 
 if __name__ == "__main__":
     app.run(debug=True)
