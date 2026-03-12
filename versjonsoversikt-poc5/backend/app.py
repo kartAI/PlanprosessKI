@@ -93,5 +93,6 @@ def all_changes():
     result = analyse_all_diff(documents)
     return jsonify(result), 200
 
+
 if __name__ == "__main__":
     app.run(debug=True)
