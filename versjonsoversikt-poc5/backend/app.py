@@ -14,6 +14,8 @@ UPLOAD_FOLDER = Path(__file__).parent / "uploads"
 UPLOAD_FOLDER.mkdir(exist_ok=True)
 app.config["UPLOAD_FOLDER"] = str(UPLOAD_FOLDER)
 
+MEETINGS_FOLDER = Path(__file__).parent / "meetings"
+
 # Håndter opplastning av fil
 @app.route("/upload", methods=["POST"])
 def upload():
@@ -93,6 +95,28 @@ def all_changes():
     result = analyse_all_diff(documents)
     return jsonify(result), 200
 
+# Håndter KI-analyse av møtereferater 
+@app.route('/current_analysis', methods=['GET'])
+def current_analyses():
+    meetings_dir = MEETINGS_FOLDER
+    try:
+        # Les alle møtereferat-filer fra mappen
+        files = [f for f in os.listdir(meetings_dir) if os.path.isfile(os.path.join(meetings_dir, f))]
+        meeting_texts = []
+        for filename in files:
+            file_path = os.path.join(meetings_dir, filename)
+            meeting_texts.append(read_pdf(file_path))  # les PDF til tekst
+
+        all_meetings = "\n\n".join(meeting_texts)  # Samle all tekst til én streng
+
+        # Kjør KI-analysen på samlet tekst
+        resultat = analyse_meetings(all_meetings)
+        
+        return jsonify(resultat), 200       
+    except FileNotFoundError as e:
+        return jsonify({"error": str(e)}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
