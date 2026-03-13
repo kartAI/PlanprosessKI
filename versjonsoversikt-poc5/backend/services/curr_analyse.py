@@ -12,6 +12,7 @@ def analyse_meetings(all_meetings: str) -> dict:
         - Hvis et krav eller forslag er fjernet, overstyrt eller endret i et senere møtereferat, skal kun den nyeste versjonen tas med.
         - Ignorer utdatert informasjon som er erstattet i et senere møtereferat. 
         - Inkluder seneste dato øverst i listen.
+        - Alt skal stå på norsk bokmål med forståelige setninger.
         Returner KUN gyldig JSON i dette formatet:
 {{
         "oppdateringer": [
