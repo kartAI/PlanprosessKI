@@ -7,24 +7,25 @@ from services.ai_conf import client, deployment
 def analyse_all_diff(all_documents: list) -> list:
     try:
         prompt = f"""
-        Du får en liste med dokumenter. Gjør følgende:
+        Du får en liste med dokumenter. Du skal:
         - Sorter dokumentene etter dato, med nyest først og eldst sist.
         - Sammenlign dokumentene og finn hva som er endret mellom hver versjon.
-        - Returner et JSON-objekt med følgende struktur (ingen markdown, kun JSON):
-        
+
         REGLER:
         - Du skal ikke nevne små språklige endringer som komma, mellomrom, punktum.
-        - Alt skal stå på norsk bokmål
+        - Du skal svare på norsk bokmål med forståelige setninger.
+        
+        Returner KUN gyldig JSON-objekt med følgende struktur:
         {{
         "dokumentversjoner": [
             {{
-            "dato": "YYYY-MM-DD",
+            "dato": "DD-MM-YYYY",
             "filnavn": "string",
             "endringer_fra_forrige": ["string", "string"]
             }}
         ]
         }}
-        Alle dokumenter:
+        DOKUMENTER:
         {all_documents}
         """
         response = client.chat.completions.create(
@@ -37,24 +38,25 @@ def analyse_all_diff(all_documents: list) -> list:
         )
         return json.loads(response.choices[0].message.content.strip())
     except FileNotFoundError:
-        return {'error': 'Ingen dokumenter ikke funnet'}
+        return {'error': 'Ingen dokumenter funnet'}
     except json.JSONDecodeError:
         return {'error': 'Feil ved parsing av KI-respons'}
     except Exception as e:
         return {'error': f'Uventet feil: {str(e)}'}
 
-#metode for å sammenligne to
+# Metode for å sammenligne to versjoner
 def compare_versions(document1: str, document2: str):
     try:
         prompt = f"""
-        Du få to versioner av samme dokument. Gjør følgende:
-        - Du skal sammenligne den elste mot den nyeste
-        - Finne ut hva som er endret mellom de to versjonene.
+        Du få to versioner av samme dokument. Du skal:
+        - Du skal sammenligne den elste mot den nyeste og finne ut hva som er endret.
         - Returner et JSON-objekt med følgende struktur (ingen markdown, kun JSON):
         
         REGLER:
-        - Ikke nevne små språklige endringer som komma, mellomrom, punktum.
-        - Alt skal stå på norsk bokmål
+        - Ikke nevn små språklige endringer som komma, mellomrom, punktum.
+        - Aldri nevn endring i dato. 
+        - Alt skal stå på norsk bokmål med forståelige setninger. 
+        - Hvis det ikke er noen vesentlige endringer mellom to dokumenter returner: "Ingen vesentlige endringer.".
         {{
         "dokumentversjoner": [
             {{
@@ -77,7 +79,7 @@ def compare_versions(document1: str, document2: str):
         )
         return json.loads(response.choices[0].message.content.strip())
     except FileNotFoundError:
-        return {'error': 'Ingen dokumenter ikke funnet'}
+        return {'error': 'Ingen dokumenter funnet'}
     except json.JSONDecodeError:
         return {'error': 'Feil ved parsing av KI-respons'}
     except Exception as e:
