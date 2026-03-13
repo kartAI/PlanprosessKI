@@ -1,4 +1,4 @@
-# Bachelorprosjket - PlanprosessKI
+# Bachelorprosjekt - PlanprosessKI
 
 Repo for Gruppe 7 - 2026
 
@@ -23,6 +23,7 @@ Det kan komme mange innspill og høringer knyttet til hver planendring som kan v
 Det kan være utfordrende å sørge for at alle punktene i sjekklisten/malen (sjekkliste fra regjeringen, mal Kristiansand Kommune) er oppfylt i planbeskrivelsen. Kan KI brukes til å automatisk sjekke at kravene i sjekklisten er inkludert, eventuelt også oppfylt, i planbeskrivelsen?
 
 ## Proof of Concept 4 - Lovsjekk
+
 Hvordan kan KI brukes til sjekke om en planbestemmelse samsvarer med lovverket?(sjekke om man har hjemmel iht. Plan- og bygningsloven til å stille kravet).
 
 ## Proof of Concept 5 - Versjonsoversikt
