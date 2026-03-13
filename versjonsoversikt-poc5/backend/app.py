@@ -2,7 +2,7 @@
 import os
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-from services.diff_analyse import analyse_all_diff
+from services.diff_analyse import analyse_all_diff, compare_versions
 from werkzeug.utils import secure_filename
 from pathlib import Path
 from services.pdf_reader import read_pdf
@@ -65,7 +65,7 @@ def list_uploads():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-#Slette en fil i uploads
+# Slette en fil i uploads
 @app.route('/delete/<filename>', methods=['DELETE'])
 def delete_file(filename):
     try:
@@ -77,8 +77,9 @@ def delete_file(filename):
             return jsonify({'error': 'File not found'}), 404
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
 
-        
+# Håndter analyse av alle PDF-filer i uploads        
 @app.route('/all-changes-analysis', methods=['GET'])
 def all_changes():
     pdfs = list(UPLOAD_FOLDER.glob("*.pdf"))
@@ -96,6 +97,18 @@ def all_changes():
     result = analyse_all_diff(documents)
     return jsonify(result), 200
 
+# Håndterer sammenligning analysen av to spesifikke versjoner
+@app.route('/compare-versions-analysis', methods=['POST'])
+def compare_documents():
+    if 'document1' not in request.files or 'document2' not in request.files:
+        return jsonify({'error': 'Manglende filer'}), 400
+
+    text1 = read_pdf(request.files['document1'].stream)
+    text2 = read_pdf(request.files['document2'].stream)
+    
+    result = compare_versions(text1, text2)
+    return jsonify(result), 200
+    
 # Håndter KI-analyse av møtereferater 
 @app.route('/current_analysis', methods=['GET'])
 def current_analyses():
