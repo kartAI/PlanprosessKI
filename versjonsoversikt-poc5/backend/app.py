@@ -9,7 +9,7 @@ from services.pdf_reader import read_pdf
 from services.curr_analyse import analyse_meetings
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 UPLOAD_FOLDER = Path(__file__).parent / "uploads"
 UPLOAD_FOLDER.mkdir(exist_ok=True)
@@ -134,3 +134,18 @@ def current_analyses():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+# Test direkte i terminalen, husk å flytt "app.run(debug=True)" under. 
+"""if __name__ == "__main__":
+    # Test direkte i terminalen
+    meetings_dir = MEETINGS_FOLDER
+    files = [f for f in os.listdir(meetings_dir) if os.path.isfile(os.path.join(meetings_dir, f))]
+    meeting_texts = []
+    for filename in files:
+        file_path = os.path.join(meetings_dir, filename)
+        meeting_texts.append(read_pdf(file_path))
+    all_meetings = "\n\n".join(meeting_texts)
+    print(analyse_meetings(all_meetings))"""
+    
+    
+    

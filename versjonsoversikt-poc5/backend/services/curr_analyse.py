@@ -1,10 +1,5 @@
-#Analyse for Gjeldene
 #laster inn og importer biblioteker
-import json
 from services.ai_conf import client, deployment
-import os
-import re
-from datetime import datetime
 
 def analyse_meetings(all_meetings: str) -> str:
     prompt = f"""
@@ -24,9 +19,11 @@ def analyse_meetings(all_meetings: str) -> str:
         "oppdateringer": [
             {{
             "dato": "YYYY-MM-DD",
-            "punkter": [
-                "Krav eller forslag 1",
-                "Krav eller forslag 2",
+            "gjeldende": [
+                {{
+                "tema": "string",
+                "beskrivelse": "string"
+                }},
                 ...
             ]
             }},
@@ -45,3 +42,5 @@ def analyse_meetings(all_meetings: str) -> str:
         temperature=0.1
     )
     return response.choices[0].message.content
+
+

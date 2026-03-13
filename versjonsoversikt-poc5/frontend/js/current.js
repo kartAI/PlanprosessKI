@@ -1,5 +1,6 @@
 import { API_BASE } from "./script.js";
 
+//skriver ut analysen i punktliste på gjelder.html
 function loadAnalysis() {
     fetch(`${API_BASE}/current_analysis`)
         .then(res => res.json())
@@ -7,20 +8,27 @@ function loadAnalysis() {
             const container = document.getElementById('currentInfo');
             if (!container) return;
 
-            let html = "<ul>";
+            let html = "";
             try {
-                const points = typeof data === "string" ? JSON.parse(data) : data;
-                if (Array.isArray(points)) {
-                    points.forEach(punkt => html += `<li>${punkt}</li>`);
-                } else if (points.result) {
-                    points.result.forEach(punkt => html += `<li>${punkt}</li>`);
+                if (data.oppdateringer && Array.isArray(data.oppdateringer) && data.oppdateringer.length > 0) {
+                    const latest = data.oppdateringer[0];
+                    html += `<h3>${latest.dato}</h3>`;
+                    if (latest.gjeldende && Array.isArray(latest.gjeldende) && latest.gjeldende.length > 0) {
+                        html += `<ul>`;
+                        latest.gjeldende.forEach(punkt => {
+                            html += `<li><strong>${punkt.tema}:</strong> ${punkt.beskrivelse}</li>`;
+                        });
+                        html += `</ul>`;
+                    } else {
+                        html += "<p>Ingen punkter funnet.</p>";
+                    }
                 } else {
-                    html += `<li>${JSON.stringify(points)}</li>`;
+                    html += "<p>Ingen gyldige oppdateringer funnet.</p>";
                 }
             } catch (e) {
-                html += `<li>${data}</li>`;
+                html += `<p>Feil ved parsing av data.</p>`;
+                console.error("Parsing error:", e);
             }
-            html += "</ul>";
             container.innerHTML = html;
         })
         .catch(err => {
