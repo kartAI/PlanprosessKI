@@ -24,7 +24,11 @@ Det kan være utfordrende å sørge for at alle punktene i sjekklisten/malen (sj
 
 ## Proof of Concept 4 - Lovsjekk
 
-Det kan være vanskelig å sjekke om en planbestemmelse er lovlig. Hvordan kan KI brukes til sjekke om en planbestemmelse samsvarer med lovverket?(sjekke om man har hjemmel iht. Plan- og bygningsloven til å stille kravet).
+Hvordan kan KI brukes til sjekke om en planbestemmelse samsvarer med lovverket?(sjekke om man har hjemmel iht. Plan- og bygningsloven til å stille kravet).
+
+## Proof of Concept 5 - Versjonsoversikt
+
+Det kan være vanskelig å følge med og holde styr på endringer som kommer i løpet av planprosessen. Kan KI brukes som versjonsoversikt for endringene som skjer fortløpende i planprosessen? Sjekke en gammel mot en ny, med endringer. (Github lignenede) 
 
 ## Setup and run (Windows, PowerShell)
 
@@ -58,7 +62,7 @@ PoC 1
 python file.py
 ```
 
-PoC 2, 3 og 4
+PoC 2, 3, 4 og 5
 
 ```powershell
 python app.py

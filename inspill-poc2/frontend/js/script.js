@@ -103,14 +103,14 @@ function showBanner(message, type = 'info') {
 
     document.body.appendChild(banner);
     setTimeout(() => {
-        // fade out then remove for a smooth UX
+        // Fade out for en fin UX
         banner.style.opacity = '0';
         banner.style.transform = 'translateX(-50%) translateY(-6px)';
         setTimeout(() => banner.remove(), 250);
     }, 3000);
 }
 
-//hent analyse
+// Hent analyse
 window.onload = async function () {
     try {
         const response = await fetch(`${API_BASE}/analysis`);

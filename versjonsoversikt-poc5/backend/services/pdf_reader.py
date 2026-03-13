@@ -1,6 +1,6 @@
 from pypdf import PdfReader
 
-# Hent informasjon fra pdf og gjør den til tekst
+#henter informasjon fra PDF og gjør det om til tekst
 def read_pdf(path: str) -> str:
     reader = PdfReader(path)
     text = ""

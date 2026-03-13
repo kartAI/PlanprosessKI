@@ -55,7 +55,7 @@ if (uploadForm) {
             return;
         }
 
-        // Legg til den en fil
+        // Legg til én fil i FormData‑objektet.
         formData.append('file', files[0]);  
 
         const checklistSelect = document.querySelector('select[name="sjekkliste"]');
@@ -182,7 +182,7 @@ async function loadAnalysis() {
     }
 }
 
-// Kall funksjonen når siden lastes
+// Kaller funksjonen når siden lastes
 document.addEventListener('DOMContentLoaded', () => {
     loadChecklist();
     loadAnalysis();
@@ -198,6 +198,7 @@ function showBanner(message, type = 'info') {
     banner.className = 'upload-banner upload-banner--' + (type || 'info');
     banner.textContent = message;
 
+    // fader ut bannered for brukervennlighet
     document.body.appendChild(banner);
     setTimeout(() => {
         banner.style.opacity = '0';
