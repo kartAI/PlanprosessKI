@@ -2,15 +2,16 @@ import { API_BASE } from "./script.js";
 
 const setAddressBtn = document.getElementById('setAddressBtn');
 const addressSelect = document.getElementById('addressSelect');
+const statusText = document.getElementById('statusText');
 const output = document.getElementById('for-me-output');
 const pointsBtn = document.getElementById('points-btn');
 const textBtn = document.getElementById('text-btn');
+const address = addressSelect.value;
 
-let visningsModus = 'punkter';
 let sisteResultat = null;
 
 // Last adresser fra backend
-async function lastAdresser() {
+async function loadAdresser() {
     try {
         const response = await fetch(`${API_BASE}/properties`);
         const adresser = await response.json();
@@ -27,7 +28,7 @@ async function lastAdresser() {
     }
 }
 
-lastAdresser();
+loadAdresser();
 
 // Bytt visningsmodus
 pointsBtn.addEventListener('click', () => {
@@ -78,26 +79,3 @@ setAddressBtn.addEventListener('click', async () => {
         setAddressBtn.disabled = false;
     }
 });
-
-function visResultat(data) {
-    output.innerHTML = '';
-
-    if (visningsModus === 'tekst') {
-        const li = document.createElement('li');
-        li.textContent = data.sammendrag;
-        output.appendChild(li);
-    } else {
-        data.punkter.forEach(punkt => {
-            const li = document.createElement('li');
-            const farge = punkt.type === 'positiv' ? 'green'
-                        : punkt.type === 'negativ' ? 'red'
-                        : 'gray';
-            li.innerHTML = `
-                <span style="color:${farge}">●</span>
-                <strong>${punkt.tittel}</strong><br>
-                ${punkt.beskrivelse}
-            `;
-            output.appendChild(li);
-        });
-    }
-}

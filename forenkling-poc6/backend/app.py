@@ -1,5 +1,8 @@
 # Importerer nødvendige biblioteker og moduler
 from flask import Flask, request, jsonify, send_from_directory
+from services.for_me_analyse import for_me_analyse
+from services.read_pdf import read_pdf
+from services.tools import get_address_data, clear_uploads
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from pathlib import Path
@@ -18,12 +21,6 @@ app.config["UPLOAD_FOLDER"] = str(UPLOAD_FOLDER)
 # Global liste for å holde styr på siste opplastede filer i runtime
 LAST_UPLOADS = []
 
-# Hjelpefunksjon: Sletter alle filer i uploads-mappen
-def _clear_uploads(folder: Path) -> None:
-    for item in folder.iterdir():
-        if item.is_file():
-            item.unlink(missing_ok=True)
-
 # Endepunkt for filopplasting (kun én fil tillatt)
 @app.route("/upload", methods=["POST"])
 def upload():
@@ -35,7 +32,7 @@ def upload():
     saved = []
 
     try:
-        _clear_uploads(UPLOAD_FOLDER)
+        clear_uploads(UPLOAD_FOLDER)
         filename = secure_filename(file.filename)
         path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
         file.save(path)
@@ -54,14 +51,17 @@ def hent_adresser():
     with open("properties.json", encoding="utf-8") as f:
         return jsonify(json.load(f))
 
-@app.route("/for-meg", methods=["POST"])
-def for_meg():
-    data = request.get_json()
-    address = data.get("address", "").strip()
 
-    if not address:
-        return jsonify({'error': 'Ingen adresse oppgitt'}), 400
+"""
+@app.route("/for-me-analysis", methods=["GET"])
+def for_me_analysis():
+    uplodes_dir = Path(app.config["UPLOAD_FOLDER"])
+    document = read_pdf(str(path))
+    address = 
 
+    resultat = for_me_analyse(address,document)
+"""
+    
 if __name__ == "__main__":
     app.run(debug=True)
 

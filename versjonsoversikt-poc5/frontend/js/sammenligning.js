@@ -56,7 +56,7 @@ async function submitComparison() {
     const select2 = document.getElementById("document2");
     if (!select1.value || !select2.value) { alert("Velg to dokumenter"); return; }
 
-    // Hent filene som Blob fra backend
+    // Sender filene som Blob til backend
     const [blob1, blob2] = await Promise.all([
         fetch(`${API_BASE}/uploads/${encodeURIComponent(select1.value)}`)
             .then(r => r.blob()),
