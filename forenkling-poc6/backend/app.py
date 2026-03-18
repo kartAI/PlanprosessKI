@@ -6,6 +6,8 @@ from pathlib import Path
 import os
 from services.read_pdf import read_pdf
 from services.summary_analyse import summary_analyse
+import json
+
 
 # Oppretter Flask-app og aktiverer CORS for å tillate forespørsler fra Frontend
 app = Flask(__name__)
@@ -79,12 +81,28 @@ def summary():
     result = summary_analyse(document)
     return jsonify(result), 200
 
+# for henting av adresser fra en lokal JSON-fil
+@app.route("/properties", methods=["GET"])
+def hent_adresser():
+    with open("properties.json", encoding="utf-8") as f:
+        return jsonify(json.load(f))
+
+@app.route("/for-meg", methods=["POST"])
+def for_meg():
+    data = request.get_json()
+    address = data.get("address", "").strip()
+
+    if not address:
+        return jsonify({'error': 'Ingen adresse oppgitt'}), 400
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
+
 #For å skrive det ut i terminalen, ps, flytt app.run under.
 """
     result = for_me_analyse()
     print(result)
 """
 
-if __name__ == "__main__":
-    app.run(debug=True)
 
