@@ -60,3 +60,21 @@ if (fileInput) {
     });
 }
 
+// Enkel ikke-blokkerende bannermelding
+function showBanner(message, type = 'info') {
+    const existing = document.getElementById('upload-banner');
+    if (existing) existing.remove();
+
+    const banner = document.createElement('div');
+    banner.id = 'upload-banner';
+    banner.className = 'upload-banner upload-banner--' + (type || 'info');
+    banner.textContent = message;
+
+    document.body.appendChild(banner);
+    setTimeout(() => {
+        // fade out på bannermelding for brukervennlig UX
+        banner.style.opacity = '0';
+        banner.style.transform = 'translateX(-50%) translateY(-6px)';
+        setTimeout(() => banner.remove(), 250);
+    }, 3000);
+}
