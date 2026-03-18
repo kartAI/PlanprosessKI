@@ -13,14 +13,14 @@
 <div id="header"></div>
 
 <div class="POC5-container">
-<h1>Last opp PDF‑filen du vil gjøre enklere</h1>
+<h1>Last opp PDF-filen du vil gjøre enklere</h1>
 
 <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
     <div class="upload-grid">
         <div class="upload-box">
             <h3>Forenkling av planbeskrivelse</h3>
-            <input type="file" name="forenkling" id="forenkling" accept=".pdf" multiple>
-            <label for="forenkling" class="upload-label">Velg fil</label>
+            <input type="file" name="file" id="planbeskrivelse-fil" accept=".pdf">
+            <label for="planbeskrivelse-fil" class="upload-label">Velg fil</label>
             <p class="file-name" id="forenkling-name">Ingen fil valgt</p>
         </div>
 
@@ -31,7 +31,8 @@
 </div>
 
 <!-- kobling til JavaScript for håndtering av filvalg og innsending -->
-<script src="js/script.js"></script>
+<script type="module" src="js/script.js"></script>
+<script type="module" src="js/index.js"></script>
 </body>
 
 </html>
