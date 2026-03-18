@@ -4,7 +4,10 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from pathlib import Path
 import os
+from services.read_pdf import read_pdf
+from services.summary_analyse import summary_analyse
 import json
+
 
 # Oppretter Flask-app og aktiverer CORS for å tillate forespørsler fra Frontend
 app = Flask(__name__)
@@ -48,6 +51,36 @@ def upload():
 
     return jsonify({'uploaded': saved}), 200
 
+# Endepunkt: hent liste over siste opplastede dokumenter
+@app.route('/documents', methods=['GET'])
+def get_documents():
+    try:
+        return jsonify(LAST_UPLOADS) # Returnerer listen som JSON
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500 # Feil ved henting av dokumenter
+
+#Endepunkt for å servere filer fra uploads-mappen
+@app.route('/uploads/<filename>', methods=['GET'])
+def serve_file(filename):
+    try:
+        return send_from_directory(app.config["UPLOAD_FOLDER"], filename) #send filen
+    except Exception as e:
+        return jsonify({'error': str(e)}), 404 #feil hvis fil ikke finnes
+
+
+#endepunkt for summary_analyse
+@app.route("/summary-analysis", methods=["GET"])
+def summary():
+    if not LAST_UPLOADS:
+        return jsonify({'error': 'Ingen fil lastet opp'}), 400
+    
+    path = os.path.join(app.config["UPLOAD_FOLDER"], LAST_UPLOADS[0])
+    
+    document = read_pdf(path)
+
+    result = summary_analyse(document)
+    return jsonify(result), 200
+
 # for henting av adresser fra en lokal JSON-fil
 @app.route("/properties", methods=["GET"])
 def hent_adresser():
@@ -65,9 +98,11 @@ def for_meg():
 if __name__ == "__main__":
     app.run(debug=True)
 
+
 #For å skrive det ut i terminalen, ps, flytt app.run under.
 """
     result = for_me_analyse()
     print(result)
 """
+
 
