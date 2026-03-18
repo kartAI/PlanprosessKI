@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="no">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +10,6 @@
     <div id="header"></div>
     <div class="POC5-container">
         <h1>Hva gjelder for meg?</h1>
-        <p>Velg to PDF-filer fra uploads for visning.</p>
 
         <div class="content-wrapper sammenligning-wrapper">
             <div class="content-area pdf-column">
@@ -30,10 +29,11 @@
 
                 <!--  der brukeren kan skrive in addressen sin og da en kanpp som setter det som adressen -->
                     <div class="address-input-group">
-                        <input type="text" id="addressInput" placeholder="Skriv inn adressen din">
-                        <button id="setAddressBtn" class="select-sjekkliste pdf-select">Sett adresse</button>
+                        <select id="addressSelect" class="select-sjekkliste">
+                            <option value="">Velg adresse</option>
+                        </select>
+                        <button id="setAddressBtn" class="select-sjekkliste pdf-select">Analyser</button>
                     </div>
-
 
                 <div class="analysis-container">
                     <h2>Hva gjelder for meg?</h2>
