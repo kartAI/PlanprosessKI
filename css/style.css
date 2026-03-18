@@ -674,4 +674,53 @@ p {
     z-index: 1000;
 }
 
+/* POC6 */
+
+/* Style for button group - gjør knappene mindre */
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.button-group button {
+    flex: 1;
+    padding: 8px 16px !important;
+    font-size: 0.9rem !important;
+    width: auto !important;
+}
+
+/* Style for address input group - gjør det finere */
+.address-input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+    padding: 15px;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+}
+
+#addressInput {
+    flex: 1;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+}
+
+#addressInput:focus {
+    outline: none;
+    border-color: #24BD76;
+    box-shadow: 0 0 0 3px rgba(36, 189, 118, 0.1);
+}
+
+.address-input-group button {
+    padding: 10px 20px !important;
+    font-size: 0.9rem !important;
+    width: auto !important;
+}
 
