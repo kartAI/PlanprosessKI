@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hva gjelder for meg?</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body class="page-with-header">
+    <div id="header"></div>
+    <div class="POC5-container">
+        <h1>Hva gjelder for meg?</h1>
+        <p>Velg to PDF-filer fra uploads for visning.</p>
+
+        <div class="content-wrapper sammenligning-wrapper">
+            <div class="content-area pdf-column">
+                <div class="documents-container pdf-block">
+                    <h2>Planbeskrivelse</h2>
+                    <iframe id="pdfViewer1" class="pdf-viewer" title="PDF 1"></iframe>
+                </div>
+            </div>
+
+
+            <div class="content-area2 endringer-column">
+                <!-- Knapper der brukeren kan velge mellom punkter og tekst -->
+                <div class="button-group">
+                    <button id="points-btn" class="select-sjekkliste pdf-select">Punkter</button>
+                    <button id="text-btn" class="select-sjekkliste pdf-select">Tekst</button>
+                </div>
+
+                <!--  der brukeren kan skrive in addressen sin og da en kanpp som setter det som adressen -->
+                    <div class="address-input-group">
+                        <input type="text" id="addressInput" placeholder="Skriv inn adressen din">
+                        <button id="setAddressBtn" class="select-sjekkliste pdf-select">Sett adresse</button>
+                    </div>
+
+
+                <div class="analysis-container">
+                    <h2>Hva gjelder for meg?</h2>
+                    <ul id="for-me-output" class="endringer-list">
+        
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="statusText" class="status-text"></div>
+
+    </div>
+    <script type="module" src="js/script.js"></script>
+    <script type="module" src="js/for_meg.js"></script>
+</body>
+</html>
