@@ -49,3 +49,10 @@ def upload():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+#For å skrive det ut i terminalen, ps, flytt app.run under.
+"""
+    result = for_me_analyse()
+    print(result)
+"""
+
