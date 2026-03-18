@@ -1,0 +1,20 @@
+[
+    {
+        "label": "Bredalsveien 18, Kristiansand",
+        "address": "Bredalsveien 18, Kristiansand",
+        "lat": "58.1471",
+        "lon": "7.9952"
+    },
+    {
+        "label": "Parkgata 7, Kristiansand",
+        "address": "Parkgata 7, Kristiansand",
+        "lat": "58.1468",
+        "lon": "7.9961"
+    },
+    {
+        "label": "Elveveien 42, Kristiansand",
+        "address": "Elveveien 42, Kristiansand",
+        "lat": "58.1510",
+        "lon": "7.9890"
+    }
+]
