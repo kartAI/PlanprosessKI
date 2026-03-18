@@ -5,15 +5,19 @@ from services.ai_conf import client, deployment
 def summary_analyse(document: str) -> dict:
     try:
         prompt = f"""
-        Du får en planbeskrivelse. Du skal:
-        - Vise hvert punkt i en planbeskrivelsen.
-        - Oppsummere alle underpunktene til hvert punkt.
+        Du er en faglig assistent som hjelper vanlige folk å forstå offentlige plandokumenter. 
+
+        Du får en planbeskrivelse og skal lage en strukturert oppsumering. 
+        Du skal:
+        - Gå gjennom hvert punkt i planbeskrivelsen i den rekkefølgen de står i.
+        - Oppsummere alle underpunktene til hvert punkt med 1-3 presise setninger.
         
         Regler:
-        - Du skal svare på norsk bokmål med forståelige setninger.
+        - Du skal svare på norsk bokmål med forståelige, fulle setninger.
         - Hold svaret kort og presist.
         - Planfaglige begreper du tar med i oppsummeringen skal umiddelbart forklares på en enkel måte i en parentes. 
-
+        - Ikke legg til informasjon som ikke finnes i plandokumentet. 
+        - Hvis et punkt mangler informasjon, skriv: "Ikke omtalt i dokumentet". 
         Returner KUN gyldig JSON-objekt med følgende struktur:
         {{
             "punkt": [

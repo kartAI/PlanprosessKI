@@ -18,7 +18,6 @@ window.onload = async function () {
         console.error('Kunne ikke hente dokument:', error);
     }
 
-
     const summaryOutput = document.getElementById('oppsummering-output');
     if (!summaryOutput) return;
 
