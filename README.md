@@ -28,7 +28,11 @@ Hvordan kan KI brukes til sjekke om en planbestemmelse samsvarer med lovverket?(
 
 ## Proof of Concept 5 - Versjonsoversikt
 
-Det kan være vanskelig å følge med og holde styr på endringer som kommer i løpet av planprosessen. Kan KI brukes som versjonsoversikt for endringene som skjer fortløpende i planprosessen? Sjekke en gammel mot en ny, med endringer. (Github lignenede) 
+Det kan være vanskelig å følge med og holde styr på endringer som kommer i løpet av planprosessen. Kan KI brukes som versjonsoversikt for endringene som skjer fortløpende i planprosessen? Sjekke en gammel mot en ny, med endringer. (Github lignenede)
+
+## Proof of Concept 6 - Forenkling
+
+Planmateriale er omfattende og er preget av tungt og faglig språk som kan være vanskelig for innbyggere å tolke. Kan KI automatisk oppsummere konsekvensene av et planforslag for innbyggere uten planfaglig bakgrunn, med fokus på hvordan planen påvirker deres eiendom, nærmiljø og dagligliv?
 
 ## Setup and run (Windows, PowerShell)
 
@@ -62,7 +66,7 @@ PoC 1
 python file.py
 ```
 
-PoC 2, 3, 4 og 5
+PoC 2, 3, 4, 5 og 6
 
 ```powershell
 python app.py
