@@ -96,9 +96,13 @@ setAddressBtn.addEventListener("click", async () => {
         return;
     }
 
-    statusText.textContent = "Analyserer — vennligst vent...";
-    output.innerHTML = "";
-    setAddressBtn.disabled = true;
+    // Spinner mens analysen kjører
+    output.innerHTML = `
+        <div class="spinner-container">
+            <div class="spinner"></div>
+            <p>Analyserer planbeskrivelse...</p>
+        </div>
+    `;
 
     try {
         const response = await fetch(`${API_BASE}/for-meg`, {
