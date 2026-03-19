@@ -1,7 +1,7 @@
 import json
 from services.ai_conf import client, deployment
-#Husk å bruk riktig datatype !!!!!!!!!!!!
-def for_me_analyse(address_data: str, document: str) -> dict:
+
+def for_me_analyse(address_data: dict, document: str) -> str:
     try:
         prompt = f"""
         Du er en assistent som hjelper innbyggere å forstå kommunale plandokumenter.
@@ -19,13 +19,13 @@ def for_me_analyse(address_data: str, document: str) -> dict:
             - Snakk norsk bokmål
         
         
-        KOORDINATER: 
+        KOORDINATER:
         Lat: {address_data.get('lat')}, Lon: {address_data.get('lon')}
 
         PLANFORSLAG:
-        {document} 
+        {document}
 
-        Basert på planedokumentene, analyser og identifiser hva som gjelder for adressen "{address}".
+        Basert på planedokumentene, analyser og identifiser hva som gjelder for adressen "{address_data.get('address')}".
 
         Gi svar som strukturert JSON med følgende format:
         {{

@@ -1,14 +1,18 @@
 import json
+from pathlib import Path
+
 # Sletter alle filer i uploads-mappen
 def clear_uploads(folder: Path) -> None:
     for item in folder.iterdir():
         if item.is_file():
             item.unlink(missing_ok=True)
 
-# Trekker ut kordinater til addressen fra properties.json
-def get_address_data(address: str, properties_file: str = "../properties.json") -> dict:
+# Trekker ut koordinater til adressen fra properties.json
+def get_address_data(address: str) -> dict:
     """Henter addressdata fra properties.json"""
-    with open(properties_file, encoding="utf-8") as f:
+    properties_path = Path(__file__).resolve().parent.parent / "properties.json"
+
+    with open(properties_path, encoding="utf-8") as f:
         properties = json.load(f)
 
     address_data = next((p for p in properties if p["address"] == address), None)
