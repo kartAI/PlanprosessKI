@@ -43,7 +43,7 @@ def input_analyse(document: str, userInput: str) -> dict:
                 model=deployment,
                 messages=[{"role": "system", "content": prompt}],
                 max_tokens=2000,
-                temperature=0.2,
+                temperature=0.5,
                 top_p=1
             )
         

@@ -9,8 +9,6 @@ from services.for_me_analyse import for_me_analyse
 from services.summary_analyse import summary_analyse
 from services.input_analyse import input_analyse
 
-
-
 # Oppretter Flask-app og aktiverer CORS for å tillate forespørsler fra Frontend
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -19,9 +17,6 @@ LAST_UPLOADS = []
 UPLOAD_FOLDER = Path(__file__).resolve().parent.parent / "uploads"
 UPLOAD_FOLDER.mkdir(exist_ok=True)
 app.config["UPLOAD_FOLDER"] = str(UPLOAD_FOLDER)
-
-
-
 
 @app.before_request
 def log_request():
@@ -178,17 +173,14 @@ def for_meg_analysis():
 def text_analyse():
     try:
         data = request.get_json(silent=True) or {}
-        print(f"[DEBUG] JSON data: {data}")
 
         text = (data.get("text") or data.get("text") or "").strip()
-        print(f"[DEBUG] Text: {text}")
 
         if not text:
             return jsonify({"error": "Adresse er påkrevd"}), 400
 
         pdf_file = find_pdf_for_analysis()
-        print(f"[DEBUG] PDF valgt: {pdf_file}")
-
+        
         if not pdf_file:
             return jsonify({"error": "Ingen planbestemmelse lastet opp - last opp PDF først"}), 400
 
