@@ -9,25 +9,21 @@
 <body class="page-with-header">
     <div id="header"></div>
 
-
     <div>
     <h1>Oppsummer en planbeskrivelse</h1>
         <div class="content-wrapper">
-
-        <!-- VENSTRE KOLONNE -->
+        <!-- Planbeskrivelsen -->
             <div class="content-area">
                 <h2>Planbeskrivelse</h2>
                 <iframe id="pdfViewer" width="100%" height="600px"></iframe>
             </div>
 
-            <!-- HØYRE KOLONNE -->
+            <!-- KI analyse -->
             <div class="content-area">
                 <h2>KI oppsummering</h2>
                 <div class="button-group">
-                    <button id="points-btn" class="select-sjekkliste pdf-select">Punkter</button>
-                    <button id="text-btn" class="select-sjekkliste pdf-select">Tekst</button>
+                    <button id="toggle-all" onclick="toggleAll()" class="select-sjekkliste pdf-select">Åpne alle</button>
                 </div>
-
                 <div id="oppsummering-output">
                 </div>
             </div>
