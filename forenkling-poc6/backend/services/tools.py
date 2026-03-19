@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from pypdf import PdfReader
 
 # Sletter alle filer i uploads-mappen
 def clear_uploads(folder: Path) -> None:
@@ -20,3 +21,13 @@ def get_address_data(address: str) -> dict:
         raise KeyError(f"Adresse '{address}' ikke funnet")
 
     return address_data
+
+
+# Henter informasjon fra PDF og gjør det om til tekst
+def read_pdf(path: str) -> str:
+    reader = PdfReader(path)
+    text = ""
+    for page in reader.pages:
+        text += page.extract_text() or ""
+    return text
+
