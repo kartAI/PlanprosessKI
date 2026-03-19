@@ -1,25 +1,26 @@
-from flask import Flask, request, jsonify, send_from_directory
-from services.for_me_analyse import for_me_analyse
-from services.read_pdf import read_pdf
-from services.tools import get_address_data, clear_uploads
-from flask_cors import CORS
-from werkzeug.utils import secure_filename
-from pathlib import Path
 import os
-from services.read_pdf import read_pdf
-from services.summary_analyse import summary_analyse
 import json
+from pathlib import Path
+from flask_cors import CORS
+from flask import Flask, request, jsonify, send_from_directory
+from werkzeug.utils import secure_filename
+from services.tools import get_address_data, clear_uploads, read_pdf
+from services.for_me_analyse import for_me_analyse
+from services.summary_analyse import summary_analyse
+from services.input_analyse import input_analyse
+
 
 
 # Oppretter Flask-app og aktiverer CORS for å tillate forespørsler fra Frontend
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-UPLOAD_FOLDER = Path(__file__).parent / "uploads"
+LAST_UPLOADS = []
+UPLOAD_FOLDER = Path(__file__).resolve().parent.parent / "uploads"
 UPLOAD_FOLDER.mkdir(exist_ok=True)
 app.config["UPLOAD_FOLDER"] = str(UPLOAD_FOLDER)
 
-LAST_UPLOADS = []
+
 
 
 @app.before_request
@@ -66,7 +67,18 @@ def upload():
 
     return jsonify({"uploaded": saved}), 200
 
+# hjelpefunskjon for å finne siste PDF for analyse, enten fra LAST_UPLOADS eller ved å sjekke uploads-mappen
+def find_pdf_for_analysis() -> Path | None:
+    if LAST_UPLOADS:
+        candidate = UPLOAD_FOLDER / LAST_UPLOADS[0]
+        if candidate.exists() and candidate.is_file():
+            return candidate
 
+    pdf_files = [p for p in UPLOAD_FOLDER.iterdir() if p.is_file() and p.suffix.lower() == ".pdf"]
+    if not pdf_files:
+        return None
+
+    return max(pdf_files, key=lambda p: p.stat().st_mtime)
 
 # Endepunkt: hent liste over siste opplastede dokumenter
 @app.route('/documents', methods=['GET'])
@@ -105,33 +117,21 @@ def hent_adresser():
     with open(properties_path, encoding="utf-8") as f:
         return jsonify(json.load(f))
 
-
-def _find_pdf_for_analysis() -> Path | None:
-    if LAST_UPLOADS:
-        candidate = UPLOAD_FOLDER / LAST_UPLOADS[0]
-        if candidate.exists() and candidate.is_file():
-            return candidate
-
-    pdf_files = [p for p in UPLOAD_FOLDER.iterdir() if p.is_file() and p.suffix.lower() == ".pdf"]
-    if not pdf_files:
-        return None
-
-    return max(pdf_files, key=lambda p: p.stat().st_mtime)
-
-
+# Endepunkt for å hente en spesifikk opplastet fil
 @app.route("/uploads/<path:filename>", methods=["GET"])
 def get_uploaded_file(filename):
     return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
 
 
+# Endepunkt for å hente siste opplastede PDF-fil
 @app.route("/latest-upload", methods=["GET"])
 def latest_upload():
-    pdf_file = _find_pdf_for_analysis()
+    pdf_file = find_pdf_for_analysis()
     if not pdf_file:
         return jsonify({"filename": None}), 200
     return jsonify({"filename": pdf_file.name}), 200
 
-
+# Endepunkt for analyse basert på adresse - hva gjelder meg?
 @app.route("/for-meg", methods=["POST"])
 def for_meg_analysis():
     try:
@@ -144,7 +144,7 @@ def for_meg_analysis():
         if not address:
             return jsonify({"error": "Adresse er påkrevd"}), 400
 
-        pdf_file = _find_pdf_for_analysis()
+        pdf_file = find_pdf_for_analysis()
         print(f"[DEBUG] PDF valgt: {pdf_file}")
 
         if not pdf_file:
@@ -172,7 +172,43 @@ def for_meg_analysis():
         import traceback
         traceback.print_exc()
         return jsonify({"error": f"Feil: {str(e)}"}), 500
+    
+# Endepunkt for brukerinput-analyse
+@app.route("/text-analyse", methods=["POST"])
+def text_analyse():
+    try:
+        data = request.get_json(silent=True) or {}
+        print(f"[DEBUG] JSON data: {data}")
 
+        text = (data.get("text") or data.get("text") or "").strip()
+        print(f"[DEBUG] Text: {text}")
+
+        if not text:
+            return jsonify({"error": "Adresse er påkrevd"}), 400
+
+        pdf_file = find_pdf_for_analysis()
+        print(f"[DEBUG] PDF valgt: {pdf_file}")
+
+        if not pdf_file:
+            return jsonify({"error": "Ingen planbestemmelse lastet opp - last opp PDF først"}), 400
+
+        document = read_pdf(str(pdf_file))
+        userInput = text
+
+
+        result = input_analyse(document, userInput)
+
+        if isinstance(result, dict):
+            return jsonify(result), 500
+
+        parsed = json.loads(result)
+        return jsonify(parsed), 200
+    except FileNotFoundError as e:
+        return jsonify({"error": f"Fil ikke funnet: {str(e)}"}), 404
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": f"Feil: {str(e)}"}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)

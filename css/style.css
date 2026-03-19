@@ -676,20 +676,6 @@ p {
 
 /* POC6 */
 
-/* Style for button group - gjør knappene mindre */
-.button-group {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-.button-group button {
-    flex: 1;
-    padding: 8px 16px !important;
-    font-size: 0.9rem !important;
-    width: auto !important;
-}
-
 /* Style for address input group - gjør det finere */
 .address-input-group {
     display: flex;
@@ -724,3 +710,21 @@ p {
     width: auto !important;
 }
 
+/* Style for innspill textarea */
+.innspill-box textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    font-family: inherit;
+    margin-bottom: 20px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(36,189,118,0.08);
+    transition: border-color 0.3s;
+}
+
+.innspill-box textarea:focus {
+    border-color: #24BD76;
+    outline: none;
+}

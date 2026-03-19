@@ -4,8 +4,6 @@ const setAddressBtn = document.getElementById("setAddressBtn");
 const addressSelect = document.getElementById("addressSelect");
 const statusText = document.getElementById("statusText");
 const output = document.getElementById("for-me-output");
-const pointsBtn = document.getElementById("points-btn");
-const textBtn = document.getElementById("text-btn");
 const pdfViewer = document.getElementById("pdfViewer1");
 
 let sisteResultat = null;
@@ -28,15 +26,6 @@ function visResultat(data) {
         output.innerHTML = "<li>Ingen punkter funnet i analysen.</li>";
         return;
     }
-
-    if (visningsModus === "tekst") {
-        const tekst = punkter
-            .map(p => `${p.tittel || "Uten tittel"}: ${p.beskrivelse || ""}`)
-            .join(" ");
-        output.innerHTML = `<li>${escapeHtml(tekst)}</li>`;
-        return;
-    }
-
     punkter.forEach(p => {
         const li = document.createElement("li");
         li.innerHTML = `<strong>${escapeHtml(p.tittel || "Uten tittel")}:</strong> ${escapeHtml(p.beskrivelse || "")}`;
@@ -77,16 +66,6 @@ async function loadLatestPdf() {
 
 loadAdresser();
 loadLatestPdf();
-
-pointsBtn.addEventListener("click", () => {
-    visningsModus = "punkter";
-    if (sisteResultat) visResultat(sisteResultat);
-});
-
-textBtn.addEventListener("click", () => {
-    visningsModus = "tekst";
-    if (sisteResultat) visResultat(sisteResultat);
-});
 
 setAddressBtn.addEventListener("click", async () => {
     const adresse = (addressSelect.value || "").trim();
