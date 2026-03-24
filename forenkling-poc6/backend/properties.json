@@ -1,0 +1,38 @@
+[
+    {
+        "label": "Bredalsveien 18, Kristiansand",
+        "address": "Bredalsveien 18, Kristiansand",
+        "lat": "58.1471",
+        "lon": "7.9952"
+    },
+    {
+        "label": "Parkgata 7, Kristiansand",
+        "address": "Parkgata 7, Kristiansand",
+        "lat": "58.1468",
+        "lon": "7.9961"
+    },
+    {
+        "label": "Elveveien 42, Kristiansand",
+        "address": "Elveveien 42, Kristiansand",
+        "lat": "58.1510",
+        "lon": "7.9890"
+    },
+    {
+        "label": "Rosseland skole (nord for planområdet)",
+        "address": "Rosselandsveien, Songdalen",
+        "lat": "58.1495",
+        "lon": "7.9952"
+    },
+    {
+        "label": "Rundkjøring E39/fv. 114 (hovedadkomst)",
+        "address": "E39 / fv. 114, Rosseland",
+        "lat": "58.1468",
+        "lon": "7.9918"
+    },
+    {
+        "label": "Dagligvarehandel Rosseland (nærservice)",
+        "address": "Rosselandsveien, Songdalen",
+        "lat": "58.1502",
+        "lon": "7.9945"
+    }
+]

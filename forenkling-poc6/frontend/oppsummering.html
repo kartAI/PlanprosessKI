@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oppsummering</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body class="page-with-header">
+    <div id="header"></div>
+
+    <div>
+    <h1>Oppsummer en planbeskrivelse</h1>
+        <div class="content-wrapper">
+        <!-- Planbeskrivelsen -->
+            <div class="content-area">
+                <h2>Planbeskrivelse</h2>
+                <iframe id="pdfViewer" width="100%" height="600px"></iframe>
+            </div>
+
+            <!-- KI analyse -->
+            <div class="content-area">
+                <h2>KI oppsummering</h2>
+                <div class="button-group">
+                    <button id="toggle-all" onclick="toggleAll()" class="select-sjekkliste pdf-select">Åpne alle</button>
+                </div>
+                <div id="oppsummering-output">
+                </div>
+            </div>
+    </div>
+</div>
+
+<script type="module" src="js/oppsummering.js"></script>
+
+</body>
+</html>
