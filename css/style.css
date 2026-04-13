@@ -767,3 +767,34 @@ p {
     to { transform: rotate(360deg); }
 }
 
+
+.sjekkliste-page .content-wrapper {
+    flex-wrap: nowrap;
+    align-items: flex-start;
+}
+
+.sjekkliste-page .content-area,
+.sjekkliste-page #checklist-container {
+    flex: 0 1 calc(50% - 15px);
+    min-width: 320px;
+}
+
+.sjekkliste-page #checklist-container {
+    padding: 20px;
+    overflow-y: auto;
+    max-height: 600px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+}
+
+@media (max-width: 1024px) {
+    .sjekkliste-page .content-wrapper {
+        flex-wrap: wrap;
+    }
+
+    .sjekkliste-page .content-area,
+    .sjekkliste-page #checklist-container {
+        flex: 0 1 100%;
+    }
+}
