@@ -7,26 +7,42 @@ from services.ai_conf import client, deployment
 def analyse_all_diff(all_documents: list) -> list:
     try:
         prompt = f"""
-        Du får en liste med dokumenter. Du skal:
-        - Sorter dokumentene etter dato, med nyest først og eldst sist.
-        - Sammenlign dokumentene og finn hva som er endret mellom hver versjon.
+        Du får en liste med dokumenter, der hvert element inneholder:
+            - "dato": dato for versjonen
+            - "filnavn": navn på dokumentet
+            - "innhold": tekstinnholdet i dokumentet
 
-        REGLER:
-        - Du skal ikke nevne små språklige endringer som komma, mellomrom, punktum.
-        - Du skal svare på norsk bokmål med forståelige setninger.
-        
-        Returner KUN gyldig JSON-objekt med følgende struktur:
-        {{
-        "dokumentversjoner": [
-            {{
-            "dato": "DD-MM-YYYY",
-            "filnavn": "string",
-            "endringer_fra_forrige": ["string", "string"]
-            }}
-        ]
-        }}
-        DOKUMENTER:
-        {all_documents}
+        Oppgave:
+            1. Sorter dokumentene etter dato (nyeste først).
+            2. Sammenlign hver versjon med versjonen før den.
+            3. Identifiser kun reelle, meningsbærende endringer i innholdet.
+
+        Definisjoner:
+            - "Vesentlige endringer" betyr endringer i innhold, struktur, krav, formuleringer som endrer mening, nye avsnitt, fjernede avsnitt, nye punkter, endrede punkter.
+            - "Ikke-vesentlige endringer" som skal ignoreres:
+                - tegnsetting (komma, punktum, mellomrom)
+                - små språklige justeringer uten betydning
+                - endringer i dato eller versjonsnummer
+
+        Regler:
+            - Svar alltid på norsk bokmål.
+            - Svar med korte, klare setninger.
+            - Returner KUN gyldig JSON med følgende struktur:
+
+            {
+            "dokumentversjoner": [
+                {
+                "filnavn": "string",
+                "endringer_fra_forrige": ["string", "string"]
+                }
+            ]
+            }
+
+            Hvis ingen vesentlige endringer finnes mellom to versjoner, bruk:
+            "endringer_fra_forrige": ["Ingen vesentlige endringer."]
+
+            DOKUMENTER:
+            {all_documents}
         """
         response = client.chat.completions.create(
             model=deployment,
