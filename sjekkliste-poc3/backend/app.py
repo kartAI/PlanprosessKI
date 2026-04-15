@@ -1,3 +1,4 @@
+#import traceback
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
@@ -117,6 +118,7 @@ def get_analysis():
     except FileNotFoundError as e:
         return jsonify({"error": str(e)}), 400
     except Exception as e:
+        #traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
