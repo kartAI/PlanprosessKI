@@ -1,20 +1,22 @@
 import os
 import json
 from dotenv import load_dotenv
-from openai import AzureOpenAI
+from openai import OpenAI
 import re
 from pathlib import Path
 from read_pdf import read_pdf
 
+
 load_dotenv()
 
-client = AzureOpenAI(
+
+
+client = OpenAI(
     api_key=os.getenv("AZURE_OPENAI_API_KEY"),
-    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
-    api_version=os.getenv("AZURE_OPENAI_API_VERSION")
+    base_url=os.getenv("AZURE_OPENAI_ENDPOINT"),
 )
 
-deployment = "gpt-4.1"
+deployment = "gpt-5.1-chat"
 
 # ekstraherer numererte punkter og underpunkter fra et dokument
 def extract_checklist_points(text: str) -> list[str]:
@@ -71,7 +73,24 @@ def load_checklist_from_sjekklister(filename: str) -> str:
 checklist_text = load_checklist_from_sjekklister("sjekkliste_for_planbeskrivelse_bokm_mal.pdf")
 checklist_points = extract_checklist_points(checklist_text)
 
+def clean_json_from_ai(raw: str) -> str:
+    raw = raw.strip()
 
+    if raw.startswith("```") and raw.endswith("```"):
+        raw = raw[3:-3].strip()
+
+    if (raw.startswith("'") and raw.endswith("'")) or (raw.startswith('"') and raw.endswith('"')):
+        inner = raw[1:-1].strip()
+        if inner.startswith("{") and inner.endswith("}"):
+            raw = inner
+
+    raw = raw.encode("utf-8").decode("utf-8-sig")
+
+    match = re.search(r'(\{.*\})', raw, re.DOTALL)
+    if match:
+        raw = match.group(1)
+
+    return raw
 
 def check_document_against_checklist(document_text: str, checklist: list[str]):
     checklist_joined = "\n".join([f"- {p}" for p in checklist])
@@ -128,13 +147,16 @@ DOKUMENT:
 
     response = client.chat.completions.create(
     model=deployment,
-    messages=[{"role": "user", "content": prompt}],
+    messages=[
+        {"role": "system", "content": "Return only valid JSON. Do not add any explanation, markdown, or extra text."},
+        {"role": "user", "content": prompt}
+    ],
     max_completion_tokens=2000,
-    temperature=0.1
+    #temperature=0.0
 )
 
-
     raw = response.choices[0].message.content
+    raw = clean_json_from_ai(raw)
 
     try:
         return json.loads(raw)

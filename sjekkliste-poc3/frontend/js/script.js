@@ -164,19 +164,44 @@ async function loadAnalysis() {
             ? `?name=${encodeURIComponent(selectedChecklist)}`
             : "";
         const response = await fetch(`${API_BASE}/analysis${analysisParam}`);
-        const data = await response.json();
-        
-        const analysisList = document.getElementById('analysis-list');
-        if (analysisList && data.resultat) {
-            analysisList.innerHTML = data.resultat.map(item => {
-                const statusClass = item.status === 'oppfylt' ? 'oppfylt' : 'ikke-oppfylt';
-                const statusIcon = item.status === 'oppfylt' ? '✓' : '✗';
-                return `<li class="analysis-item ${statusClass}">
-                    <span class="status-icon">${statusIcon}</span>
-                    <span class="punkt">${item.punkt}</span>
-                </li>`;
-            }).join('');
+
+        if (!response.ok) {
+            const text = await response.text();
+            console.error('Analysis request failed:', response.status, text);
+            return;
         }
+
+        const data = await response.json();
+
+        if (data.error) {
+            console.error('Analysis returned error:', data.error, data.raw);
+            return;
+        }
+
+        const analysisList = document.getElementById('analysis-list');
+        if (!analysisList) {
+            console.error('Element #analysis-list ikke funnet');
+            return;
+        }
+
+        if (!data.resultat || !Array.isArray(data.resultat) || data.resultat.length === 0) {
+            analysisList.innerHTML = '<li>Ingen analyse-resultater funnet.</li>';
+            return;
+        }
+
+        analysisList.innerHTML = data.resultat.map(item => {
+            const statusClass = item.status === 'oppfylt' ? 'oppfylt' : 'ikke-oppfylt';
+            const statusIcon = item.status === 'oppfylt' ? '✓' : '✗';
+            const punkt = item.punkt || 'Ukjent punkt';
+            const forklaring = item.forklaring || '';
+            return `<li class="analysis-item ${statusClass}">
+                <div class="analysis-header">
+                    <span class="status-icon">${statusIcon}</span>
+                    <span class="punkt">${punkt}</span>
+                </div>
+                <div class="forklaring">${forklaring}</div>
+            </li>`;
+        }).join('');
     } catch (error) {
         console.error('Feil ved henting av analyse:', error);
     }
