@@ -139,6 +139,8 @@ Utforsker hvordan KI kan brukes til å lese gjennom alle dokumentene i et planfo
 ### Problemstilling 
 _Hvordan kan KI brukes til å identifisere relevante avvik mellom plandokumenter på en presis og forståelig måte for fagpersoner?_
 
+<img width="800" height="450" alt="POC1GIF" src="https://github.com/user-attachments/assets/f856e9b7-f63c-4ebf-b486-bc60f25b3af5" />
+
 ## Proof of Concept 2 - Oppsummering og kategorisering av høringsinnspill
 ### Bakgrunn
 Det kan komme mange høringsinnspill og merknader i løpet av en planprosess, som ofte er tidkrevende og uoversiktlige å lese og oppsummere. Det kan være vanskelig å rask få en oversikt over hovedtemaene og hva som går igjen i innspillene.
@@ -148,6 +150,8 @@ Konseptet går ut på å utforske hvordan KI kan brukes til å oppsummere, struk
 
 ### Problemstilling
 _Hvordan kan KI brukes til å oppsummere innspill presist og kategorisere dem på en måte som gir saksbehandlere et raskt og nyttig overblikk?_
+
+<img width="800" height="450" alt="POC2GIF" src="https://github.com/user-attachments/assets/dd4ea097-9e9a-49be-8ca6-ed725844f2c1" />
 
 ## Proof of Concept 3 - Sjekkliste for planbeskrivelse
 ### Bakgrunn
@@ -159,6 +163,8 @@ Konseptet går ut på å utforske hvordan KI kan brukes til å sammenligne planb
 ### Problemstilling
 _Hvordan kan KI brukes til å verifisere om kravene i sjekklisten er inkludert og eventuelt oppfylt i planbeskrivelsen?_
 
+<img width="800" height="450" alt="POC3GIF" src="https://github.com/user-attachments/assets/c6aae2d4-7239-4da6-8bcc-bc403a217f11" />
+
 ## Proof of Concept 4 - Lovsjekk av planbestemmelser
 ### Bakgrunn
 Saksbehandler må gå gjennom planbestemmelsen og sjekke om den er i henhold til lovverket. Det kan være vanskelig og tidkrevende å sjekke hele planbestemmelsen opp mot lovverket.
@@ -168,6 +174,8 @@ Konseptet går ut på å utforske hvordan KI kan sjekke en planbestemmelse opp m
 
 ### Problemstilling 
 _Hvordan kan KI brukes til å vurdere om en planbestemmelse er i tråd med lovverket og identifisere eventuelle avvik på en presis og forståelig måte?_
+
+<img width="800" height="450" alt="POC4GIF" src="https://github.com/user-attachments/assets/aa0b7c5b-2d31-434b-aaba-972835b2c94c" />
 
 ## Proof of Concept 5 - Versjonsoversikt over planbeskrivelse
 ### Bakgrunn
@@ -179,6 +187,8 @@ Konseptet går ut på å utforske hvordan KI kan brukes til å lage en versjonso
 ### Problemstilling
 _Hvordan kan KI brukes til å identifisere og oppsummere endringer mellom ulike versjoner av plandokumenter på en måte som gir saksbehandlere en rask og informativ oversikt?_
 
+<img width="800" height="450" alt="POC5GIF" src="https://github.com/user-attachments/assets/a7e0279a-4f0e-4520-bce5-3dca37dc008b" />
+
 ## Proof of Concept 6 - Forenkling av planbeskrivelse for innbyggere
 ### Bakgrunn
 Planmateriale er omfattende og er preget av tungt og faglig språk som kan være vanskelig for innbyggere å tolke.
@@ -188,6 +198,8 @@ Konseptet går ut på å utforske hvordan KI kan brukes til å oppsummere virkni
 
 ### Problemstilling
 _Hvordan kan KI brukes til å oppsummere et planforslag på en måte som gjør det enklere for innbyggere å forstå hvordan forslaget påvirker deres eiendom, nærmiljø og dagligliv?_ 
+
+<img width="800" height="450" alt="POC6GIF" src="https://github.com/user-attachments/assets/ffa9a067-cdb9-4e41-b95c-3337c631d2e7" />
 
 ## Setup and run (Windows, PowerShell)
 
