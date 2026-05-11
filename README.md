@@ -4,35 +4,71 @@ Repo for Gruppe 7 - 2026
 
 ## Hovedproblemstilling
 
-Utforske hvordan KI kan brukes i en planprosess, med fokus på formidling, forståelse og kontroll av prosessen. Prosjektet skal utvikle proof-of-concepts som forenkler planprosessen for ulike aktører, inkludert innbyggere, høringsinstanser og fagfolk. Målet er å identifisere tekniske muligheter som gir konkret sluttbrukerverdi, og spisse løsningen mot spesifikke deler av planprosessen, for eksempel konsekvensutredning osv.
+Problemstillingen for prosjektet var: Hvordan kan kunstig intelligens brukes til å støtte konkrete deler av planprosessen, og hvilken nytteverdi opplever fagpersoner og innbyggere ved bruk av KI-verktøy? 
 
 ### Prosjektstruktur
 
 KOMMER
 
 ## Proof of Concept 1 - Sjekk avvik mellom dokumenter i et planforslag
+### Bakgrunn
+Et planforslag består av flere dokumenter, som plankart, planbestemmelser og planbeskrivelse. Det kan være tidkrevende å kontrollere at disse stemmer overens og ikke inneholder avvik eller motstridende informasjon.
 
-Planforslag består av plankart, planbestemmelser og planbeskrivelser, og det kan være vanskelig å sjekke om disse stemmer overens. Kan KI brukes til å identifisere avvik eller flagge potensielle konflikter mellom dokumentene i et planforslag?
+### Konsept
+Utforsker hvordan KI kan brukes til å lese gjennom alle dokumentene i et planforslag samlet, og identifisere avvik, mangler eller potensielle konflikter mellom dem.
+
+### Problemstilling 
+_Hvordan kan KI brukes til å identifisere relevante avvik mellom plandokumenter på en presis og forståelig måte for fagpersoner?_
 
 ## Proof of Concept 2 - Oppsummering av høringsinnspill
+### Bakgrunn
+Det kan komme mange høringsinnspill og merknader i løpet av en planprosess, som ofte er tidkrevende og uoversiktlige å lese og oppsummere. Det kan være vanskelig å rask få en oversikt over hovedtemaene og hva som går igjen i innspillene.
 
-Det kan komme mange innspill og høringer knyttet til hver planendring som kan være tidkrevende og uoversiktlig å lese gjennom. Kan KI brukes til å gi en objektiv oppsummering av høringer og innspill, for å kategorisere og/eller trekke ut hva som er de viktigste punktene som går igjen?
+### Konsept
+Konseptet går ut på å utforske hvordan KI kan brukes til å oppsummere, strukturere og kategorisere høringsinnspill, slik at det blir lettere å se de viktigste temaene og mønstrene.
+
+### Problemstilling
+_Hvordan kan KI brukes til å oppsummere innspill presist og kategorisere dem på en måte som gir saksbehandlere et raskt og nyttig overblikk?_
 
 ## Proof of Concept 3 - Sjekkliste for planbeskrivelse
+### Bakgrunn
+Planbeskrivelser må ofte oppfylle en rekke krav og punkter fra sjekklister og maler. Det kan være krevende og tidkrevende å sikre at alle nødvendige punkter er inkludert og tilstrekkelig besvart.
 
-Det kan være utfordrende å sørge for at alle punktene i sjekklisten/malen (sjekkliste fra regjeringen, mal Kristiansand Kommune) er oppfylt i planbeskrivelsen. Kan KI brukes til å automatisk sjekke at kravene i sjekklisten er inkludert, eventuelt også oppfylt, i planbeskrivelsen?
+### Konsept
+Konseptet går ut på å utforske hvordan KI kan brukes til å sammenligne planbeskrivelsen med en gitt sjekkliste eller mal, og automatisk identifisere manglende eller ufullstendige punkter.
+
+### Problemstilling
+_Hvordan kan KI brukes til å verifisere om kravene i sjekklisten er inkludert og eventuelt oppfylt i planbeskrivelsen?_
 
 ## Proof of Concept 4 - Lovsjekk
+### Bakgrunn
+Saksbehandler må gå gjennom planbestemmelsen og sjekke om den er i henhold til lovverket. Det kan være vanskelig og tidkrevende å sjekke hele planbestemmelsen opp mot lovverket.
 
-Hvordan kan KI brukes til sjekke om en planbestemmelse samsvarer med lovverket?(sjekke om man har hjemmel iht. Plan- og bygningsloven til å stille kravet).
+### Konsept
+Konseptet går ut på å utforske hvordan KI kan sjekke en planbestemmelse opp mot lovverket, henvise til relevante lover og avgjøre om bestemmelsen har hjemmel i forhold til lovverket.
+
+### Problemstilling 
+_Hvordan kan KI brukes til å vurdere om en planbestemmelse er i tråd med lovverket og identifisere eventuelle avvik på en presis og forståelig måte?_
 
 ## Proof of Concept 5 - Versjonsoversikt
+### Bakgrunn
+Det kommer nye dokumenter og versjoner gjennom hele prosessen, og det er vanskelig å holde styr på endringer som blir gjort underveis i planprosessen.
 
-Det kan være vanskelig å følge med og holde styr på endringer som kommer i løpet av planprosessen. Kan KI brukes som versjonsoversikt for endringene som skjer fortløpende i planprosessen? Sjekke en gammel mot en ny, med endringer. (Github lignenede)
+### Konsept
+Konseptet går ut på å utforske hvordan KI kan brukes til å lage en versjonsoversikt for endringene som skjer i plandokumenter fortløpende underveis i planprosessen.
+
+### Problemstilling
+_Hvordan kan KI brukes til å identifisere og oppsummere endringer mellom ulike versjoner av plandokumenter på en måte som gir saksbehandlere en rask og informativ oversikt?_
 
 ## Proof of Concept 6 - Forenkling
+### Bakgrunn
+Planmateriale er omfattende og er preget av tungt og faglig språk som kan være vanskelig for innbyggere å tolke.
 
-Planmateriale er omfattende og er preget av tungt og faglig språk som kan være vanskelig for innbyggere å tolke. Kan KI automatisk oppsummere konsekvensene av et planforslag for innbyggere uten planfaglig bakgrunn, med fokus på hvordan planen påvirker deres eiendom, nærmiljø og dagligliv?
+### Konsept
+Konseptet går ut på å utforske hvordan KI kan brukes til å oppsummere virkningene av et planforslag for innbyggere uten planfaglig kompetanse.
+
+### Problemstilling
+_Hvordan kan KI brukes til å oppsummere et planforslag på en måte som gjør det enklere for innbyggere å forstå hvordan forslaget påvirker deres eiendom, nærmiljø og dagligliv?_ 
 
 ## Setup and run (Windows, PowerShell)
 
