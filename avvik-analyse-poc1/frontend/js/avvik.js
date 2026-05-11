@@ -93,7 +93,7 @@ window.onload = async function() {
         console.error('Backend feil:', error);
         const analysisOutput = document.getElementById('analysis-output');
         if (analysisOutput) {
-            analysisOutput.innerHTML = `<p class="error">FEIL: Backend kjører ikke på localhost:5000<br>Start den med: python file.py</p>`;
+            analysisOutput.innerHTML = `<p class="error">FEIL: Backend kjører ikke på localhost:5000<br>Start den med: python app.py</p>`;
         }
     }
 };
