@@ -227,12 +227,7 @@ pip install -r requirements.txt
 
 3. Kjør backend (fra `backend` mappe):
 
-POC 1
-```powershell
-python file.py
-```
-
-POC 2, 3, 4, 5 og 6
+For alle POC-er
 ```powershell
 python app.py
 ```
