@@ -8,7 +8,124 @@ Problemstillingen for prosjektet var: Hvordan kan kunstig intelligens brukes til
 
 ### Prosjektstruktur
 
-KOMMER
+```
+PlanprosessKI/
+├── README.md
+├── LICENSE
+├── avvik-analyse-poc1/
+│   ├── requirements.txt
+│   ├── backend/
+│   │   ├── file.py
+│   │   ├── extract_info.py
+│   │   ├── test_pdf.py
+│   │   ├── json/
+│   │   │   └── plankart.json
+│   │   ├── services/
+│   │   │   ├── analysis_service.py
+│   │   │   └── comparison_service.py
+│   │   ├── test/
+│   │   │   └── test_gpt.py
+│   │   └── uploads/
+│   └── frontend/
+│       ├── avvik.html
+│       ├── index.html
+│       └── js/
+│           ├── avvik.js
+│           └── script.js
+├── inspill-poc2/
+│   ├── requirements.txt
+│   ├── backend/
+│   │   ├── app.py
+│   │   ├── read_pdf.py
+│   │   ├── services/
+│   │   │   └── analysis_services.py
+│   │   ├── test/
+│   │   │   └── test_auto_categorize.py
+│   │   └── uploads/
+│   └── frontend/
+│       ├── index.html
+│       ├── oppsummering.html
+│       └── js/
+│           └── script.js
+├── sjekkliste-poc3/
+│   ├── requirements.txt
+│   ├── backend/
+│   │   ├── app.py
+│   │   ├── read_pdf.py
+│   │   ├── test_connection.py
+│   │   ├── services/
+│   │   │   └── analysis_service.py
+│   │   ├── sjekklister/
+│   │   └── uploads/
+│   └── frontend/
+│       ├── index.html
+│       ├── sjekkliste.html
+│       └── js/
+│           └── script.js
+├── lovsjekk-poc4/
+│   ├── requirements.txt
+│   ├── backend/
+│   │   ├── app.py
+│   │   ├── lovverk.xml
+│   │   ├── read_pdf.py
+│   │   ├── services/
+│   │   │   └── analysis_services.py
+│   │   └── uploads/
+│   └── frontend/
+│       ├── index.html
+│       ├── lovAnalyse.html
+│       └── js/
+│           └── script.js
+├── versjonsoversikt-poc5/
+│   ├── requirements.txt
+│   ├── backend/
+│   │   ├── app.py
+│   │   ├── meetings/
+│   │   ├── services/
+│   │   │   ├── ai_conf.py
+│   │   │   ├── curr_analyse.py
+│   │   │   ├── diff_analyse.py
+│   │   │   └── pdf_reader.py
+│   │   └── uploads/
+│   └── frontend/
+│       ├── endring.html
+│       ├── gjelder.html
+│       ├── header.html
+│       ├── index.html
+│       ├── sammenligning.html
+│       └── js/
+│           ├── current.js
+│           ├── endring.js
+│           ├── index.js
+│           ├── sammenligning.js
+│           └── script.js
+├── forenkling-poc6/
+│   ├── requirements.txt
+│   ├── backend/
+│   │   ├── app.py
+│   │   ├── properties.json
+│   │   ├── services/
+│   │   │   ├── ai_conf.py
+│   │   │   ├── for_me_analyse.py
+│   │   │   ├── input_analyse.py
+│   │   │   ├── summary_analyse.py
+│   │   │   └── tools.py
+│   │   └── uploads/
+│   └── frontend/
+│       ├── for_meg.html
+│       ├── header.html
+│       ├── index.html
+│       ├── innspill.html
+│       ├── oppsummering.html
+│       └── js/
+│           ├── for_meg.js
+│           ├── index.js
+│           ├── innspill.js
+│           ├── oppsummering.js
+│           └── script.js
+└── css/
+    └── style.css
+```
 
 ## Proof of Concept 1 - Sjekk avvik mellom dokumenter i et planforslag
 ### Bakgrunn
