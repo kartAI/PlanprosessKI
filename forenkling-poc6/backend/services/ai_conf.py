@@ -1,14 +1,13 @@
 
 import os
 from dotenv import load_dotenv
-from openai import AzureOpenAI
+from openai import OpenAI
 
 load_dotenv()
 
-client = AzureOpenAI(
+client = OpenAI(
     api_key=os.getenv("AZURE_OPENAI_API_KEY"),
-    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
-    api_version=os.getenv("AZURE_OPENAI_API_VERSION")
+    base_url=os.getenv("AZURE_OPENAI_ENDPOINT"),
 )
 
-deployment = "gpt-4.1"
+deployment="gpt-5.1-chat"

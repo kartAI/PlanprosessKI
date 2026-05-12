@@ -4,6 +4,9 @@ from services.ai_conf import client, deployment
 # Tar inn planbeskrivelse og brukerinput og formulerer forslag til et innspill.
 def input_analyse(document: str, userInput: str) -> dict:
     try:
+        if len(userInput) > 2000:
+            return {'error': 'Input er for lang'}
+        
         prompt = f"""
             Du skal hjelpe en innbygger med å formulere et innspill basert på deres bekymringer.
             Du skal hjelpe en innbygger med å formulere et innspill basert på deres bekymringer.
@@ -42,8 +45,7 @@ def input_analyse(document: str, userInput: str) -> dict:
         response = client.chat.completions.create(
                 model=deployment,
                 messages=[{"role": "system", "content": prompt}],
-                max_tokens=2000,
-                temperature=0.5,
+                max_completion_tokens=2000,
                 top_p=1
             )
         

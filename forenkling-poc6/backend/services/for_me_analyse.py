@@ -18,14 +18,13 @@ def for_me_analyse(address_data: dict, document: str) -> str:
             - Returner kun gyldig JSON
             - Snakk norsk bokmål
         
-        
         KOORDINATER:
         Lat: {address_data.get('lat')}, Lon: {address_data.get('lon')}
 
         PLANFORSLAG:
         {document}
 
-        Basert på planedokumentene, analyser og identifiser hva som gjelder for adressen "{address_data.get('address')}".
+        Basert på plandokumentene, analyser og identifiser hva som gjelder for adressen "{address_data.get('address')}".
 
         Gi svar som strukturert JSON med følgende format:
         {{
@@ -42,8 +41,7 @@ def for_me_analyse(address_data: dict, document: str) -> str:
         response = client.chat.completions.create(
             model=deployment,
             messages=[{"role": "system", "content": prompt}],
-            max_tokens=2000,
-            temperature=0.1
+            max_completion_tokens=2000,
         )
         return response.choices[0].message.content.strip()
     except FileNotFoundError:

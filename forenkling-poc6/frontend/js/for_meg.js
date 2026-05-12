@@ -33,6 +33,7 @@ function visResultat(data) {
     });
 }
 
+// Hente adresser
 async function loadAdresser() {
     try {
         const response = await fetch(`${API_BASE}/properties`);
@@ -51,6 +52,7 @@ async function loadAdresser() {
     }
 }
 
+// Hent PDF fra uploads
 async function loadLatestPdf() {
     try {
         const response = await fetch(`${API_BASE}/latest-upload`);
