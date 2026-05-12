@@ -17,35 +17,51 @@ app.config["UPLOAD_FOLDER"] = str(UPLOAD_FOLDER)
 
 MEETINGS_FOLDER = Path(__file__).parent / "meetings"
 
-# Håndter opplastning av fil
+# felles funksjon for opplastning av fokumenter
+def save_files_to_folder(files, destination: Path):
+    saved = []
+    duplicates = []
+
+    for f in files:
+        if f and f.filename:
+            filename = secure_filename(f.filename)
+            path = destination / filename
+            if path.exists():
+                duplicates.append(filename)
+            else:
+                f.save(path)
+                saved.append(filename)
+
+    response = {"uploaded": saved}
+    if duplicates:
+        response["duplicates"] = duplicates
+    return response
+
+#uploads
 @app.route("/upload", methods=["POST"])
 def upload():
     files = request.files.getlist("files")
     if not files:
-        return jsonify({'error': 'Ingen filer mottatt'}), 400
+        return jsonify({"error": "Ingen filer mottatt"}), 400
 
-    saved = []
-    duplicates = []
     try:
-        for f in files:
-            if f and f.filename:
-                filename = secure_filename(f.filename)
-                path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
-                
-                # Sjekk om filen allerede finnes
-                if os.path.exists(path):
-                    duplicates.append(filename)
-                else:
-                    f.save(path)
-                    saved.append(filename)
+        response = save_files_to_folder(files, UPLOAD_FOLDER)
+        return jsonify(response), 200
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({"error": str(e)}), 500
 
-    response = {'uploaded': saved}
-    if duplicates:
-        response['duplicates'] = duplicates
-        
-    return jsonify(response), 200
+#meetings
+@app.route("/upload-meetings", methods=["POST"])
+def upload_meetings():
+    files = request.files.getlist("files")
+    if not files:
+        return jsonify({"error": "Ingen filer mottatt"}), 400
+
+    try:
+        response = save_files_to_folder(files, MEETINGS_FOLDER)
+        return jsonify(response), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # Frontend kan hente en fil
 @app.route('/uploads/<filename>', methods=['GET'])
@@ -54,14 +70,28 @@ def serve_file(filename):
         return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
     except Exception as e:
         return jsonify({'error': str(e)}), 404
-    
-# Leser filene i /uploads og gjør dem om til json
+
+#felles funksjon for å liste filer i en mappe  
+def list_files_in_folder(folder: Path):
+    try:
+        files = os.listdir(folder)
+        return [f for f in files if not f.startswith('.')]
+    except Exception as e:
+        raise e
+
+# Frontend kan hente en liste over alle filer i uploads
 @app.route('/list-uploads', methods=['GET'])
 def list_uploads():
     try:
-        files = os.listdir(app.config["UPLOAD_FOLDER"])
-        files = [f for f in files if not f.startswith('.')]  # fjern skjulte filer
-        return jsonify(files)
+        return jsonify(list_files_in_folder(UPLOAD_FOLDER)), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# Frontend kan hente en liste over alle filer i meetings
+@app.route('/list-meetings', methods=['GET'])
+def list_meetings():
+    try:
+        return jsonify(list_files_in_folder(MEETINGS_FOLDER)), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -78,6 +108,26 @@ def delete_file(filename):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
+# Frontend kan hente en fil fra meetings
+@app.route('/meetings/<filename>', methods=['GET'])
+def serve_meetings_file(filename):
+    try:
+        return send_from_directory(str(MEETINGS_FOLDER), filename)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 404
+
+# Slette en fil i meetings
+@app.route('/delete-meetings/<filename>', methods=['DELETE'])
+def delete_meetings_file(filename):
+    try:
+        path = MEETINGS_FOLDER / filename
+        if path.exists():
+            os.remove(path)
+            return jsonify({'message': 'File deleted'}), 200
+        else:
+            return jsonify({'error': 'File not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 # Håndter analyse av alle PDF-filer i uploads        
 @app.route('/all-changes-analysis', methods=['GET'])
