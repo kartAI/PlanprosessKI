@@ -1,3 +1,4 @@
+// Håndter filvalg og vis valgt filnavn
 const fileInputs = document.querySelectorAll('input[type="file"]');
 fileInputs.forEach(input => {
     input.addEventListener('change', function(e) {
@@ -18,17 +19,15 @@ uploadForm.addEventListener('submit', async function(e) {
     const planbestemmelse = document.getElementById('planbestemmelse').files[0];
     const planbeskrivelse = document.getElementById('planbeskrivelse').files[0];
     const plankart = document.getElementById('plankart').files[0];
-    
-    // Sjekk at alle filer er valgt
+
     if (!planbestemmelse || !planbeskrivelse || !plankart) {
-        alert('Vennligst velg alle tre filene før opplasting');
+        alert('Vennligst velg planbestemmelse, planbeskrivelse og plankart før opplasting');
         return;
     }
-    
-    // Legg til filene i FormData med riktige navn som matcher backend
+
     formData.append('file1', planbestemmelse);
     formData.append('file2', planbeskrivelse);
-    formData.append('file3', plankart);
+    // ikke append file3
     
     try {
         const response = await fetch('http://localhost:5000/upload', {
@@ -37,8 +36,7 @@ uploadForm.addEventListener('submit', async function(e) {
         });
         
         if (response.ok) {
-            alert('Filene ble lastet opp!');
-            window.location.href = 'avvik.html';
+        window.location.href = 'avvik.html';
         } else {
             const error = await response.text();
             alert('Feil ved opplasting: ' + error);
