@@ -76,9 +76,18 @@ function convertMarkdownTable(lines) {
 
 // Hent analyse når siden laster
 window.onload = async function() {
+    const analysisOutput = document.getElementById('analysis-output');
+
+    // Vis spinner mens analysen kjører
+    analysisOutput.innerHTML = `
+        <div class="spinner-container">
+            <div class="spinner"></div>
+            <p>Analyserer planforslag...</p>
+        </div>
+    `;
+
     try {
         const analysisResponse = await fetch('http://localhost:5000/analysis-results');
-        const analysisOutput = document.getElementById('analysis-output');
 
         if (analysisResponse.ok) {
             const data = await analysisResponse.json();
@@ -91,7 +100,6 @@ window.onload = async function() {
         }
     } catch (error) {
         console.error('Backend feil:', error);
-        const analysisOutput = document.getElementById('analysis-output');
         if (analysisOutput) {
             analysisOutput.innerHTML = `<p class="error">FEIL: Backend kjører ikke på localhost:5000<br>Start den med: python app.py</p>`;
         }

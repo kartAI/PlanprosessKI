@@ -8,12 +8,12 @@ from read_pdf import read_pdf
 
 load_dotenv()
 
-
 client = OpenAI(
     api_key=os.getenv("AZURE_OPENAI_API_KEY"),
     base_url=os.getenv("AZURE_OPENAI_ENDPOINT"),
 )
 deployment = "gpt-5.1-chat"
+
 # ekstraherer numererte punkter og underpunkter fra et dokument
 def extract_checklist_points(text: str) -> list[str]:
     combined = []
@@ -60,6 +60,7 @@ def load_checklist_from_sjekklister(filename: str) -> str:
 
 checklist_text = load_checklist_from_sjekklister("sjekkliste_for_planbeskrivelse_bokm_mal.pdf")
 checklist_points = extract_checklist_points(checklist_text)
+
 def clean_json_from_ai(raw: str) -> str:
     raw = raw.strip()
     if raw.startswith("```") and raw.endswith("```"):
@@ -73,6 +74,7 @@ def clean_json_from_ai(raw: str) -> str:
     if match:
         raw = match.group(1)
     return raw
+
 def check_document_against_checklist(document_text: str, checklist: list[str]):
     checklist_joined = "\n".join([f"- {p}" for p in checklist])
     prompt = f"""
@@ -110,7 +112,6 @@ def check_document_against_checklist(document_text: str, checklist: list[str]):
         {"role": "user", "content": prompt}
     ],
     max_completion_tokens=2000,
-    #temperature=0.0
 )
     raw = response.choices[0].message.content
     raw = clean_json_from_ai(raw)
