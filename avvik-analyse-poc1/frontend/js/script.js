@@ -9,7 +9,6 @@ fileInputs.forEach(input => {
     });
 });
 
-
 // Håndter skjema-innsending
 const uploadForm = document.getElementById('uploadForm');
 uploadForm.addEventListener('submit', async function(e) {

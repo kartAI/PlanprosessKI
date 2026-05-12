@@ -24,11 +24,20 @@ async function loadDocuments() {
 
 // Hent analyse
 window.onload = async function () {
+    const summaryOutput = document.getElementById('summary-output');
+
+     // Vis spinner mens analysen kjører
+    summaryOutput.innerHTML = `
+        <div class="spinner-container">
+            <div class="spinner"></div>
+            <p>Analyserer høringsinnspill...</p>
+        </div>
+    `;
+
     try {
         const response = await fetch(`${API_BASE}/analysis`);
         const data = await response.json();
 
-        const summaryOutput = document.getElementById('summary-output');
         const categoryOutput = document.getElementById('category-output');
         const currentCategory = document.getElementById('current-category');
         const documentsList = document.getElementById('documents-list');
