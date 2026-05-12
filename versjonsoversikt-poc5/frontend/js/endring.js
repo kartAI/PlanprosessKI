@@ -5,8 +5,16 @@ window.onload = async function () {
     const changesOutput = document.getElementById('all-changes-output');
     if (!changesOutput) return;
 
+    changesOutput.innerHTML = `
+        <div class="spinner-container">
+            <div class="spinner"></div>
+            <p>Analyserer...</p>
+        </div>
+    `;
+
     try {
         const response = await fetch(`${API_BASE}/all-changes-analysis`);
+
 
         if (!response.ok) {
             const errorText = await response.text();
@@ -30,7 +38,8 @@ window.onload = async function () {
 
         let html = '';
         versjoner.forEach(versjon => {
-            html += `<h2>${versjon.dato} — ${versjon.filnavn}</h2>`;
+            html += `<h2>${versjon.dato}</h2>`;
+        
             if (versjon.endringer_fra_forrige && versjon.endringer_fra_forrige.length > 0) {
                 html += '<ul>';
                 versjon.endringer_fra_forrige.forEach(endring => {
@@ -38,8 +47,9 @@ window.onload = async function () {
                 });
                 html += '</ul>';
             } else {
-                html += '<p>Ingen endringer fra forrige versjon</p>';
+                html += '<ul><li>Ingen endringer fra forrige versjon</li></ul>';
             }
+            html += `<p style="text-align: left;"><a href="${API_BASE}/uploads/${encodeURIComponent(versjon.filnavn)}" target="_blank">${versjon.filnavn}</a></p>`;
         });
 
         changesOutput.innerHTML = html;

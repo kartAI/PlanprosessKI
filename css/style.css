@@ -107,6 +107,7 @@ p {
     font-weight: 500;
     transition: all 0.3s ease;
     margin-bottom: 10px;
+    margin-top: 20px;
 }
 
 .upload-label:hover {
@@ -581,7 +582,7 @@ p {
 
 /* Style for meny */
 #meny {
-    background-color: #034E31; /* mørk grå */
+    background-color: #034E31; 
     padding: 15px 0;
     width: 100%;
 }
@@ -608,33 +609,17 @@ p {
 }
 /*Style for poc5*/
 .POC5-container {
-    background: #f3f3f5;
+    background: F2F2F2;
     padding: 40px;
     width: 100%;
+    align-items: center;
     }
 
-.file-list {
-    margin: 1rem 0;
-}
 
-.file-link {
-    display: inline-block;
-    padding: 0.3rem;
-    margin: 0.3rem 0;
-    color: rgb(36, 117, 238);
-    text-decoration: none;
-    border-radius: 4px;
-}
-
-.file-link:hover {
-    transition: all 0.3s ease;
-    background-color: rgb(154, 165, 180);
-    color: white;
-}
 
 .delete-btn {
     padding: 0.5rem;
-    margin: 1rem 0;
+    margin: 5px 20px;
     display:inline-block;
     background-color:#d32f2f;
     color: white;
@@ -820,4 +805,294 @@ p {
     .sjekkliste-page #checklist-container {
         flex: 0 1 100%;
     }
+}
+
+.upload-box-meetings{
+    background: white;
+    border: none;
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.upload-box:hover {
+    transform: translateY(-5px);
+    border: 3px solid #034E31;
+}
+
+.upload-box-meetings h3 {
+    color: #333;
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+.upload-box-meetings h2 {
+    color: #034E31;;
+}
+
+/* File input styling */
+.upload-box-meetings input[type="file"] {
+    display: none;
+}
+
+
+.upload-grid-meetings {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.meeting-info{
+    background: white;
+    border: none;
+    border-radius: 20px;
+    padding: 40px;
+    text-align: left;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.meeting-info:hover {
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+}
+
+/* Styling for h2/h3 headings i meeting-info */
+.meeting-info h2,
+.meeting-info h3 {
+    color: #034E31;
+    font-size: 1.3rem;
+    margin-top: 25px;
+    margin-bottom: 15px;
+    border-bottom: 3px solid #24BD76;
+    padding-bottom: 10px;
+    font-weight: 700;
+}
+
+.meeting-info h2:first-child,
+.meeting-info h3:first-child {
+    margin-top: 0;
+}
+
+/* Styling for paragraphs i meeting-info */
+.meeting-info p {
+    text-align: left;
+    margin: 12px 0;
+    color: #555;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* Styling for links i meeting-info */
+.meeting-info a {
+    color: white;
+    background: #24BD76;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-block;
+    margin-top: 8px;
+}
+
+.meeting-info a:hover {
+    background: #034E31;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(3, 78, 49, 0.3);
+}
+
+/* Styling for lists i meeting-info */
+.meeting-info ul {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0;
+}
+
+.meeting-info li {
+    background: #f8f9fa;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    border-left: 4px solid #24BD76;
+    border-radius: 6px;
+    color: #333;
+    line-height: 1.6;
+    transition: all 0.3s ease;
+}
+
+
+.analyse-meetings-btn{
+    width: 100%;
+    background-color: #034E31;
+    color: white;
+    border: none;
+    padding: 18px 40px;
+    font-size: 1.2rem;
+    font-weight: 500;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+}
+
+.analyse-meetings-btn:hover {
+    transform: scale(1.05);
+}
+
+.current-files-box {
+    background: white;
+    border: none;
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.current-files-box:hover {
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+.current-files-box h3 {
+    margin: 0 0 18px 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #034E31;
+    border-bottom: 3px solid #24BD76;
+    padding-bottom: 10px;
+}
+
+.file-list {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.file-list .file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
+}
+
+
+.file-list .file-item:last-child {
+    margin-bottom: 0;
+}
+
+.file-list .file-link {
+    color: #24BD76;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.file-list .file-link:hover {
+    color: #034E31;
+    text-decoration: underline;
+}
+
+.file-list .delete-btn {
+    padding: 8px 14px;
+    margin: 0;
+    background-color: #d32f2f;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.file-list .delete-btn:hover {
+    background-color: #8f050c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+}
+
+.all-changes-section{
+    background: white;
+    border: none;
+    border-radius: 20px;
+    padding: 40px;
+    margin: 20px auto;
+    width: 100%;
+    max-width: 900px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.all-changes-section:hover {
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+}
+
+/* Styling for h2 headings */
+.all-changes-section h2 {
+    color: #034E31;
+    font-size: 1.5rem;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    border-bottom: 3px solid #24BD76;
+    padding-bottom: 10px;
+    font-weight: 700;
+}
+
+.all-changes-section h2:first-child {
+    margin-top: 0;
+}
+
+/* Styling for list */
+.all-changes-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0 20px 0;
+}
+
+.all-changes-section li {
+    background: #f8f9fa;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    border-left: 4px solid #24BD76;
+    border-radius: 6px;
+    color: #333;
+    line-height: 1.6;
+    transition: all 0.3s ease;
+}
+
+/* Styling for paragraphs */
+.all-changes-section p {
+    text-align: left;
+    margin: 15px 0;
+    color: #555;
+    font-size: 1rem;
+}
+
+/* Styling for links */
+.all-changes-section p a {
+    display: inline-block;
+    color: white;
+    background: #24BD76;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.all-changes-section p a:hover {
+    background: #034E31;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(3, 78, 49, 0.3);
 }

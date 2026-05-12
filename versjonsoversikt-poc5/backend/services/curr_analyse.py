@@ -33,8 +33,8 @@ def analyse_meetings(all_meetings: str) -> dict:
     response = client.chat.completions.create(
         model=deployment,
         messages=[{"role": "system", "content": prompt}],
-        max_tokens=2000,
-        temperature=0.1
+        max_completion_tokens=2000,
+        #temperature=0.1
     )
 
     raw = response.choices[0].message.content
