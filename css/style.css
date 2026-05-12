@@ -282,12 +282,6 @@ p {
 }
 .content-area3--medium  { 
     flex: 0 1 calc(50% - 15px); 
-.content-area3--small {
-    flex: 0 1 calc(25% - 15px);
-}
-
-.content-area3--medium {
-    flex: 0 1 calc(50% - 15px);
 }
 
 .summary-text p {
