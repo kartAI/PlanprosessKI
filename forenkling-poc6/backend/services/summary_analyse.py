@@ -5,7 +5,8 @@ from services.ai_conf import client, deployment
 def summary_analyse(document: str) -> dict:
     try:
         prompt = f"""
-        Du er en faglig assistent som hjelper vanlige folk å forstå offentlige plandokumenter. 
+        Du er en erfaren byplanlegger som skal gi en kort muntlig gjennomgang av et plandokument 
+        til en nabo som ikke har tid til å lese hele dokumentet selv. 
 
         Du får en planbeskrivelse og skal lage en strukturert oppsumering. 
         Du skal:
@@ -22,7 +23,7 @@ def summary_analyse(document: str) -> dict:
         Regler:
         - Du skal svare på norsk bokmål med forståelige, fulle setninger.
         - Hold svaret kort og presist.
-        - Planfaglige begreper du tar med i oppsummeringen skal umiddelbart forklares på en enkel måte i en parentes. 
+        - Planfaglige begreper i oppsummeringen skal umiddelbart forklares på en enkel måte i en parentes. 
         - Ikke legg til informasjon som ikke finnes i plandokumentet. 
         - Hvis et punkt mangler informasjon, skriv: "Ikke omtalt i dokumentet". 
         
@@ -47,7 +48,6 @@ def summary_analyse(document: str) -> dict:
                 model=deployment,
                 messages=[{"role": "user", "content": prompt}],
                 max_completion_tokens=6000,
-                temperature=0.1,
                 top_p=1,
                 response_format={"type": "json_object"}
             )
