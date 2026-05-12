@@ -268,7 +268,6 @@ p {
 }
 
 .content-area3 {
-    flex: 0 1 calc(25% - 15px);
     padding: 20px;
     overflow-y: auto;
     background: #f8f9fa;
@@ -277,14 +276,24 @@ p {
     max-height: 600px;
 }
 
-.content-area4 {
+.content-area3--small {
+    flex: 0 1 calc(25% - 15px);
+}
+
+.content-area3--medium {
     flex: 0 1 calc(50% - 15px);
-    padding: 20px;
-    overflow-y: auto;
-    background: #f8f9fa;
-    border-radius: 12px;
-    border: 1px solid #e0e0e0;
-    max-height: 600px;
+}
+
+.summary-text p {
+    margin-bottom: 0.75rem;
+    line-height: 1.7;
+    color: #333;
+    font-size: 0.95rem;
+    text-align: left;
+}
+
+.summary-text p:last-child {
+    margin-bottom: 0;
 }
 
 .content-area-changes {
