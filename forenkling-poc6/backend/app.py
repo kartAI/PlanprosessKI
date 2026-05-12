@@ -62,7 +62,7 @@ def upload():
 
     return jsonify({"uploaded": saved}), 200
 
-# hjelpefunskjon for å finne siste PDF for analyse, enten fra LAST_UPLOADS eller ved å sjekke uploads-mappen
+# Hjelpefunskjon for å finne siste PDF for analyse, enten fra LAST_UPLOADS eller ved å sjekke uploads-mappen
 def find_pdf_for_analysis() -> Path | None:
     if LAST_UPLOADS:
         candidate = UPLOAD_FOLDER / LAST_UPLOADS[0]
@@ -91,8 +91,7 @@ def serve_file(filename):
     except Exception as e:
         return jsonify({'error': str(e)}), 404 #feil hvis fil ikke finnes
 
-
-#endepunkt for summary_analyse
+# Endepunkt for summary_analyse
 @app.route("/summary-analysis", methods=["GET"])
 def summary():
     if not LAST_UPLOADS:
@@ -105,7 +104,7 @@ def summary():
     result = summary_analyse(document)
     return jsonify(result), 200
 
-# for henting av adresser fra en lokal JSON-fil
+# For henting av adresser fra en lokal JSON-fil
 @app.route("/properties", methods=["GET"])
 def hent_adresser():
     properties_path = Path(__file__).parent / "properties.json"
@@ -205,10 +204,4 @@ def text_analyse():
 if __name__ == "__main__":
     app.run(debug=True)
 
-
-#For å skrive det ut i terminalen, ps, flytt app.run under.
-"""
-    result = for_me_analyse()
-    print(result)
-"""
 

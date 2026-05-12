@@ -54,7 +54,7 @@ window.onload = async function () {
                     <h2 class="punkt-tittel" onclick="toggleUnderpunkter(${index})">
                         ${punkt.tittel} <span class="arrow">▶</span>
                     </h2>
-                    <ul class="underpunkter-liste" id="underpunkter-${index}" style="display: none;">
+                    <ul class="underpunkter-liste" id="underpunkter-${index}">
                         ${punkt.underpunkter.map(u => `<li>${u.beskrivelse}</li>`).join('')}
                     </ul>
                 </div>
