@@ -10,7 +10,8 @@ from services.analysis_services import (
     summarize_single_document,
     generate_categories,
     summarize_all_documents,
-    summarize_category
+    summarize_category,
+    classify_documents
 )
 
 app = Flask(__name__)
@@ -91,48 +92,50 @@ def analysis():
         return jsonify({"error": "Ingen PDF-filer funnet"}), 400
 
     documents = []
-    all_texts = []
 
-    # 1. Ekstraher tekst + oppsummer hvert dokument
+    # 1. Ekstraher tekst og oppsummer hvert dokument
     for pdf in pdf_files:
-        text = read_pdf(str(pdf))
-        summary = summarize_single_document(text)
+        try:
+            text = read_pdf(str(pdf))
+            summary = summarize_single_document(text)
+            documents.append({
+                "filename": pdf.name, 
+                "summary": summary})
+        except Exception as e:
+            documents.append({"filename": pdf.name, "summary": f"[Feil: {e}]"})
 
-        documents.append({
-            "filename": pdf.name,
-            "text": text,
-            "summary": summary
-        })
+    summaries = [d["summary"] for d in documents]
 
-        all_texts.append(text)
+    # 2. Generer kategorier fra innholdet
+    kategorier = generate_categories(summaries)
 
-
-    # 2. Automatisk kategorisering
-    auto = generate_categories(all_texts)
-
-    # 3. Lag kategori → dokumentliste (tekst + filnavn)
-    category_texts = {cat["navn"]: [] for cat in auto["kategorier"]}
-    category_documents = {cat["navn"]: [] for cat in auto["kategorier"]}
+    # 3. Klassifiser inspill inn i kategoriene
+    classification = classify_documents(documents, kategorier)
+    
+    # 4. Bygg kategoriliste
+    category_documents = {k: [] for k in kategorier}
+    category_summaries_input = {k: [] for k in kategorier}
 
     for doc in documents:
-        for cat in auto["kategorier"]:
-            if any(word.lower() in doc["text"].lower() for word in cat["navn"].split()):
-                category_texts[cat["navn"]].append(doc["text"])
-                category_documents[cat["navn"]].append(doc["filename"])
+        assigned = classification.get(doc["filename"], [])
+        for cat in assigned:
+            if cat in category_documents:
+                category_documents[cat].append(doc["filename"])
+                category_summaries_input[cat].append(doc["summary"])
 
-    # 4. Felles oppsummering
-    combined_summary = summarize_all_documents([d["summary"] for d in documents])
+    # 5. Felles oppsummering
+    combined_summary = summarize_all_documents(summaries)
 
-    # 5. Oppsummering per kategori
+    # 6. Oppsummering per kategori
     category_summaries = {
-        name: summarize_category(name, texts)
-        for name, texts in category_texts.items()
+        name: summarize_category(name, sums)
+        for name, sums in category_summaries_input.items()
     }
-    # 6. Returner alt til frontend
+
+    # 7. Returner alt til frontend
     return jsonify({
-        "documents": documents,
-        "auto_categories": auto,
-        "category_distribution": category_texts,
+        "documents": [{"filename": d["filename"]} for d in documents],
+        "auto_categories": {"kategorier": [{"navn": k} for k in kategorier]},
         "category_documents": category_documents,
         "combined_summary": combined_summary,
         "category_summaries": category_summaries
