@@ -7,12 +7,50 @@
     <link rel="stylesheet" href="../../css/style.css">
 </head>
 <body class="page-with-header">
-    <div id="header"></div>
+    <div id="header"></div> 
+
+
     <div class="POC5-container">
         <div class>
-            <h1>Hva skal endres?</h1>
-        <div id="currentInfo"> </div>
+            <h1>Avklarte endringer til behandling</h1>
+            <p>Her kan du laste opp møtereferater og vedlegg, og få en oversikt over avklarte endrigner som enda ikke er endret i et planforslag.</p>
+    
+
+    <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+    <div class="upload-grid-meetings">
+
+        <!-- Opplastingsboks -->
+        <div class="upload-box-meetings">
+            <h2>Last opp møtereferat  og vedlegg</h2>
+
+            <input type="file" name="files" id="versjonsoversikt-fil" accept=".pdf" multiple>
+            <label for="versjonsoversikt-fil" class="upload-label">Velg fil</label>
+
+            <p class="file-name" id="versjonsoversikt-navn"></p>
+
+            <div class="current-files-box">
+            <h3>Filer som er lastet opp</h3>
+            <div id="file-list" class="file-list"></div>
+            </div>
+
+            <button type="submit" class="analyse-meetings-btn">Last opp nye filer</button>
         </div>
+
+        <div class="meeting-info">
+            <div id="currentInfo"> </div>
+        </div>
+    
+        </div>
+
+
+    
+        
+
+    </div>
+
+    
+</form>
+        
     </div>
     <script type="module" scr="js/script.js"></script>
     <script type="module" src="js/current.js"></script>

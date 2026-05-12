@@ -24,7 +24,7 @@ Oppsummer følgende høringsinnspill kort, presist og nøytralt:
     response = client.chat.completions.create(
         model=deployment,
         messages=[{"role": "user", "content": prompt}],
-        max_completion_tokens=300,
+        max_completion_tokens=1000,
         seed=42
     )
 
@@ -58,7 +58,7 @@ Innspill:
     response = client.chat.completions.create(
         model=deployment,
         messages=[{"role": "user", "content": prompt}],
-        max_completion_tokens=300,
+        max_completion_tokens=1000,
         seed=42
     )
 
@@ -88,8 +88,8 @@ Regler:
 
 Returner KUN gyldig JSON:
 {{
-  "filnavn.pdf": ["Kategori A", "Kategori B"],
-  "fil.pdf": ["Kategori C"]
+    "filnavn.pdf": ["Kategori A", "Kategori B"],
+    "fil.pdf": ["Kategori C"]
 }}
 
 Dokumenter:
@@ -99,7 +99,7 @@ Dokumenter:
     response = client.chat.completions.create(
         model=deployment,
         messages=[{"role": "user", "content": prompt}],
-        max_completion_tokens=500,
+        max_completion_tokens=1000,
         seed=42
     )
 
@@ -121,6 +121,9 @@ Oppgave:
 - Vær kort, presis og nøytral. 
 - Gå rett på oppsummeringen
 
+Formatering:
+- Skill hvert tema eller poeng med linjeskift.
+
 Her er oppsummeringene:
 {joined}
 """
@@ -128,7 +131,7 @@ Her er oppsummeringene:
     response = client.chat.completions.create(
         model=deployment,
         messages=[{"role": "user", "content": prompt}],
-        max_completion_tokens=400,
+        max_completion_tokens=1500,
         seed=42
     )
 
@@ -152,6 +155,9 @@ Oppgave:
 - Vær kort, nøytral og konsis.
 - Gå rett på oppsummeringen
 
+Formatering:
+- Skill hvert tema eller poeng med linjeskift.
+
 Her er innspillene:
 {joined}
 """
@@ -159,7 +165,7 @@ Her er innspillene:
     response = client.chat.completions.create(
         model=deployment,
         messages=[{"role": "user", "content": prompt}],
-        max_completion_tokens=300,
+        max_completion_tokens=1000,
         seed=42
     )
 

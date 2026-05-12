@@ -1,13 +1,47 @@
 import { API_BASE } from "./script.js";
+import { setupFileUpload, loadFiles, showBanner } from "./fileManager.js";
 
-//skriver ut analysen i punktliste på gjelder.html
+// Oppsett for møtereferater
+setupFileUpload(
+    'uploadForm',
+    'versjonsoversikt-fil',
+    'versjonsoversikt-navn',
+    '/upload-meetings',
+    () => {
+        loadMeetingsFiles();
+        loadAnalysis();
+    }
+);
+
+// Last møtereferater-filer ved oppstart
+function loadMeetingsFiles() {
+    loadFiles(
+        '/list-meetings',
+        'file-list',
+        '/meetings/',
+        '/delete-meetings/',
+        loadAnalysis
+    );
+}
+
+// Skriver ut analysen
 function loadAnalysis() {
-    fetch(`${API_BASE}/current_analysis`)
-        .then(res => res.json())
-        .then(data => {
-            console.log("KI-output:", data);
+        const container = document.getElementById('currentInfo');
+        if (!container) return;
+
+        container.innerHTML = `
+            <div class="spinner-container">
+                <div class="spinner"></div>
+                <p>Analyserer...</p>
+            </div>
+        `;
+
+        fetch(`${API_BASE}/current_analysis`)
+            .then(res => res.json())
+            .then(data => {
             const container = document.getElementById('currentInfo');
             if (!container) return;
+            
 
             let html = "<ul>";
             try {
@@ -33,7 +67,8 @@ function loadAnalysis() {
         });
 }
 
-// Kjør analysen når gjelder.html lastes
+// Kjør når siden lastes
 window.onload = function() {
+    loadMeetingsFiles();
     loadAnalysis();
 };

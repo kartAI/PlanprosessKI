@@ -32,8 +32,8 @@ def analyse_all_diff(all_documents: list) -> list:
             model=deployment,
             messages=[{"role": "user", "content": prompt}],
             max_completion_tokens=1000,
-            temperature=0.1,
-            top_p=1,
+            #temperature=0.1,
+            #top_p=1,
             response_format={"type": "json_object"}
         )
         return json.loads(response.choices[0].message.content.strip())
@@ -72,9 +72,9 @@ def compare_versions(document1: str, document2: str):
         response = client.chat.completions.create(
             model=deployment,
             messages=[{"role": "user", "content": prompt}],
-            max_completion_tokens=1000,
-            temperature=0.1,
-            top_p=1,
+            max_completion_tokens=3000,
+            #temperature=0.1,
+            #top_p=1,
             response_format={"type": "json_object"}
         )
         return json.loads(response.choices[0].message.content.strip())

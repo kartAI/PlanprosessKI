@@ -72,9 +72,17 @@ window.onload = async function () {
             }
             const title = isAll ? 'Felles oppsummering' : `Oppsummering - ${categoryName}`;
             const summaryText = isAll ? combinedSummary : (categorySummaries[categoryName] || 'Ingen oppsummering for denne kategorien.');
+            
+            const formatted = summaryText
+                .split('\n')                  // del opp på linjeskift
+                .map(line => line.trim())
+                .filter(line => line)         // fjern tomme linjer
+                .map(line => `<p>${line}</p>`) // pakk hver linje i <p>
+                .join('');
+            
             summaryOutput.innerHTML = `
                 <h3>${title}</h3>
-                <p>${summaryText}</p>
+                <div class="summary-text">${formatted}</div>
             `;
 
             const files = isAll ? allDocuments : (categoryDocuments[categoryName] || []);
