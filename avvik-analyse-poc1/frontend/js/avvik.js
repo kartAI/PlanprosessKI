@@ -54,7 +54,7 @@ function convertMarkdownTable(lines) {
     // Header
     const headerRow = lines[0].split('|').map(cell => cell.trim()).filter(c => c);
     headerRow.forEach(cell => {
-        table += `<th>${escapeHtml(cell)}</th>`;
+        table += `<th style="color: black;">${escapeHtml(cell)}</th>`;
     });
     table += '</tr></thead><tbody>';
     

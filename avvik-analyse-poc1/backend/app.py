@@ -1,15 +1,16 @@
+from ast import compare
+
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from pathlib import Path
 import json
 import os
 
-from extract_info import read_pdf
-from services.analysis_service import extract_info_from_text
+from read_pdf import read_pdf
 from services.comparison_service import compare_documents
 
 app = Flask(__name__)
-CORS(app)  # Tillater forespørsler fra frontend
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 BASE_DIR = Path(__file__).resolve().parent
 UPLOAD_FOLDER = BASE_DIR / 'uploads'
@@ -25,30 +26,24 @@ def _read_text_file(path: Path) -> str:
         text = path.read_text(encoding="utf-8", errors="ignore")
     return text[:5000]
 
-def _json_dump(value) -> str:
-    if isinstance(value, (dict, list)):
-        return json.dumps(value, ensure_ascii=False, indent=2)
-    return str(value)
-
 @app.route('/upload', methods=['POST'])
 def upload_file():
-    # Sjekker at alle tre filene er inkludert
-    if 'file1' not in request.files or 'file2' not in request.files or 'file3' not in request.files:
-        return 'No file part', 400
-    files = [request.files['file1'], request.files['file2'], request.files['file3']]
-    
-    for file in files:
-        # Sjekker at filen har et navn
-        if file.filename == '':
-            return 'No selected file', 400
-        
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-        
-        # Sjekker om filen allerede eksisterer
-        if not os.path.exists(file_path):
-            # Lagrer filen i upload
-            file.save(file_path)
-    
+    if 'file1' not in request.files or 'file2' not in request.files:
+        return 'Missing files', 400
+
+    planbestemmelse = request.files['file1']
+    planbeskrivelse = request.files['file2']
+
+    if planbestemmelse.filename == '' or planbeskrivelse.filename == '':
+        return 'No selected file', 400
+
+    # Slett tidligere opplastede pdf-filer
+    for path in UPLOAD_FOLDER.glob('*.pdf'):
+        path.unlink()
+
+    planbestemmelse.save(UPLOAD_FOLDER / "Planbestemmelse.pdf")
+    planbeskrivelse.save(UPLOAD_FOLDER / "Planbeskrivelse.pdf")
+
     return 'Files uploaded successfully', 200
 
 @app.route('/file-content', methods=['GET'])
@@ -68,8 +63,8 @@ def get_file_content():
 
 @app.route('/analysis-results', methods=['GET'])
 def analysis_results():
-    pdf_path_1 = UPLOAD_FOLDER / "Planbeskrivelse3-Flere-avvik-med-bestemmelse.pdf"
-    pdf_path_2 = UPLOAD_FOLDER / "Reguleringsbestemmelser.pdf"
+    pdf_path_1 = UPLOAD_FOLDER / "Planbestemmelse.pdf"
+    pdf_path_2 = UPLOAD_FOLDER / "Planbeskrivelse.pdf"
     json_path = JSON_FOLDER / "plankart.json"
 
     missing = []
@@ -99,36 +94,16 @@ def analysis_results():
             "details": str(e)
         }), 400
 
-    result_1 = extract_info_from_text(plan_text_1)
-    result_2 = extract_info_from_text(plan_text_2)
-    result_3 = extract_info_from_text(plan_text_3)
-
+    # Bruk simple_compare eller compare_documents
     comparison = compare_documents(
-        plan_text_2,
         plan_text_1,
-        plan_text_3,
-        doc1_name="Planbestemmelse",
-        doc2_name="Planbeskrivelse",
-        doc3_name="Plankart"
+        plan_text_2,
+        plan_text_3
     )
 
-    terminal_output = "\n".join([
-        str(comparison)
-    ])
-
     return jsonify({
-        "doc_names": {
-            "doc1": "Planbeskrivelse3-Flere-avvik-med-bestemmelse",
-            "doc2": "Reguleringsbestemmelser",
-            "doc3": "Plankart (JSON)"
-        },
-        "extractions": {
-            "planbeskrivelse": result_1,
-            "reguleringsbestemmelser": result_2,
-            "plankart": result_3
-        },
         "comparison": comparison,
-        "terminal_output": terminal_output
+        "terminal_output": comparison
     }), 200
 
 # Kjører appen
